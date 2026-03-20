@@ -1,0 +1,1 @@
+"""JotiGames backend application package."""

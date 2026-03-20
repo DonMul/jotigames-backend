@@ -1,0 +1,295 @@
+validation:
+  invalidRequest: "Request payload is invalid."
+game:
+  auth:
+    userRequired: "A user principal is required for game management endpoints."
+    viewAccessRequired: "You do not have read access to this game."
+    manageAccessRequired: "You do not have write access to this game."
+  teamMessage:
+    sent: "Message sent to team successfully."
+    sendFailed: "Message could not be sent to team."
+  chat:
+    emptyMessage: "Chat message cannot be empty."
+    sendFailed: "Chat message could not be sent."
+  notFound: "Game was not found."
+  member:
+    userNotFound: "User was not found."
+    emailNotFound: "No user was found for that email address."
+  schema:
+    columnMissing: "Game table schema is missing a required column."
+  types:
+    columnMissing: "Game type availability schema is missing a required column."
+  validation:
+    requiredFieldsMissing: "Required game fields are missing."
+    startBeforeEndRequired: "Game start time must be before end time."
+    unknownSetting: "One or more game settings keys are unknown."
+  create:
+    failed: "Game could not be created."
+  update:
+    failed: "Game could not be updated."
+  delete:
+    failed: "Game could not be deleted."
+    success: "Game deleted successfully."
+  reset:
+    failed: "Game could not be reset."
+    success: "Game reset successfully."
+  admin:
+    add:
+      failed: "Game admin could not be added."
+      success: "Game admin added successfully."
+    remove:
+      failed: "Game admin could not be removed."
+      success: "Game admin removed successfully."
+      ownerForbidden: "The game owner cannot be removed as admin."
+      selfForbidden: "You cannot remove yourself from game admins."
+  gameMaster:
+    add:
+      failed: "Game master could not be added."
+      success: "Game master added successfully."
+    remove:
+      failed: "Game master could not be removed."
+      success: "Game master removed successfully."
+team:
+  notFound: "Team was not found in this game."
+  auth:
+    selfRequired: "Team tokens can only access their own team."
+  validation:
+    codeAlreadyUsed: "Team code is already in use for this game."
+  create:
+    failed: "Team could not be created."
+    codeGenerationFailed: "A unique team code could not be generated."
+  update:
+    failed: "Team could not be updated."
+  delete:
+    failed: "Team could not be deleted."
+    success: "Team deleted successfully."
+explodingKittens:
+  gameTypeRequired: "This endpoint is only available for Exploding Kittens games."
+  lives:
+    invalidDelta: "Life delta must be non-zero."
+    updated: "Team lives updated successfully."
+    updateFailed: "Team lives could not be updated."
+  play:
+    failed: "Card could not be played."
+    cardNotInHand: "Card is not in this team's hand."
+    cardNotPlayable: "This card cannot be played directly."
+    needsTarget: "A target team is required for this card."
+    targetSelf: "A team cannot target itself."
+    targetInvalid: "Target team is invalid for this game."
+    attackAlreadyPending: "An attack is already pending for this team."
+    peekAlreadyPending: "See the future is already pending for this team."
+    skipAlreadyPending: "Skip is already pending for this team."
+    attackReady: "Attack card played successfully."
+    favorTargeted: "Favor card played and target action created."
+    peekReady: "See the future card played successfully."
+    shuffleDone: "Shuffle card played successfully."
+    skipReady: "Skip card played successfully."
+  hand:
+    addFailed: "Random hand card could not be added."
+    removeFailed: "Random hand card could not be removed."
+  cards:
+    invalidType: "Card type is invalid for Exploding Kittens."
+    notFound: "Card was not found."
+    addFailed: "Cards could not be added."
+    addSuccess: "Cards added successfully."
+    createFailed: "Card could not be created."
+    updateFailed: "Card could not be updated."
+    deleteFailed: "Card could not be deleted."
+    deleteSuccess: "Card deleted successfully."
+    removeBlocked: "Card cannot be removed while in hand or locked."
+    pdfDependenciesMissing: "QR PDF export dependencies are not available on the server."
+    pdfLogoInvalid: "Center logo must be an image file."
+    pdfLogoTooLarge: "Center logo is too large. Maximum size is 2 MB."
+  scan:
+    failed: "Card scan failed."
+    cardNotFound: "Card was not found for this game."
+    cardInHand: "Card is already in a team hand."
+    cardLocked: "Card is currently locked."
+    cardAdded: "Card added to hand."
+    cardNoEffect: "Card has no effect."
+    felixGain: "Felix card granted one life."
+    felixAlreadyUsed: "Felix card was already used by this team."
+    explodingDefused: "Exploding kitten was defused."
+    explodingHit: "Exploding kitten hit the team."
+    attackTargeted: "Attack is targeted and pending resolution."
+  state:
+    fetched: "Team state fetched."
+    resolveFailed: "State could not be resolved."
+    none: "No pending state to resolve."
+    skipPending: "Skip is pending for this team."
+    skipResolved: "Skip state resolved."
+    peekPending: "See the future is pending for this team."
+    peekNeedsConfirm: "See the future requires confirm to resolve."
+    peekResolved: "See the future state resolved."
+    attackNeedsTarget: "Attack requires a target team and scanned card."
+    attackInvalidTarget: "Attack target team is invalid."
+  action:
+    invalid: "Action is invalid."
+    notAllowed: "Action cannot be resolved by this team."
+    nopeMissing: "Nope card is required to cancel this action."
+    nopeUsed: "Action canceled using Nope."
+    favorNoCards: "Target team has no cards for Favor."
+    favorTaken: "Favor resolved and a card was taken."
+    resolveFailed: "Action could not be resolved."
+  combo:
+    failed: "Combo could not be used."
+    invalid: "Invalid combo selection."
+    cardNotInHand: "One or more selected cards are not in hand."
+    needsTarget: "Combo requires a target team."
+    targetSelf: "Team cannot target itself for this combo."
+    targetInvalid: "Combo target team is invalid."
+    twoReady: "2-of-a-kind combo queued."
+    twoNoCards: "Target team has no cards for 2-of-a-kind combo."
+    twoTaken: "2-of-a-kind combo resolved and a card was taken."
+    threeNeedsType: "3-of-a-kind combo requires requested card type."
+    threeInvalidType: "Requested card type is invalid for 3-of-a-kind combo."
+    threeReady: "3-of-a-kind combo queued."
+    threeTaken: "3-of-a-kind combo resolved and requested card was taken."
+    threeNoMatch: "Requested card type not found in target team hand."
+    fiveNeedsType: "5-different combo requires requested card type."
+    fiveTaken: "5-different combo resolved and card was taken from deck."
+    fiveNone: "5-different combo resolved but requested card type not available in deck."
+geohunter:
+  gameTypeRequired: "This endpoint is only available for Geohunter games."
+  validation:
+    missingPoiId: "Point of interest id is required."
+  answer:
+    recorded: "Answer submitted successfully."
+    alreadySubmitted: "This point was already answered by your team."
+blindhike:
+  gameTypeRequired: "This endpoint is only available for Blindhike games."
+  validation:
+    missingMarkerId: "Marker id is required."
+  marker:
+    added: "Marker added successfully."
+    alreadyAdded: "Marker was already added by your team."
+resource_run:
+  gameTypeRequired: "This endpoint is only available for Resource Run games."
+  validation:
+    missingNodeId: "Resource node id is required."
+  claim:
+    recorded: "Resource claimed successfully."
+    alreadyCollected: "Resource was already collected by your team."
+territory_control:
+  gameTypeRequired: "This endpoint is only available for Territory Control games."
+  validation:
+    missingZoneId: "Zone id is required."
+  claim:
+    recorded: "Zone claimed successfully."
+    alreadyOwned: "Zone was already claimed by your team."
+market_crash:
+  gameTypeRequired: "This endpoint is only available for Market Crash games."
+  validation:
+    missingTradeId: "Trade id is required."
+  trade:
+    executed: "Trade executed successfully."
+crazy88:
+  gameTypeRequired: "This endpoint is only available for Crazy 88 games."
+  validation:
+    missingTaskId: "Task id is required."
+    missingSubmissionId: "Submission id is required."
+  task:
+    submitted: "Task submitted successfully."
+  review:
+    judged: "Submission judged successfully."
+    alreadyJudged: "Submission was already judged."
+courier_rush:
+  gameTypeRequired: "This endpoint is only available for Courier Rush games."
+  validation:
+    missingPickupId: "Pickup id is required."
+    missingDropoffId: "Dropoff id is required."
+  pickup:
+    confirmed: "Pickup confirmed successfully."
+    alreadyConfirmed: "Pickup was already confirmed."
+  dropoff:
+    confirmed: "Dropoff confirmed successfully."
+echo_hunt:
+  gameTypeRequired: "This endpoint is only available for Echo Hunt games."
+  validation:
+    missingBeaconId: "Beacon id is required."
+  beacon:
+    claimed: "Beacon claimed successfully."
+    alreadyClaimed: "Beacon was already claimed by your team."
+checkpoint_heist:
+  gameTypeRequired: "This endpoint is only available for Checkpoint Heist games."
+  validation:
+    missingCheckpointId: "Checkpoint id is required."
+  capture:
+    recorded: "Checkpoint captured successfully."
+    alreadyCaptured: "Checkpoint was already captured by your team."
+pandemic_response:
+  gameTypeRequired: "This endpoint is only available for Pandemic Response games."
+  validation:
+    missingPickupId: "Pickup id is required."
+    missingHotspotId: "Hotspot id is required."
+  pickup:
+    collected: "Pickup collected successfully."
+    alreadyCollected: "Pickup was already collected by your team."
+  hotspot:
+    resolved: "Hotspot resolved successfully."
+    alreadyResolved: "Hotspot was already resolved by your team."
+birds_of_prey:
+  gameTypeRequired: "This endpoint is only available for Birds of Prey games."
+  validation:
+    missingEggId: "Egg id is required."
+  egg:
+    dropped: "Egg dropped successfully."
+    destroyed: "Egg destroyed successfully."
+    alreadyDestroyed: "Egg was already destroyed."
+code_conspiracy:
+  gameTypeRequired: "This endpoint is only available for Code Conspiracy games."
+  validation:
+    missingTargetTeamId: "Target team id is required."
+    missingCode: "Code is required."
+  code:
+    submitted: "Code submission received."
+auth:
+  locale:
+    unsupported: "Unsupported locale. Allowed values are en and nl."
+  ws:
+    superAdminKeyRequired: "WS super admin key is required."
+    superAdminKeyInvalid: "WS super admin key is invalid."
+    superAdminKeyNotConfigured: "WS super admin key is not configured on backend."
+  user:
+    invalidEmailOrPassword: "Invalid email or password."
+    disallowedRole: "This account does not have permission to access this backend."
+    superAdminRequired: "Super admin access is required for this action."
+  team:
+    invalidCodes: "Invalid game code or team code."
+  token:
+    missingBearerToken: "Bearer token is required."
+    invalidBearerHeaderFormat: "Bearer token header format is invalid."
+    invalidOrExpired: "Token is invalid or expired."
+    gameAccessRequired: "Token does not have access to the requested game."
+  register:
+    emailAlreadyUsed: "An account with this email already exists."
+    usernameAlreadyUsed: "This username is already in use."
+    verifyEmailSent: "Account created. Please check your email to verify your address."
+    emailSendFailed: "Could not send verification email."
+    mailerNotConfigured: "Email service is not configured."
+    mailerUnsupportedScheme: "Email service DSN scheme is not supported."
+    mailerFromMissing: "Email sender address is not configured."
+  verify:
+    invalidToken: "This verification token is invalid or expired."
+    success: "Email address verified successfully."
+    pendingEmailConflict: "This pending email can no longer be applied because it is already in use."
+    tokenColumnMissing: "Verification token storage is not configured correctly."
+  reset:
+    requestAccepted: "If an account exists and is verified, a reset email has been sent."
+    tokenColumnsMissing: "Password reset token storage is not configured correctly."
+    emailSendFailed: "Could not send password reset email."
+mailer:
+  verify:
+    subject: "Confirm your email"
+    title: "Confirm your email"
+    greeting: "Hi %username%,"
+    intro: "Confirm your email address by clicking the button below."
+    cta: "Confirm email"
+    outro: "If you have not created an account, you can ignore this email."
+  reset:
+    subject: "Reset password"
+    title: "Reset password"
+    greeting: "Hi %username%,"
+    intro: "A password reset has been requested for your account. Use the button below to choose a new password."
+    cta: "Reset password"
+    outro: "If you have not requested this, you can ignore this email."
