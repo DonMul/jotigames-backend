@@ -2,7 +2,7 @@ from functools import lru_cache
 from urllib.parse import urlparse, urlunparse
 from typing import Optional
 
-from pydantic import Field
+from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -79,6 +79,15 @@ class Settings(BaseSettings):
 
     default_locale: str = Field(default="en", alias="DEFAULT_LOCALE")
     translations_dir: Optional[str] = Field(default="translations/locales", alias="TRANSLATIONS_DIR")
+
+    @field_validator("ws_port", mode="before")
+    @classmethod
+    def _normalize_ws_port(cls, value: object) -> object:
+        if value is None:
+            return None
+        if isinstance(value, str) and value.strip() == "":
+            return None
+        return value
 
     @property
     def ws_socket_endpoint(self) -> Optional[str]:
