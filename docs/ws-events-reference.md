@@ -52,6 +52,21 @@ Rules:
 }
 ```
 
+#### Birds of Prey
+
+##### `game.birds_of_prey.team.score`
+
+- Purpose: Broadcast score changes for Birds of Prey leaderboard updates on team/admin live views.
+- Payload:
+
+```json
+{
+  "game_id": "<game_id>",
+  "team_id": "<team_id>",
+  "score": 12
+}
+```
+
 #### Exploding Kittens
 
 ##### `game.exploding_kittens.highscore.adjust`
@@ -155,6 +170,68 @@ Rules:
 }
 ```
 
+#### Birds of Prey
+
+##### `admin.birds_of_prey.team.location.updated`
+
+- Purpose: Notify admin live overview that a team location moved.
+- Payload:
+
+```json
+{
+  "game_id": "<game_id>",
+  "team_id": "<team_id>",
+  "lat": 52.1234567,
+  "lon": 5.1234567,
+  "updated_at": "<ISO-8601>"
+}
+```
+
+##### `admin.birds_of_prey.egg.added`
+
+- Purpose: Notify admin live overview that an egg was dropped.
+- Payload:
+
+```json
+{
+  "game_id": "<game_id>",
+  "id": "<egg_id>",
+  "owner_team_id": "<team_id>",
+  "owner_team_name": "<team_name>",
+  "lat": 52.1234567,
+  "lon": 5.1234567,
+  "dropped_at": "<ISO-8601>",
+  "automatic": true
+}
+```
+
+##### `admin.birds_of_prey.egg.removed`
+
+- Purpose: Notify admin live overview that an egg was removed by a destroy action.
+- Payload:
+
+```json
+{
+  "game_id": "<game_id>",
+  "egg_id": "<egg_id>",
+  "owner_team_id": "<owner_team_id>",
+  "destroyed_by_team_id": "<team_id>"
+}
+```
+
+##### `admin.birds_of_prey.team.score`
+
+- Purpose: Update admin views when a Birds of Prey team score changes.
+- Payload:
+
+```json
+{
+  "game_id": "<game_id>",
+  "team_id": "<team_id>",
+  "score": 12
+}
+```
+
 ### Team
 
 #### Blind Hike
@@ -176,6 +253,81 @@ Rules:
     "lon": 5.1234567,
     "placed_at": "<ISO-8601>"
   }
+}
+```
+
+#### Birds of Prey
+
+##### `team.birds_of_prey.self.updated`
+
+- Purpose: Notify the team channel of own Birds of Prey state deltas such as score or location updates.
+- Payload (shape depends on cause):
+
+```json
+{
+  "game_id": "<game_id>",
+  "team_id": "<team_id>",
+  "score": 12,
+  "location": {
+    "lat": 52.1234567,
+    "lon": 5.1234567,
+    "updated_at": "<ISO-8601>"
+  }
+}
+```
+
+##### `team.birds_of_prey.enemy_eggs.visible`
+
+- Purpose: Push the current set of visible enemy eggs for a team after location/egg changes.
+- Payload:
+
+```json
+{
+  "game_id": "<game_id>",
+  "team_id": "<team_id>",
+  "eggs": [
+    {
+      "id": "<egg_id>",
+      "owner_team_id": "<owner_team_id>",
+      "owner_team_name": "<owner_team_name>",
+      "lat": 52.1234567,
+      "lon": 5.1234567,
+      "dropped_at": "<ISO-8601>",
+      "can_destroy": true
+    }
+  ]
+}
+```
+
+##### `team.birds_of_prey.egg.added`
+
+- Purpose: Notify a team that an egg was added to its own egg list.
+- Payload:
+
+```json
+{
+  "game_id": "<game_id>",
+  "id": "<egg_id>",
+  "owner_team_id": "<team_id>",
+  "owner_team_name": "<team_name>",
+  "lat": 52.1234567,
+  "lon": 5.1234567,
+  "dropped_at": "<ISO-8601>",
+  "automatic": false
+}
+```
+
+##### `team.birds_of_prey.egg.removed`
+
+- Purpose: Notify involved teams that an egg was removed.
+- Payload:
+
+```json
+{
+  "game_id": "<game_id>",
+  "egg_id": "<egg_id>",
+  "owner_team_id": "<owner_team_id>",
+  "destroyed_by_team_id": "<team_id>"
 }
 ```
 

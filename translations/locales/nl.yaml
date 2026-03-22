@@ -231,12 +231,25 @@ pandemic_response:
     alreadyResolved: "Hotspot is al opgelost door je team."
 birds_of_prey:
   gameTypeRequired: "Dit endpoint is alleen beschikbaar voor Birds of Prey-games."
+  config:
+    updateFailed: "Birds of Prey-instellingen opslaan mislukt."
+  location:
+    required: "Locatie is verplicht voordat je deze actie kunt uitvoeren."
+    invalid: "Locatiecoördinaten zijn ongeldig."
+    updated: "Locatie bijgewerkt."
   validation:
     missingEggId: "Egg-id is verplicht."
   egg:
     dropped: "Egg succesvol geplaatst."
+    dropFailed: "Egg kon niet worden opgeslagen."
+    alreadyDropped: "Egg is al geplaatst."
+    persistFailed: "Egg-drop is geaccepteerd, maar kon niet uit persistente game-state worden geladen."
     destroyed: "Egg succesvol vernietigd."
     alreadyDestroyed: "Egg is al vernietigd."
+    notFound: "Egg is niet gevonden."
+    cannotDestroyOwn: "Je kunt je eigen egg niet vernietigen."
+    notVisible: "Egg is niet zichtbaar binnen je bereik."
+    protected: "Egg is beschermd omdat de eigenaar in de buurt is."
 code_conspiracy:
   gameTypeRequired: "Dit endpoint is alleen beschikbaar voor Code Conspiracy-games."
   validation:

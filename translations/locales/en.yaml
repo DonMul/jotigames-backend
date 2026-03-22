@@ -231,12 +231,25 @@ pandemic_response:
     alreadyResolved: "Hotspot was already resolved by your team."
 birds_of_prey:
   gameTypeRequired: "This endpoint is only available for Birds of Prey games."
+  config:
+    updateFailed: "Could not save Birds of Prey settings."
+  location:
+    required: "Location is required before you can perform this action."
+    invalid: "Location coordinates are invalid."
+    updated: "Location updated."
   validation:
     missingEggId: "Egg id is required."
   egg:
     dropped: "Egg dropped successfully."
+    dropFailed: "Egg could not be stored."
+    alreadyDropped: "Egg was already dropped."
+    persistFailed: "Egg drop was accepted but could not be loaded from persisted game state."
     destroyed: "Egg destroyed successfully."
     alreadyDestroyed: "Egg was already destroyed."
+    notFound: "Egg was not found."
+    cannotDestroyOwn: "You cannot destroy your own egg."
+    notVisible: "Egg is not in visible range."
+    protected: "Egg is protected because the owner is nearby."
 code_conspiracy:
   gameTypeRequired: "This endpoint is only available for Code Conspiracy games."
   validation:

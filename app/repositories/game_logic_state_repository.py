@@ -1,14 +1,18 @@
 import json
+import ast
 from datetime import UTC, datetime
 from typing import Any, Dict, Optional
 
 from sqlalchemy import MetaData, Table, select, update
 from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.sql.sqltypes import JSON as SqlAlchemyJson
 
 from app.dependencies import DbSession
 
 
 class GameLogicStateRepository:
+    _SETTINGS_COLUMN_CANDIDATES = ["settings", "game_settings", "settings_json", "gameSettings"]
+
     def __init__(self) -> None:
         self._metadata = MetaData()
 
@@ -60,6 +64,11 @@ class GameLogicStateRepository:
     def _deserialize_json_value(value: Any) -> Dict[str, Any]:
         if isinstance(value, dict):
             return dict(value)
+        if isinstance(value, (bytes, bytearray)):
+            try:
+                value = value.decode("utf-8")
+            except Exception:
+                return {}
         if isinstance(value, str):
             stripped = value.strip()
             if not stripped:
@@ -69,6 +78,12 @@ class GameLogicStateRepository:
                 if isinstance(decoded, dict):
                     return decoded
             except json.JSONDecodeError:
+                try:
+                    decoded = ast.literal_eval(stripped)
+                except (ValueError, SyntaxError):
+                    return {}
+                if isinstance(decoded, dict):
+                    return dict(decoded)
                 return {}
         return {}
 
@@ -78,21 +93,50 @@ class GameLogicStateRepository:
             return {}
 
         raw_settings = None
-        for key in ["settings", "game_settings", "settings_json", "gameSettings"]:
-            if key in game:
-                raw_settings = game.get(key)
-                break
+        for key in self._SETTINGS_COLUMN_CANDIDATES:
+            if key not in game:
+                continue
+            value = game.get(key)
+            if isinstance(value, str) and not value.strip():
+                continue
+            if value is None:
+                continue
+            raw_settings = value
+            break
+        if raw_settings is None:
+            for key in self._SETTINGS_COLUMN_CANDIDATES:
+                if key in game:
+                    raw_settings = game.get(key)
+                    break
 
         return self._deserialize_json_value(raw_settings)
 
     def update_game_settings_without_commit(self, db: DbSession, game_id: str, settings_value: Dict[str, Any]) -> None:
         table = self.get_game_table(db)
-        settings_column = self._pick_column(table, ["settings", "game_settings", "settings_json", "gameSettings"])
+        settings_column = self._pick_column(table, self._SETTINGS_COLUMN_CANDIDATES)
         if settings_column is None:
             return
 
+        current_game_row = self.get_game_by_id(db, game_id) or {}
+        for key in self._SETTINGS_COLUMN_CANDIDATES:
+            if key not in table.c:
+                continue
+            value = current_game_row.get(key)
+            if isinstance(value, str) and not value.strip():
+                continue
+            if value is None:
+                continue
+            settings_column = key
+            break
+
+        write_value: Any = settings_value
+        column_type = table.c[settings_column].type
+        is_json_column = isinstance(column_type, SqlAlchemyJson)
+        if not is_json_column:
+            write_value = json.dumps(settings_value, ensure_ascii=False)
+
         values: Dict[str, Any] = {
-            settings_column: settings_value,
+            settings_column: write_value,
         }
 
         updated_column = self._pick_column(table, ["updated_at", "updatedAt"])
