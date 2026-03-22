@@ -1,3 +1,4 @@
+from datetime import UTC, datetime
 from typing import Any, Dict, Optional
 
 from fastapi import APIRouter, HTTPException, status
@@ -44,6 +45,7 @@ class BlindHikeConfigUpdateRequest(BaseModel):
     rotation: int = Field(default=0, ge=0, le=360)
     max_markers: Optional[int] = Field(default=None, ge=1, le=100000)
     marker_cooldown: int = Field(default=0, ge=0, le=86400)
+    finish_radius_meters: int = Field(default=25, ge=1, le=100000)
 
 
 class BlindHikeModule(ApiModule, SharedModuleBase):
@@ -107,6 +109,7 @@ class BlindHikeModule(ApiModule, SharedModuleBase):
                 "rotation": int(body.rotation),
                 "max_markers": body.max_markers,
                 "marker_cooldown": int(body.marker_cooldown),
+                "finish_radius_meters": int(body.finish_radius_meters),
             }
 
             try:
@@ -126,6 +129,78 @@ class BlindHikeModule(ApiModule, SharedModuleBase):
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="blindhike.validation.missingMarkerId")
 
             result = self._service.add_marker(db, game_id=game_id, team_id=team_id, marker_id=body.marker_id.strip())
+            if not result.success:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail=self._localize_message_key(result.message_key, locale),
+                )
+
+            team_state = self._service.get_team_bootstrap(db, game_id, team_id)
+            team_markers = team_state.get("team_markers") if isinstance(team_state, dict) else []
+            marker_count = int((team_state or {}).get("actions") or 0)
+            team_finished = bool((team_state or {}).get("finished"))
+            latest_marker = team_markers[-1] if isinstance(team_markers, list) and len(team_markers) > 0 else None
+            marker_payload = latest_marker if isinstance(latest_marker, dict) else None
+
+            team_event_payload = {
+                "game_id": game_id,
+                "team_id": team_id,
+                "marker_count": marker_count,
+                "team_finished": team_finished,
+                "marker": marker_payload,
+            }
+            self._ws_publisher.publish(
+                "team.blind_hike.marker.added",
+                team_event_payload,
+                channels=[f"channel:{game_id}:{team_id}"],
+            )
+
+            if team_finished:
+                self._ws_publisher.publish(
+                    "team.general.message",
+                    {
+                        "teamId": team_id,
+                        "id": str(result.action_id or ""),
+                        "message": "",
+                        "message_key": "teamDashboard.blindhike.finishedWaitMessage",
+                        "messageKey": "teamDashboard.blindhike.finishedWaitMessage",
+                        "message_params": {},
+                        "messageParams": {},
+                        "title": "",
+                        "title_key": "teamDashboard.blindhike.finished",
+                        "titleKey": "teamDashboard.blindhike.finished",
+                        "level": "info",
+                        "from": "system",
+                        "gameId": game_id,
+                        "createdAt": team_event_payload.get("marker", {}).get("placed_at") or datetime.now(UTC).isoformat(),
+                    },
+                    channels=[f"channel:{game_id}:{team_id}"],
+                )
+
+            game_event_payload = {
+                "game_id": game_id,
+                "team_id": team_id,
+                "marker_count": marker_count,
+                "team_finished": team_finished,
+            }
+            self._ws_publisher.publish(
+                "game.blind_hike.marker.added",
+                game_event_payload,
+                channels=[f"channel:{game_id}"],
+            )
+
+            admin_event_payload = {
+                "game_id": game_id,
+                "team_id": team_id,
+                "marker_count": marker_count,
+                "team_finished": team_finished,
+                "marker": marker_payload,
+            }
+            self._ws_publisher.publish(
+                "admin.blind_hike.marker.added",
+                admin_event_payload,
+                channels=[f"channel:{game_id}:admin"],
+            )
             
             return ActionResponse(
                 success=result.success,

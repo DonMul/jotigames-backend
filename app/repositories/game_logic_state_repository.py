@@ -18,6 +18,13 @@ class GameLogicStateRepository:
     def get_game_table(self, db: DbSession) -> Table:
         return self._get_table(db, "game")
 
+    @staticmethod
+    def _pick_column(table: Table, candidates: list[str]) -> Optional[str]:
+        for name in candidates:
+            if name in table.c:
+                return name
+        return None
+
     def get_team_table(self, db: DbSession) -> Table:
         return self._get_table(db, "team")
 
@@ -69,14 +76,33 @@ class GameLogicStateRepository:
         game = self.get_game_by_id(db, game_id)
         if game is None:
             return {}
-        return self._deserialize_json_value(game.get("settings"))
+
+        raw_settings = None
+        for key in ["settings", "game_settings", "settings_json", "gameSettings"]:
+            if key in game:
+                raw_settings = game.get(key)
+                break
+
+        return self._deserialize_json_value(raw_settings)
 
     def update_game_settings_without_commit(self, db: DbSession, game_id: str, settings_value: Dict[str, Any]) -> None:
         table = self.get_game_table(db)
+        settings_column = self._pick_column(table, ["settings", "game_settings", "settings_json", "gameSettings"])
+        if settings_column is None:
+            return
+
+        values: Dict[str, Any] = {
+            settings_column: settings_value,
+        }
+
+        updated_column = self._pick_column(table, ["updated_at", "updatedAt"])
+        if updated_column is not None:
+            values[updated_column] = datetime.now(UTC).replace(tzinfo=None)
+
         db.execute(
             update(table)
             .where(table.c["id"] == game_id)
-            .values(settings=settings_value, updated_at=datetime.now(UTC).replace(tzinfo=None))
+            .values(**values)
         )
 
     def increment_team_geo_score_without_commit(self, db: DbSession, team_id: str, points: int) -> int:

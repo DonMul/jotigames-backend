@@ -36,6 +36,22 @@ Rules:
 
 ### Game
 
+#### Blind Hike
+
+##### `game.blind_hike.marker.added`
+
+- Purpose: Broadcast latest marker count for a team to game-wide consumers (e.g. team highscore updates).
+- Payload:
+
+```json
+{
+  "game_id": "<game_id>",
+  "team_id": "<team_id>",
+  "marker_count": 4,
+  "team_finished": true
+}
+```
+
 #### Exploding Kittens
 
 ##### `game.exploding_kittens.highscore.adjust`
@@ -116,6 +132,52 @@ Rules:
 ```
 
 ### Admin
+
+#### Blind Hike
+
+##### `admin.blind_hike.marker.added`
+
+- Purpose: Notify admin live overview that a team placed a marker, including marker coordinates and latest team marker count.
+- Payload:
+
+```json
+{
+  "game_id": "<game_id>",
+  "team_id": "<team_id>",
+  "marker_count": 4,
+  "team_finished": true,
+  "marker": {
+    "id": "<marker_id>",
+    "lat": 52.1234567,
+    "lon": 5.1234567,
+    "placed_at": "<ISO-8601>"
+  }
+}
+```
+
+### Team
+
+#### Blind Hike
+
+##### `team.blind_hike.marker.added`
+
+- Purpose: Notify the team channel that its own marker was added and whether this placement completed the game objective.
+- Payload:
+
+```json
+{
+  "game_id": "<game_id>",
+  "team_id": "<team_id>",
+  "marker_count": 4,
+  "team_finished": true,
+  "marker": {
+    "id": "<marker_id>",
+    "lat": 52.1234567,
+    "lon": 5.1234567,
+    "placed_at": "<ISO-8601>"
+  }
+}
+```
 
 #### Message
 
@@ -266,6 +328,27 @@ Rules:
 ```
 
 ### Team
+
+#### Blind Hike
+
+##### `team.blind_hike.marker.added`
+
+- Purpose: Notify a team that its marker was placed, with exact marker geolocation and latest marker total for that team.
+- Payload:
+
+```json
+{
+  "game_id": "<game_id>",
+  "team_id": "<team_id>",
+  "marker_count": 4,
+  "marker": {
+    "id": "<marker_id>",
+    "lat": 52.1234567,
+    "lon": 5.1234567,
+    "placed_at": "<ISO-8601>"
+  }
+}
+```
 
 #### General
 

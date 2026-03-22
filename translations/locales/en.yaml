@@ -163,6 +163,7 @@ blindhike:
   marker:
     added: "Marker added successfully."
     alreadyAdded: "Marker was already added by your team."
+    finished: "Your team already finished and cannot place more markers."
 resource_run:
   gameTypeRequired: "This endpoint is only available for Resource Run games."
   validation:
