@@ -1,346 +1,344 @@
 validation:
-  invalidRequest: Содержимое запроса недействительно.
+  invalidRequest: De aanvraaginhoud is ongeldig.
 game:
   auth:
-    userRequired: Для конечных точек управления игрой требуется субъект-пользователь.
-    viewAccessRequired: У вас нет доступа для чтения к этой игре.
-    manageAccessRequired: У вас нет прав на запись в этой игре.
+    userRequired: Een gebruiker-principal is vereist voor gamebeheer-eindpunten.
+    viewAccessRequired: Je hebt geen leestoegang tot deze game.
+    manageAccessRequired: Je hebt geen schrijftoegang tot deze game.
   teamMessage:
-    sent: Сообщение успешно отправлено команде.
-    sendFailed: Не удалось отправить сообщение команде.
+    sent: Bericht succesvol naar team verstuurd.
+    sendFailed: Bericht kon niet naar team worden verstuurd.
   chat:
-    emptyMessage: Сообщение чата не может быть пустым.
-    sendFailed: Не удалось отправить сообщение в чат.
-  notFound: Игра не найдена.
+    emptyMessage: Chatbericht mag niet leeg zijn.
+    sendFailed: Chatbericht kon niet worden verstuurd.
+  notFound: Game is niet gevonden.
   member:
-    userNotFound: Пользователь не найден.
-    emailNotFound: Ни один пользователь с таким адресом электронной почты не найден.
+    userNotFound: Gebruiker is niet gevonden.
+    emailNotFound: Er is geen gebruiker gevonden met dat e-mailadres.
   schema:
-    columnMissing: В схеме игровой таблицы отсутствует обязательный столбец.
+    columnMissing: Het schema van de gametabel mist een verplichte kolom.
   types:
-    columnMissing: В графике доступности типа игры отсутствует обязательный столбец.
+    columnMissing: Het schema van game type availability mist een verplichte kolom.
   validation:
-    requiredFieldsMissing: Обязательные игровые поля отсутствуют.
-    startBeforeEndRequired: Время начала игры должно предшествовать времени окончания.
-    unknownSetting: Одна или несколько клавиш настроек игры неизвестны.
+    requiredFieldsMissing: Verplichte gamevelden ontbreken.
+    startBeforeEndRequired: De starttijd van een game moet vóór de eindtijd liggen.
+    unknownSetting: Eén of meer game-instellingen-sleutels zijn onbekend.
   create:
-    failed: Не удалось создать игру.
+    failed: Game kon niet worden aangemaakt.
   update:
-    failed: Не удалось обновить игру.
+    failed: Game kon niet worden bijgewerkt.
   delete:
-    failed: Не удалось удалить игру.
-    success: Игра успешно удалена.
+    failed: Game kon niet worden verwijderd.
+    success: Game succesvol verwijderd.
   reset:
-    failed: Не удалось перезагрузить игру.
-    success: Игра успешно сброшена.
+    failed: Game kon niet worden gereset.
+    success: Game succesvol gereset.
   admin:
     add:
-      failed: Не удалось добавить администратора игры.
-      success: Администратор игры успешно добавлен.
+      failed: Game admin kon niet worden toegevoegd.
+      success: Game admin succesvol toegevoegd.
     remove:
-      failed: Администратора игры удалить не удалось.
-      success: Администратор игры успешно удален.
-      ownerForbidden: Владелец игры не может быть удален с поста администратора.
-      selfForbidden: Вы не можете удалить себя из администраторов игры.
+      failed: Game admin kon niet worden verwijderd.
+      success: Game admin succesvol verwijderd.
+      ownerForbidden: De game-eigenaar kan niet als admin worden verwijderd.
+      selfForbidden: Je kunt jezelf niet uit game admins verwijderen.
   gameMaster:
     add:
-      failed: Не удалось добавить мастера игры.
-      success: Мастер игры успешно добавлен.
+      failed: Game master kon niet worden toegevoegd.
+      success: Game master succesvol toegevoegd.
     remove:
-      failed: Мастер игры не может быть удален.
-      success: Мастер игры успешно удален.
+      failed: Game master kon niet worden verwijderd.
+      success: Game master succesvol verwijderd.
 team:
-  notFound: В этой игре команда не найдена.
+  notFound: Team is niet gevonden in deze game.
   auth:
-    selfRequired: Токены команды имеют доступ только к своей команде.
+    selfRequired: Teamtokens hebben alleen toegang tot hun eigen team.
   validation:
-    codeAlreadyUsed: В этой игре уже используется командный код.
+    codeAlreadyUsed: Teamcode is al in gebruik voor deze game.
   create:
-    failed: Не удалось создать команду.
-    codeGenerationFailed: Не удалось создать уникальный код команды.
+    failed: Team kon niet worden aangemaakt.
+    codeGenerationFailed: Er kon geen unieke teamcode worden gegenereerd.
   update:
-    failed: Не удалось обновить команду.
+    failed: Team kon niet worden bijgewerkt.
   delete:
-    failed: Не удалось удалить команду.
-    success: Команда успешно удалена.
+    failed: Team kon niet worden verwijderd.
+    success: Team succesvol verwijderd.
 explodingKittens:
-  gameTypeRequired: Эта конечная точка доступна только в играх Exploding Kittens.
+  gameTypeRequired: Dit eindpunt is alleen beschikbaar voor Exploding Kittens-games.
   lives:
-    invalidDelta: Левен-дельта не должен быть нулевым.
-    updated: Жизнь команды успешно обновлена.
-    updateFailed: Не удалось обновить командные жизни.
+    invalidDelta: Leven-delta moet ongelijk aan nul zijn.
+    updated: Teamlevens succesvol bijgewerkt.
+    updateFailed: Teamlevens konden niet worden bijgewerkt.
   play:
-    failed: Карту невозможно разыграть.
-    cardNotInHand: Карта не в руке этой команды.
-    cardNotPlayable: Эту карту нельзя разыграть напрямую.
-    needsTarget: Для этой карты требуется целевая команда.
-    targetSelf: Команда не может нацеливаться на себя.
-    targetInvalid: Целевая команда недействительна для этой игры.
-    attackAlreadyPending: Для этой команды уже подготовлена ​​атака.
-    peekAlreadyPending: Видите ли, будущее этой команды уже на очереди.
-    skipAlreadyPending: Скип уже стоит в очереди к этой команде.
-    attackReady: Карта атаки разыграна успешно.
-    favorTargeted: Разыграна карта благосклонности и создано целевое действие.
-    peekReady: Увидеть будущую карту, сыгранную успешно.
-    shuffleDone: Перетасованная карта успешно сыграна.
-    skipReady: Карта пропуска сыграна успешно.
+    failed: Kaart kon niet worden gespeeld.
+    cardNotInHand: Kaart zit niet in de hand van dit team.
+    cardNotPlayable: Deze kaart kan niet direct gespeeld worden.
+    needsTarget: Voor deze kaart is een doelteam vereist.
+    targetSelf: Een team kan zichzelf niet targeten.
+    targetInvalid: Doelteam is ongeldig voor deze game.
+    attackAlreadyPending: Er staat al een aanval in de wachtrij voor dit team.
+    peekAlreadyPending: See the future staat al in de wachtrij voor dit team.
+    skipAlreadyPending: Skip staat al in de wachtrij voor dit team.
+    attackReady: Attack-kaart succesvol gespeeld.
+    favorTargeted: Favor-kaart gespeeld en doelactie aangemaakt.
+    peekReady: See the future-kaart succesvol gespeeld.
+    shuffleDone: Shuffle-kaart succesvol gespeeld.
+    skipReady: Skip-kaart succesvol gespeeld.
   hand:
-    addFailed: Не удалось добавить случайную карту руки.
-    removeFailed: Случайную карту руки удалить не удалось.
+    addFailed: Willekeurige handkaart kon niet worden toegevoegd.
+    removeFailed: Willekeurige handkaart kon niet worden verwijderd.
   cards:
-    invalidType: Тип карты недействителен для «Взрывных котят».
-    notFound: Карта не найдена.
-    addFailed: Карты не удалось добавить.
-    addSuccess: Карты успешно добавлены.
-    createFailed: Карта не может быть создана.
-    updateFailed: Карта не может быть обновлена.
-    deleteFailed: Карту не удалось удалить.
-    deleteSuccess: Карта успешно удалена.
-    removeBlocked: Карту нельзя извлечь, пока она находится в руке или заблокирована.
-    pdfDependenciesMissing: Зависимости экспорта QR-PDF недоступны на сервере.
-    pdfLogoInvalid: Логотип центра должен быть файлом изображения.
-    pdfLogoTooLarge: Центральный логотип слишком большой. Максимальный размер — 2
-      МБ.
+    invalidType: Kaarttype is ongeldig voor Exploding Kittens.
+    notFound: Kaart is niet gevonden.
+    addFailed: Kaarten konden niet worden toegevoegd.
+    addSuccess: Kaarten succesvol toegevoegd.
+    createFailed: Kaart kon niet worden aangemaakt.
+    updateFailed: Kaart kon niet worden bijgewerkt.
+    deleteFailed: Kaart kon niet worden verwijderd.
+    deleteSuccess: Kaart succesvol verwijderd.
+    removeBlocked: Kaart kan niet worden verwijderd zolang deze in een hand zit of
+      vergrendeld is.
+    pdfDependenciesMissing: QR-PDF exportafhankelijkheden zijn niet beschikbaar op
+      de server.
+    pdfLogoInvalid: Middenlogo moet een afbeeldingsbestand zijn.
+    pdfLogoTooLarge: Middenlogo is te groot. Maximale grootte is 2 MB.
   scan:
-    failed: Сканирование карты не удалось.
-    cardNotFound: Карта для этой игры не найдена.
-    cardInHand: Карта уже в руке команды.
-    cardLocked: Карта в настоящее время заблокирована.
-    cardAdded: Карта добавлена ​​в руку.
-    cardNoEffect: Карта не имеет никакого эффекта.
-    felixGain: Карта Феликса дала еще одну жизнь.
-    felixAlreadyUsed: Карта Феликса уже использовалась этой командой.
-    explodingDefused: Взорвавшийся котёнок обезврежен.
-    explodingHit: Взрывающийся котёнок попал в команду.
-    attackTargeted: Атака носит целенаправленный характер и ждет ответа.
+    failed: Kaart scannen is mislukt.
+    cardNotFound: Kaart is niet gevonden voor deze game.
+    cardInHand: Kaart zit al in een teamhand.
+    cardLocked: Kaart is momenteel vergrendeld.
+    cardAdded: Kaart aan hand toegevoegd.
+    cardNoEffect: Kaart heeft geen effect.
+    felixGain: Felix-kaart gaf één leven erbij.
+    felixAlreadyUsed: Felix-kaart is al gebruikt door dit team.
+    explodingDefused: Exploding kitten is onschadelijk gemaakt.
+    explodingHit: Exploding kitten heeft het team geraakt.
+    attackTargeted: Aanval is gericht en wacht op afhandeling.
   state:
-    fetched: Статус команды получен.
-    resolveFailed: Статус не удалось обработать.
-    none: Нет ожидающего статуса для обработки.
-    skipPending: Скип стоит в очереди к этой команде.
-    skipResolved: Статус пропуска обработан.
-    peekPending: Видите ли, будущее этой команды на очереди.
-    peekNeedsConfirm: «Видеть будущее» требует подтверждения для завершения.
-    peekResolved: См. будущий статус «Завершено».
-    attackNeedsTarget: Для атаки требуется целевая команда и отсканированная карта.
-    attackInvalidTarget: Целевая команда для атаки недействительна.
+    fetched: Teamstatus opgehaald.
+    resolveFailed: Status kon niet worden afgehandeld.
+    none: Geen wachtende status om af te handelen.
+    skipPending: Skip staat in wachtrij voor dit team.
+    skipResolved: Skip-status afgehandeld.
+    peekPending: See the future staat in wachtrij voor dit team.
+    peekNeedsConfirm: See the future vereist bevestiging om af te handelen.
+    peekResolved: See the future-status afgehandeld.
+    attackNeedsTarget: Attack vereist een doelteam en gescande kaart.
+    attackInvalidTarget: Doelteam voor attack is ongeldig.
   action:
-    invalid: Действие недействительно.
-    notAllowed: Эта команда не может выполнить действие.
-    nopeMissing: Для отмены этой акции не требуется карта.
-    nopeUsed: Акция отменена из-за Нет.
-    favorNoCards: У целевой команды нет карт благосклонности.
-    favorTaken: Благосклонность решена, и карта взята.
-    resolveFailed: Не удалось завершить действие.
+    invalid: Actie is ongeldig.
+    notAllowed: Actie kan niet door dit team worden afgehandeld.
+    nopeMissing: Nope-kaart is vereist om deze actie te annuleren.
+    nopeUsed: Actie geannuleerd met Nope.
+    favorNoCards: Doelteam heeft geen kaarten voor Favor.
+    favorTaken: Favor afgehandeld en een kaart is genomen.
+    resolveFailed: Actie kon niet worden afgehandeld.
   combo:
-    failed: Невозможно использовать комбо.
-    invalid: Неверный выбор комбинации.
-    cardNotInHand: Одна или несколько выбранных карт отсутствуют в руке.
-    needsTarget: Комбо требует целевой команды.
-    targetSelf: Команда не может выбрать сама себя для этого комбо.
-    targetInvalid: Целевая команда для комбо недействительна.
-    twoReady: В очереди 2 уникальных комбо.
-    twoNoCards: У целевой команды нет карт для уникальной комбинации.
-    twoTaken: Разыграна уникальная комбинация и взята карта.
-    threeNeedsType: Для создания комбинации «3 в своем роде» требуется карта желаемого
-      типа.
-    threeInvalidType: Желаемый тип карты недействителен для комбинации «3 в своем
-      роде».
-    threeReady: В очереди 3 уникальных комбо.
-    threeTaken: Разыграно три уникальных комбо и взята желаемая карта.
-    threeNoMatch: Желаемый тип карты не найден в руке целевой команды.
-    fiveNeedsType: Для создания 5-различной комбинации требуется карта желаемого типа.
-    fiveTaken: Разыграно 5 различных комбинаций и взята карта из колоды.
-    fiveNone: 5 различных комбинаций решены, но желаемый тип карты недоступен в колоде.
+    failed: Combo kon niet worden gebruikt.
+    invalid: Ongeldige combo-selectie.
+    cardNotInHand: Een of meer geselecteerde kaarten zitten niet in de hand.
+    needsTarget: Combo vereist een doelteam.
+    targetSelf: Team kan zichzelf niet als doel kiezen voor deze combo.
+    targetInvalid: Doelteam voor combo is ongeldig.
+    twoReady: 2-van-gelijke combo in wachtrij gezet.
+    twoNoCards: Doelteam heeft geen kaarten voor 2-van-gelijke combo.
+    twoTaken: 2-van-gelijke combo afgehandeld en een kaart is genomen.
+    threeNeedsType: 3-van-gelijke combo vereist gewenst kaarttype.
+    threeInvalidType: Gewenst kaarttype is ongeldig voor 3-van-gelijke combo.
+    threeReady: 3-van-gelijke combo in wachtrij gezet.
+    threeTaken: 3-van-gelijke combo afgehandeld en gewenste kaart is genomen.
+    threeNoMatch: Gewenst kaarttype niet gevonden in hand van doelteam.
+    fiveNeedsType: 5-verschillende combo vereist gewenst kaarttype.
+    fiveTaken: 5-verschillende combo afgehandeld en kaart uit deck genomen.
+    fiveNone: 5-verschillende combo afgehandeld maar gewenst kaarttype niet beschikbaar
+      in deck.
 geohunter:
-  gameTypeRequired: Эта конечная точка доступна только для игр Geohunter.
+  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Geohunter-games.
   validation:
-    missingPoiId: Требуется идентификатор достопримечательности.
+    missingPoiId: Point of interest-id is verplicht.
   answer:
-    recorded: Ответ успешно отправлен.
-    alreadySubmitted: На этот вопрос ваша команда уже ответила.
+    recorded: Antwoord succesvol ingediend.
+    alreadySubmitted: Dit punt is al beantwoord door je team.
 blindhike:
-  gameTypeRequired: Эта конечная точка доступна только для игр Blindhike.
+  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Blindhike-games.
   validation:
-    missingMarkerId: Требуется идентификатор маркера.
+    missingMarkerId: Marker-id is verplicht.
   marker:
-    added: Маркер успешно добавлен.
-    alreadyAdded: Маркер уже добавлен вашей командой.
-    finished: Ваша команда уже закончила игру и не может размещать дополнительные
-      маркеры.
+    added: Marker succesvol toegevoegd.
+    alreadyAdded: Marker is al toegevoegd door je team.
+    finished: Je team is al gefinisht en kan geen extra markers plaatsen.
 resource_run:
-  gameTypeRequired: Эта конечная точка доступна только для игр Resource Run.
+  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Resource Run-games.
   validation:
-    missingNodeId: Требуется идентификатор узла ресурса.
+    missingNodeId: Resource node-id is verplicht.
   claim:
-    recorded: Ресурс успешно востребован.
-    alreadyCollected: Ресурс уже собран вашей командой.
+    recorded: Resource succesvol geclaimd.
+    alreadyCollected: Resource is al verzameld door je team.
 territory_control:
-  gameTypeRequired: Эта конечная точка доступна только для игр с контролем территории.
+  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Territory Control-games.
   validation:
-    missingZoneId: Требуется идентификатор зоны.
+    missingZoneId: Zone-id is verplicht.
   claim:
-    recorded: Зона успешно востребована.
-    alreadyOwned: Зона уже захвачена вашей командой.
+    recorded: Zone succesvol geclaimd.
+    alreadyOwned: Zone is al geclaimd door je team.
 market_crash:
-  gameTypeRequired: Эта конечная точка доступна только для игр Market Crash.
+  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Market Crash-games.
   validation:
-    missingTradeId: Требуется торговый идентификатор.
+    missingTradeId: Trade-id is verplicht.
   resource:
-    invalidName: Недопустимое имя ресурса.
-    exists: Ресурс уже существует.
-    createFailed: Не удалось создать ресурс.
-    notFound: Ресурс не найден.
-    updateFailed: Обновление ресурса не удалось.
-    deleteFailed: Удаление ресурса не удалось.
+    invalidName: Resourcenaam is ongeldig.
+    exists: Resource bestaat al.
+    createFailed: Resource aanmaken mislukt.
+    notFound: Resource is niet gevonden.
+    updateFailed: Resource bijwerken mislukt.
+    deleteFailed: Resource verwijderen mislukt.
   point:
-    createFailed: Создание точки не удалось.
-    notFound: Точка не найдена.
-    updateFailed: Обновление точки не удалось.
-    deleteFailed: Удалить точку не удалось.
-    invalidTitle: Название точки недействительно.
-    invalidColor: Недопустимый цвет маркера точки.
-    invalidResource: Точка содержит недопустимую ссылку на ресурс.
-    resourcesRequired: Для точки требуется хотя бы одна настройка ресурса.
-    invalid: Координаты точки недействительны.
+    createFailed: Punt aanmaken mislukt.
+    notFound: Punt is niet gevonden.
+    updateFailed: Punt bijwerken mislukt.
+    deleteFailed: Punt verwijderen mislukt.
+    invalidTitle: Punttitel is ongeldig.
+    invalidColor: De kleur van de puntmarkering is ongeldig.
+    invalidResource: Punt bevat een ongeldige resourceverwijzing.
+    resourcesRequired: Minimaal één resource-instelling is verplicht voor een punt.
+    invalid: Puntcoördinaten zijn ongeldig.
   location:
-    required: Прежде чем вы сможете торговать, необходимо указать местоположение.
-    invalid: Координаты местоположения недействительны.
-    updated: Местоположение обновлено.
+    required: Locatie is verplicht voordat je kunt handelen.
+    invalid: Locatiecoördinaten zijn ongeldig.
+    updated: Locatie bijgewerkt.
   trade:
-    executed: Торговля завершилась успешно.
-    invalidSide: Недопустимое направление торговли.
-    invalidResource: Ресурс на данный момент не подлежит торговле.
-    outOfRange: Вы находитесь вне зоны действия этой торговой точки.
-    invalidPrice: Цена сделки недействительна.
-    insufficientCash: Недостаточно денег для этой сделки.
-    insufficientInventory: Недостаточно товара для этой сделки.
+    executed: Trade succesvol uitgevoerd.
+    invalidSide: Trade-richting is ongeldig.
+    invalidResource: Resource is niet verhandelbaar op dit punt.
+    outOfRange: Je bent buiten bereik van dit handelspunt.
+    invalidPrice: Trade-prijs is ongeldig.
+    insufficientCash: Onvoldoende cash voor deze trade.
+    insufficientInventory: Onvoldoende voorraad voor deze trade.
 crazy88:
-  gameTypeRequired: Эта конечная точка доступна только для игр Crazy 88.
+  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Crazy 88-games.
   validation:
-    missingTaskId: Требуется идентификатор задачи.
-    missingSubmissionId: Требуется идентификатор отправки.
+    missingTaskId: Task-id is verplicht.
+    missingSubmissionId: Submission-id is verplicht.
   task:
-    submitted: Задание успешно отправлено.
+    submitted: Taak succesvol ingediend.
   review:
-    judged: Подача признана успешной.
-    alreadyJudged: Подача уже оценена.
+    judged: Inzending succesvol beoordeeld.
+    alreadyJudged: Inzending is al beoordeeld.
 courier_rush:
-  gameTypeRequired: Эта конечная точка доступна только для игр Courier Rush.
+  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Courier Rush-games.
   validation:
-    missingPickupId: Требуется идентификатор самовывоза.
-    missingDropoffId: Требуется идентификатор высадки.
+    missingPickupId: Pickup-id is verplicht.
+    missingDropoffId: Dropoff-id is verplicht.
   pickup:
-    confirmed: Получение успешно подтверждено.
-    alreadyConfirmed: Самовывоз уже подтвержден.
+    confirmed: Pickup succesvol bevestigd.
+    alreadyConfirmed: Pickup is al bevestigd.
   dropoff:
-    confirmed: Высадка успешно подтверждена.
+    confirmed: Dropoff succesvol bevestigd.
 echo_hunt:
-  gameTypeRequired: Эта конечная точка доступна только для игр Echo Hunt.
+  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Echo Hunt-games.
   validation:
-    missingBeaconId: Требуется идентификатор маяка.
+    missingBeaconId: Beacon-id is verplicht.
   beacon:
-    claimed: Маяк успешно заявил права.
-    alreadyClaimed: Ваша команда уже забрала маяк.
+    claimed: Beacon succesvol geclaimd.
+    alreadyClaimed: Beacon is al geclaimd door je team.
 checkpoint_heist:
-  gameTypeRequired: Эта конечная точка доступна только для игр Checkpoint Heist.
+  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Checkpoint Heist-games.
   validation:
-    missingCheckpointId: Требуется идентификатор контрольно-пропускного пункта.
+    missingCheckpointId: Checkpoint-id is verplicht.
   capture:
-    recorded: Контрольно-пропускной пункт успешно захвачен.
-    alreadyCaptured: Чекпойнт уже захвачен вашей командой.
+    recorded: Checkpoint succesvol veroverd.
+    alreadyCaptured: Checkpoint is al veroverd door je team.
 pandemic_response:
-  gameTypeRequired: Эта конечная точка доступна только для игр Pandemic Response.
+  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Pandemic Response-games.
   validation:
-    missingPickupId: Требуется идентификатор самовывоза.
-    missingHotspotId: Требуется идентификатор точки доступа.
+    missingPickupId: Pickup-id is verplicht.
+    missingHotspotId: Hotspot-id is verplicht.
   pickup:
-    collected: Пикап собран успешно.
-    alreadyCollected: Пикап уже забран вашей командой.
+    collected: Pickup succesvol verzameld.
+    alreadyCollected: Pickup is al verzameld door je team.
   hotspot:
-    resolved: Точка доступа успешно решена.
-    alreadyResolved: Проблема с точкой доступа уже решена вашей командой.
+    resolved: Hotspot succesvol opgelost.
+    alreadyResolved: Hotspot is al opgelost door je team.
 birds_of_prey:
-  gameTypeRequired: Эта конечная точка доступна только для игр Birds of Prey.
+  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Birds of Prey-games.
   config:
-    updateFailed: Не удалось сохранить настройки Birds of Prey.
+    updateFailed: Birds of Prey-instellingen opslaan mislukt.
   location:
-    required: Прежде чем вы сможете выполнить это действие, необходимо указать местоположение.
-    invalid: Координаты местоположения недействительны.
-    updated: Местоположение обновлено.
+    required: Locatie is verplicht voordat je deze actie kunt uitvoeren.
+    invalid: Locatiecoördinaten zijn ongeldig.
+    updated: Locatie bijgewerkt.
   validation:
-    missingEggId: Требуется идентификатор яйца.
+    missingEggId: Egg-id is verplicht.
   egg:
-    dropped: Яйцо успешно размещено.
-    dropFailed: Яйцо спасти не удалось.
-    alreadyDropped: Яйцо уже положено.
-    persistFailed: Выпадение яиц было принято, но не удалось загрузить из постоянного
-      состояния игры.
-    destroyed: Яйцо успешно уничтожено.
-    alreadyDestroyed: Яйцо уже уничтожено.
-    notFound: Яйцо не найдено.
-    cannotDestroyOwn: Вы не можете уничтожить собственное яйцо.
-    notVisible: Яйцо не видно в пределах вашего диапазона.
-    protected: Яйцо защищено, потому что хозяин находится рядом.
+    dropped: Egg succesvol geplaatst.
+    dropFailed: Egg kon niet worden opgeslagen.
+    alreadyDropped: Egg is al geplaatst.
+    persistFailed: Egg-drop is geaccepteerd, maar kon niet uit persistente game-state
+      worden geladen.
+    destroyed: Egg succesvol vernietigd.
+    alreadyDestroyed: Egg is al vernietigd.
+    notFound: Egg is niet gevonden.
+    cannotDestroyOwn: Je kunt je eigen egg niet vernietigen.
+    notVisible: Egg is niet zichtbaar binnen je bereik.
+    protected: Egg is beschermd omdat de eigenaar in de buurt is.
 code_conspiracy:
-  gameTypeRequired: Эта конечная точка доступна только для игр Code Conspiracy.
+  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Code Conspiracy-games.
   validation:
-    missingTargetTeamId: Требуется идентификатор целевой команды.
-    missingCode: Требуется код.
+    missingTargetTeamId: Doelteam-id is verplicht.
+    missingCode: Code is verplicht.
   code:
-    submitted: Получен код.
+    submitted: Code-inzending ontvangen.
 auth:
   locale:
-    unsupported: Неподдерживаемый язык. Допустимые значения — en и nl.
+    unsupported: Niet-ondersteunde taal. Toegestane waarden zijn en en nl.
   ws:
-    superAdminKeyRequired: Требуется ключ суперадминистратора WS.
-    superAdminKeyInvalid: Ключ суперадминистратора WS недействителен.
-    superAdminKeyNotConfigured: Ключ суперадминистратора WS не настроен на серверной
-      стороне.
+    superAdminKeyRequired: WS super admin-sleutel is verplicht.
+    superAdminKeyInvalid: WS-superbeheerderssleutel is ongeldig.
+    superAdminKeyNotConfigured: WS super admin-sleutel is niet geconfigureerd op de
+      backend.
   user:
-    invalidEmailOrPassword: Неверный адрес электронной почты или пароль.
-    disallowedRole: У этой учетной записи нет доступа к этому серверу.
-    superAdminRequired: Для этого действия требуется доступ суперадминистратора.
+    invalidEmailOrPassword: Ongeldig e-mailadres of wachtwoord.
+    disallowedRole: Dit account heeft geen toegang tot deze backend.
+    superAdminRequired: Super admin-toegang is vereist voor deze actie.
   team:
-    invalidCodes: Неверный код игры или код команды.
+    invalidCodes: Ongeldige gamecode of teamcode.
   token:
-    missingBearerToken: Требуется токен на предъявителя.
-    invalidBearerHeaderFormat: Недопустимый формат заголовка токена-носителя.
-    invalidOrExpired: Токен недействителен или срок его действия истек.
-    gameAccessRequired: Токен не может получить доступ к запрошенной игре.
+    missingBearerToken: Bearer-token is verplicht.
+    invalidBearerHeaderFormat: Bearer-token header-formaat is ongeldig.
+    invalidOrExpired: Token is ongeldig of verlopen.
+    gameAccessRequired: Token heeft geen toegang tot de gevraagde game.
   register:
-    emailAlreadyUsed: Учетная запись с этим адресом электронной почты уже существует.
-    usernameAlreadyUsed: Это имя пользователя уже используется.
-    verifyEmailSent: Аккаунт создан. Проверьте свою электронную почту, чтобы подтвердить
-      свой адрес.
-    emailSendFailed: Не удалось отправить письмо с подтверждением.
-    mailerNotConfigured: Служба электронной почты не настроена.
-    mailerUnsupportedScheme: Схема DSN службы электронной почты не поддерживается.
-    mailerFromMissing: Адрес отправителя электронной почты не настроен.
+    emailAlreadyUsed: Er bestaat al een account met dit e-mailadres.
+    usernameAlreadyUsed: Deze gebruikersnaam is al in gebruik.
+    verifyEmailSent: Account aangemaakt. Controleer je e-mail om je adres te bevestigen.
+    emailSendFailed: Verificatie-e-mail kon niet worden verzonden.
+    mailerNotConfigured: E-mailservice is niet geconfigureerd.
+    mailerUnsupportedScheme: Het DSN-schema van de e-mailservice wordt niet ondersteund.
+    mailerFromMissing: Afzenderadres voor e-mail is niet geconfigureerd.
   verify:
-    invalidToken: Этот токен аутентификации недействителен или срок его действия истек.
-    success: Адрес электронной почты успешно подтвержден.
-    pendingEmailConflict: Этот ожидающий адрес электронной почты больше нельзя применить,
-      поскольку он уже используется.
-    tokenColumnMissing: Хранилище токенов аутентификации настроено неправильно.
+    invalidToken: Deze verificatietoken is ongeldig of verlopen.
+    success: E-mailadres is succesvol bevestigd.
+    pendingEmailConflict: Dit wachtende e-mailadres kan niet meer worden toegepast
+      omdat het al in gebruik is.
+    tokenColumnMissing: Opslag voor verificatietokens is niet correct geconfigureerd.
   reset:
-    requestAccepted: Если учетная запись существует и подтверждена, электронное письмо
-      о сбросе было отправлено.
-    tokenColumnsMissing: Хранилище токенов сброса пароля настроено неправильно.
-    emailSendFailed: Не удалось отправить электронное письмо для сброса пароля.
+    requestAccepted: Als een account bestaat en bevestigd is, is een reset-e-mail
+      verzonden.
+    tokenColumnsMissing: Opslag voor wachtwoord-resettokens is niet correct geconfigureerd.
+    emailSendFailed: Wachtwoord reset-e-mail kon niet worden verzonden.
 mailer:
   verify:
-    subject: Подтвердите свой адрес электронной почты
-    title: Подтвердите свой адрес электронной почты
-    greeting: Привет, %username%!
-    intro: Подтвердите свой адрес электронной почты, нажав кнопку ниже.
-    cta: Подтвердите адрес электронной почты
-    outro: Если вы еще не создали учетную запись, вы можете игнорировать это письмо.
+    subject: Bevestig je e-mailadres
+    title: Bevestig je e-mailadres
+    greeting: Hoi %usernaam%,
+    intro: Bevestig je e-mailadres door op de knop hieronder te klikken.
+    cta: E-mailadres bevestigen
+    outro: Als je geen account hebt aangemaakt, kun je deze e-mail negeren.
   reset:
-    subject: Сбросить пароль
-    title: Сбросить пароль
-    greeting: Привет, %username%!
-    intro: Для вашей учетной записи был запрошен сброс пароля. Используйте кнопку
-      ниже, чтобы выбрать новый пароль.
-    cta: Сбросить пароль
-    outro: Если вы не запрашивали это, вы можете игнорировать это письмо.
+    subject: Wachtwoord resetten
+    title: Wachtwoord resetten
+    greeting: Hoi %usernaam%,
+    intro: Er is een wachtwoordreset aangevraagd voor je account. Gebruik de knop
+      hieronder om een nieuw wachtwoord te kiezen.
+    cta: Wachtwoord resetten
+    outro: Als je dit niet hebt aangevraagd, kun je deze e-mail negeren.

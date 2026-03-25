@@ -198,7 +198,7 @@ market_crash:
     updateFailed: Punt bijwerken mislukt.
     deleteFailed: Punt verwijderen mislukt.
     invalidTitle: Punttitel is ongeldig.
-    invalidColor: Punt-markerkleur is ongeldig.
+    invalidColor: De kleur van de puntmarkering is ongeldig.
     invalidResource: Punt bevat een ongeldige resourceverwijzing.
     resourcesRequired: Minimaal één resource-instelling is verplicht voor een punt.
     invalid: Puntcoördinaten zijn ongeldig.
@@ -284,62 +284,61 @@ birds_of_prey:
 code_conspiracy:
   gameTypeRequired: Dit endpoint is alleen beschikbaar voor Code Conspiracy-games.
   validation:
-    missingTargetTeamId: Auðkenni markhóps er krafist.
-    missingCode: Kóði er krafist.
+    missingTargetTeamId: Doelteam-id is verplicht.
+    missingCode: Code is verplicht.
   code:
-    submitted: Móttekið kóðaskil.
+    submitted: Code-inzending ontvangen.
 auth:
   locale:
-    unsupported: Óstudd tungumál. Leyfileg gildi eru en og nl.
+    unsupported: Niet-ondersteunde taal. Toegestane waarden zijn en en nl.
   ws:
-    superAdminKeyRequired: WS ofur stjórnunarlykill er nauðsynlegur.
-    superAdminKeyInvalid: WS ofur stjórnunarlykill er ógildur.
-    superAdminKeyNotConfigured: WS ofur stjórnunarlykill er ekki stilltur á bakendanum.
+    superAdminKeyRequired: WS super admin-sleutel is verplicht.
+    superAdminKeyInvalid: WS-superbeheerderssleutel is ongeldig.
+    superAdminKeyNotConfigured: WS super admin-sleutel is niet geconfigureerd op de
+      backend.
   user:
-    invalidEmailOrPassword: Ógilt netfang eða lykilorð.
-    disallowedRole: Þessi reikningur hefur ekki aðgang að þessum bakenda.
-    superAdminRequired: Ofurstjórnandaaðgangur er nauðsynlegur fyrir þessa aðgerð.
+    invalidEmailOrPassword: Ongeldig e-mailadres of wachtwoord.
+    disallowedRole: Dit account heeft geen toegang tot deze backend.
+    superAdminRequired: Super admin-toegang is vereist voor deze actie.
   team:
-    invalidCodes: Ógildur leikkóði eða liðskóði.
+    invalidCodes: Ongeldige gamecode of teamcode.
   token:
-    missingBearerToken: Handhafamerki er krafist.
-    invalidBearerHeaderFormat: Snið haus fyrir burðartákn er ógilt.
-    invalidOrExpired: Auðkenni er ógilt eða útrunnið.
-    gameAccessRequired: Token hefur ekki aðgang að umbeðnum leik.
+    missingBearerToken: Bearer-token is verplicht.
+    invalidBearerHeaderFormat: Bearer-token header-formaat is ongeldig.
+    invalidOrExpired: Token is ongeldig of verlopen.
+    gameAccessRequired: Token heeft geen toegang tot de gevraagde game.
   register:
-    emailAlreadyUsed: Reikningur er þegar til með þessu netfangi.
-    usernameAlreadyUsed: Þetta notendanafn er þegar í notkun.
-    verifyEmailSent: Reikningur búinn til. Athugaðu tölvupóstinn þinn til að staðfesta
-      heimilisfangið þitt.
-    emailSendFailed: Ekki var hægt að senda staðfestingartölvupóst.
-    mailerNotConfigured: Tölvupóstþjónusta er ekki stillt.
-    mailerUnsupportedScheme: DSN kerfi tölvupóstþjónustunnar er ekki stutt.
-    mailerFromMissing: Netfang sendanda er ekki stillt.
+    emailAlreadyUsed: Er bestaat al een account met dit e-mailadres.
+    usernameAlreadyUsed: Deze gebruikersnaam is al in gebruik.
+    verifyEmailSent: Account aangemaakt. Controleer je e-mail om je adres te bevestigen.
+    emailSendFailed: Verificatie-e-mail kon niet worden verzonden.
+    mailerNotConfigured: E-mailservice is niet geconfigureerd.
+    mailerUnsupportedScheme: Het DSN-schema van de e-mailservice wordt niet ondersteund.
+    mailerFromMissing: Afzenderadres voor e-mail is niet geconfigureerd.
   verify:
-    invalidToken: Þessi auðkenningarlykill er ógildur eða útrunninn.
-    success: Netfang hefur verið staðfest.
-    pendingEmailConflict: Ekki er lengur hægt að nota þetta netfang í bið þar sem
-      það er þegar í notkun.
-    tokenColumnMissing: Geymsla auðkenningartákna er ekki rétt stillt.
+    invalidToken: Deze verificatietoken is ongeldig of verlopen.
+    success: E-mailadres is succesvol bevestigd.
+    pendingEmailConflict: Dit wachtende e-mailadres kan niet meer worden toegepast
+      omdat het al in gebruik is.
+    tokenColumnMissing: Opslag voor verificatietokens is niet correct geconfigureerd.
   reset:
-    requestAccepted: Ef reikningur er til og hefur verið staðfestur hefur endurstillingarpóstur
-      verið sendur.
-    tokenColumnsMissing: Geymsla tákna fyrir endurstillingu lykilorðs er ekki rétt
-      stillt.
-    emailSendFailed: Ekki var hægt að senda tölvupóst til að endurstilla lykilorð.
+    requestAccepted: Als een account bestaat en bevestigd is, is een reset-e-mail
+      verzonden.
+    tokenColumnsMissing: Opslag voor wachtwoord-resettokens is niet correct geconfigureerd.
+    emailSendFailed: Wachtwoord reset-e-mail kon niet worden verzonden.
 mailer:
   verify:
-    subject: Staðfestu netfangið þitt
-    title: Staðfestu netfangið þitt
-    greeting: Hæ %username%,
-    intro: Staðfestu netfangið þitt með því að smella á hnappinn hér að neðan.
-    cta: Staðfestu netfang
-    outro: Ef þú hefur ekki stofnað reikning geturðu hunsað þennan tölvupóst.
+    subject: Bevestig je e-mailadres
+    title: Bevestig je e-mailadres
+    greeting: Hoi %usernaam%,
+    intro: Bevestig je e-mailadres door op de knop hieronder te klikken.
+    cta: E-mailadres bevestigen
+    outro: Als je geen account hebt aangemaakt, kun je deze e-mail negeren.
   reset:
-    subject: Endurstilla lykilorð
-    title: Endurstilla lykilorð
-    greeting: Hæ %username%,
-    intro: Beðið hefur verið um endurstillingu lykilorðs fyrir reikninginn þinn. Notaðu
-      hnappinn hér að neðan til að velja nýtt lykilorð.
-    cta: Endurstilla lykilorð
-    outro: Ef þú hefur ekki beðið um þetta geturðu hunsað þennan tölvupóst.
+    subject: Wachtwoord resetten
+    title: Wachtwoord resetten
+    greeting: Hoi %usernaam%,
+    intro: Er is een wachtwoordreset aangevraagd voor je account. Gebruik de knop
+      hieronder om een nieuw wachtwoord te kiezen.
+    cta: Wachtwoord resetten
+    outro: Als je dit niet hebt aangevraagd, kun je deze e-mail negeren.

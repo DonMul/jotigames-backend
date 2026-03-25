@@ -73,7 +73,7 @@ explodingKittens:
     failed: Karte konnte nicht gespielt werden.
     cardNotInHand: Die Karte befindet sich nicht in der Hand dieses Teams.
     cardNotPlayable: Diese Karte kann nicht direkt gespielt werden.
-    needsTarget: Für diese Karte ist ein Zielteam erforderlich.
+    needsTarget: Diese Karte erfordert ein Zielteam.
     targetSelf: Ein Team kann sich nicht selbst ins Visier nehmen.
     targetInvalid: Die Zielmannschaft ist für dieses Spiel ungültig.
     attackAlreadyPending: Für dieses Team steht bereits ein Angriff an.

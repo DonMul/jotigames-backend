@@ -62,7 +62,7 @@ team:
   update:
     failed: Holdet kunne ikke opdateres.
   delete:
-    failed: Teamet kunne ikke slettes.
+    failed: Holdet kunne ikke slettes.
     success: Teamet blev slettet.
 explodingKittens:
   gameTypeRequired: Dette slutpunkt er kun tilgængeligt for Exploding Kittens-spil.
@@ -186,7 +186,7 @@ market_crash:
     missingTradeId: Handels-id er påkrævet.
   resource:
     invalidName: Ressourcenavnet er ugyldigt.
-    exists: Ressourcen findes allerede.
+    exists: Ressource findes allerede.
     createFailed: Ressourceoprettelse mislykkedes.
     notFound: Ressource ikke fundet.
     updateFailed: Ressourceopdatering mislykkedes.
@@ -229,7 +229,7 @@ courier_rush:
     missingPickupId: Afhentnings-id er påkrævet.
     missingDropoffId: Afleverings-id er påkrævet.
   pickup:
-    confirmed: Afhentning bekræftet.
+    confirmed: Afhentning blev bekræftet.
     alreadyConfirmed: Afhentning allerede bekræftet.
   dropoff:
     confirmed: Aflevering blev bekræftet.
@@ -278,7 +278,7 @@ birds_of_prey:
     alreadyDestroyed: Ægget er allerede blevet ødelagt.
     notFound: Ægget ikke fundet.
     cannotDestroyOwn: Du kan ikke ødelægge dit eget æg.
-    notVisible: Æg er ikke synligt inden for dit område.
+    notVisible: Æg er ikke synligt inden for din rækkevidde.
     protected: Ægget er beskyttet, fordi ejeren er i nærheden.
 code_conspiracy:
   gameTypeRequired: Dette slutpunkt er kun tilgængeligt for Code Conspiracy-spil.

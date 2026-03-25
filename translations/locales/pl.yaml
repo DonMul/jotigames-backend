@@ -1,346 +1,344 @@
 validation:
-  invalidRequest: Treść żądania jest nieprawidłowa.
+  invalidRequest: De aanvraaginhoud is ongeldig.
 game:
   auth:
-    userRequired: W przypadku punktów końcowych zarządzania grami wymagany jest podmiot
-      główny użytkownika.
-    viewAccessRequired: Nie masz dostępu do odczytu tej gry.
-    manageAccessRequired: Nie masz uprawnień do zapisu w tej grze.
+    userRequired: Een gebruiker-principal is vereist voor gamebeheer-eindpunten.
+    viewAccessRequired: Je hebt geen leestoegang tot deze game.
+    manageAccessRequired: Je hebt geen schrijftoegang tot deze game.
   teamMessage:
-    sent: Wiadomość została pomyślnie wysłana do zespołu.
-    sendFailed: Nie udało się wysłać wiadomości do zespołu.
+    sent: Bericht succesvol naar team verstuurd.
+    sendFailed: Bericht kon niet naar team worden verstuurd.
   chat:
-    emptyMessage: Wiadomość na czacie nie może być pusta.
-    sendFailed: Nie można wysłać wiadomości na czacie.
-  notFound: Nie znaleziono gry.
+    emptyMessage: Chatbericht mag niet leeg zijn.
+    sendFailed: Chatbericht kon niet worden verstuurd.
+  notFound: Game is niet gevonden.
   member:
-    userNotFound: Nie znaleziono użytkownika.
-    emailNotFound: Nie znaleziono żadnego użytkownika z tym adresem e-mail.
+    userNotFound: Gebruiker is niet gevonden.
+    emailNotFound: Er is geen gebruiker gevonden met dat e-mailadres.
   schema:
-    columnMissing: W schemacie stołu gry brakuje obowiązkowej kolumny.
+    columnMissing: Het schema van de gametabel mist een verplichte kolom.
   types:
-    columnMissing: W harmonogramie dostępności typów gier brakuje obowiązkowej kolumny.
+    columnMissing: Het schema van game type availability mist een verplichte kolom.
   validation:
-    requiredFieldsMissing: Brakuje obowiązkowych pól gry.
-    startBeforeEndRequired: Godzina rozpoczęcia gry musi przypadać przed godziną zakończenia.
-    unknownSetting: Co najmniej jeden klucz ustawień gry jest nieznany.
+    requiredFieldsMissing: Verplichte gamevelden ontbreken.
+    startBeforeEndRequired: De starttijd van een game moet vóór de eindtijd liggen.
+    unknownSetting: Eén of meer game-instellingen-sleutels zijn onbekend.
   create:
-    failed: Nie można utworzyć gry.
+    failed: Game kon niet worden aangemaakt.
   update:
-    failed: Nie udało się zaktualizować gry.
+    failed: Game kon niet worden bijgewerkt.
   delete:
-    failed: Nie można usunąć gry.
-    success: Gra została pomyślnie usunięta.
+    failed: Game kon niet worden verwijderd.
+    success: Game succesvol verwijderd.
   reset:
-    failed: Nie udało się zresetować gry.
-    success: Pomyślnie zresetowano grę.
+    failed: Game kon niet worden gereset.
+    success: Game succesvol gereset.
   admin:
     add:
-      failed: Nie można dodać administratora gry.
-      success: Administrator gry został pomyślnie dodany.
+      failed: Game admin kon niet worden toegevoegd.
+      success: Game admin succesvol toegevoegd.
     remove:
-      failed: Nie można usunąć administratora gry.
-      success: Administrator gry został pomyślnie usunięty.
-      ownerForbidden: Właściciela gry nie można usunąć jako administratora.
-      selfForbidden: Nie możesz usunąć się z listy administratorów gry.
+      failed: Game admin kon niet worden verwijderd.
+      success: Game admin succesvol verwijderd.
+      ownerForbidden: De game-eigenaar kan niet als admin worden verwijderd.
+      selfForbidden: Je kunt jezelf niet uit game admins verwijderen.
   gameMaster:
     add:
-      failed: Nie można dodać mistrza gry.
-      success: Mistrz gry został pomyślnie dodany.
+      failed: Game master kon niet worden toegevoegd.
+      success: Game master succesvol toegevoegd.
     remove:
-      failed: Nie można usunąć mistrza gry.
-      success: Mistrz gry został pomyślnie usunięty.
+      failed: Game master kon niet worden verwijderd.
+      success: Game master succesvol verwijderd.
 team:
-  notFound: Nie znaleziono drużyny w tej grze.
+  notFound: Team is niet gevonden in deze game.
   auth:
-    selfRequired: Tokeny zespołu mają dostęp tylko do własnego zespołu.
+    selfRequired: Teamtokens hebben alleen toegang tot hun eigen team.
   validation:
-    codeAlreadyUsed: Kod zespołu jest już używany w tej grze.
+    codeAlreadyUsed: Teamcode is al in gebruik voor deze game.
   create:
-    failed: Nie można utworzyć zespołu.
-    codeGenerationFailed: Nie można wygenerować unikalnego kodu zespołu.
+    failed: Team kon niet worden aangemaakt.
+    codeGenerationFailed: Er kon geen unieke teamcode worden gegenereerd.
   update:
-    failed: Nie udało się zaktualizować zespołu.
+    failed: Team kon niet worden bijgewerkt.
   delete:
-    failed: Nie można usunąć zespołu.
-    success: Zespół został pomyślnie usunięty.
+    failed: Team kon niet worden verwijderd.
+    success: Team succesvol verwijderd.
 explodingKittens:
-  gameTypeRequired: Ten punkt końcowy jest dostępny tylko w grach Exploding Kittens.
+  gameTypeRequired: Dit eindpunt is alleen beschikbaar voor Exploding Kittens-games.
   lives:
-    invalidDelta: Leven-delta musi być niezerowa.
-    updated: Życie zespołu zostało pomyślnie zaktualizowane.
-    updateFailed: Nie udało się zaktualizować życia zespołu.
+    invalidDelta: Leven-delta moet ongelijk aan nul zijn.
+    updated: Teamlevens succesvol bijgewerkt.
+    updateFailed: Teamlevens konden niet worden bijgewerkt.
   play:
-    failed: Nie można było zagrać kartą.
-    cardNotInHand: Karta nie jest na ręce tej drużyny.
-    cardNotPlayable: Tej karty nie można zagrać bezpośrednio.
-    needsTarget: Ta karta wymaga drużyny docelowej.
-    targetSelf: Zespół nie może celować sam w sobie.
-    targetInvalid: Zespół docelowy jest nieprawidłowy w tej grze.
-    attackAlreadyPending: Zespół ma już zaplanowany atak.
-    peekAlreadyPending: Zobacz, przyszłość jest już w kolejce dla tego zespołu.
-    skipAlreadyPending: Skip już stoi w kolejce do tego zespołu.
-    attackReady: Karta ataku została zagrana pomyślnie.
-    favorTargeted: Zagrano kartę przysługi i utworzono akcję docelową.
-    peekReady: Zobacz przyszłą kartę zagraną pomyślnie.
-    shuffleDone: Pomyślnie zagrano kartę.
-    skipReady: Pomiń kartę zagraną pomyślnie.
+    failed: Kaart kon niet worden gespeeld.
+    cardNotInHand: Kaart zit niet in de hand van dit team.
+    cardNotPlayable: Deze kaart kan niet direct gespeeld worden.
+    needsTarget: Voor deze kaart is een doelteam vereist.
+    targetSelf: Een team kan zichzelf niet targeten.
+    targetInvalid: Doelteam is ongeldig voor deze game.
+    attackAlreadyPending: Er staat al een aanval in de wachtrij voor dit team.
+    peekAlreadyPending: See the future staat al in de wachtrij voor dit team.
+    skipAlreadyPending: Skip staat al in de wachtrij voor dit team.
+    attackReady: Attack-kaart succesvol gespeeld.
+    favorTargeted: Favor-kaart gespeeld en doelactie aangemaakt.
+    peekReady: See the future-kaart succesvol gespeeld.
+    shuffleDone: Shuffle-kaart succesvol gespeeld.
+    skipReady: Skip-kaart succesvol gespeeld.
   hand:
-    addFailed: Nie można dodać losowej karty do ręki.
-    removeFailed: Nie można usunąć losowej karty z ręki.
+    addFailed: Willekeurige handkaart kon niet worden toegevoegd.
+    removeFailed: Willekeurige handkaart kon niet worden verwijderd.
   cards:
-    invalidType: Typ karty jest nieprawidłowy dla eksplodujących kociąt.
-    notFound: Nie znaleziono mapy.
-    addFailed: Nie można dodać kart.
-    addSuccess: Karty dodano pomyślnie.
-    createFailed: Nie można utworzyć mapy.
-    updateFailed: Nie można zaktualizować mapy.
-    deleteFailed: Nie można usunąć karty.
-    deleteSuccess: Karta została pomyślnie usunięta.
-    removeBlocked: Karty nie można usunąć, gdy znajduje się w ręce lub jest zablokowana.
-    pdfDependenciesMissing: Zależności eksportu QR-PDF nie są dostępne na serwerze.
-    pdfLogoInvalid: Logo środkowe musi być plikiem obrazu.
-    pdfLogoTooLarge: Logo środkowe jest za duże. Maksymalny rozmiar to 2 MB.
+    invalidType: Kaarttype is ongeldig voor Exploding Kittens.
+    notFound: Kaart is niet gevonden.
+    addFailed: Kaarten konden niet worden toegevoegd.
+    addSuccess: Kaarten succesvol toegevoegd.
+    createFailed: Kaart kon niet worden aangemaakt.
+    updateFailed: Kaart kon niet worden bijgewerkt.
+    deleteFailed: Kaart kon niet worden verwijderd.
+    deleteSuccess: Kaart succesvol verwijderd.
+    removeBlocked: Kaart kan niet worden verwijderd zolang deze in een hand zit of
+      vergrendeld is.
+    pdfDependenciesMissing: QR-PDF exportafhankelijkheden zijn niet beschikbaar op
+      de server.
+    pdfLogoInvalid: Middenlogo moet een afbeeldingsbestand zijn.
+    pdfLogoTooLarge: Middenlogo is te groot. Maximale grootte is 2 MB.
   scan:
-    failed: Skanowanie karty nie powiodło się.
-    cardNotFound: Nie znaleziono mapy dla tej gry.
-    cardInHand: Karta jest już w ręce drużyny.
-    cardLocked: Mapa jest obecnie zablokowana.
-    cardAdded: Karta dodana do ręki.
-    cardNoEffect: Karta nie ma żadnego efektu.
-    felixGain: Karta Felixa dała jedno dodatkowe życie.
-    felixAlreadyUsed: Karta Feliksa była już używana przez ten zespół.
-    explodingDefused: Wybuchający kotek został rozbrojony.
-    explodingHit: Wybuchający kotek uderzył w drużynę.
-    attackTargeted: Atak jest ukierunkowany i czeka na rozprawienie się.
+    failed: Kaart scannen is mislukt.
+    cardNotFound: Kaart is niet gevonden voor deze game.
+    cardInHand: Kaart zit al in een teamhand.
+    cardLocked: Kaart is momenteel vergrendeld.
+    cardAdded: Kaart aan hand toegevoegd.
+    cardNoEffect: Kaart heeft geen effect.
+    felixGain: Felix-kaart gaf één leven erbij.
+    felixAlreadyUsed: Felix-kaart is al gebruikt door dit team.
+    explodingDefused: Exploding kitten is onschadelijk gemaakt.
+    explodingHit: Exploding kitten heeft het team geraakt.
+    attackTargeted: Aanval is gericht en wacht op afhandeling.
   state:
-    fetched: Pobrano status zespołu.
-    resolveFailed: Nie można obsłużyć statusu.
-    none: Brak oczekującego statusu do obsługi.
-    skipPending: Skip stoi w kolejce do tego zespołu.
-    skipResolved: Pomiń status obsługiwany.
-    peekPending: Zobacz, przyszłość czeka w kolejce dla tego zespołu.
-    peekNeedsConfirm: Aby zobaczyć przyszłość, wymagane jest potwierdzenie.
-    peekResolved: Zobacz przyszły status ukończony.
-    attackNeedsTarget: Atak wymaga drużyny docelowej i zeskanowanej mapy.
-    attackInvalidTarget: Zespół docelowy ataku jest nieprawidłowy.
+    fetched: Teamstatus opgehaald.
+    resolveFailed: Status kon niet worden afgehandeld.
+    none: Geen wachtende status om af te handelen.
+    skipPending: Skip staat in wachtrij voor dit team.
+    skipResolved: Skip-status afgehandeld.
+    peekPending: See the future staat in wachtrij voor dit team.
+    peekNeedsConfirm: See the future vereist bevestiging om af te handelen.
+    peekResolved: See the future-status afgehandeld.
+    attackNeedsTarget: Attack vereist een doelteam en gescande kaart.
+    attackInvalidTarget: Doelteam voor attack is ongeldig.
   action:
-    invalid: Działanie jest nieprawidłowe.
-    notAllowed: Ten zespół nie może zająć się akcją.
-    nopeMissing: Aby anulować tę promocję, nie jest wymagana żadna karta.
-    nopeUsed: Promocja anulowana z opcją Nie.
-    favorNoCards: Zespół docelowy nie ma kart Przysług.
-    favorTaken: Przysługa rozpatrzona i karta zostaje zabrana.
-    resolveFailed: Nie można ukończyć działania.
+    invalid: Actie is ongeldig.
+    notAllowed: Actie kan niet door dit team worden afgehandeld.
+    nopeMissing: Nope-kaart is vereist om deze actie te annuleren.
+    nopeUsed: Actie geannuleerd met Nope.
+    favorNoCards: Doelteam heeft geen kaarten voor Favor.
+    favorTaken: Favor afgehandeld en een kaart is genomen.
+    resolveFailed: Actie kon niet worden afgehandeld.
   combo:
-    failed: Nie można użyć kombinacji.
-    invalid: Nieprawidłowy wybór kombinacji.
-    cardNotInHand: Jedna lub więcej wybranych kart nie znajduje się na ręce.
-    needsTarget: Kombinacja wymaga zespołu docelowego.
-    targetSelf: Zespół nie może obrać za cel tej kombinacji.
-    targetInvalid: Zespół docelowy dla kombinacji jest nieprawidłowy.
-    twoReady: Podwójna kombinacja w kolejce.
-    twoNoCards: Zespół docelowy nie ma kart do kombinacji 2 w swoim rodzaju.
-    twoTaken: Kombinacja 2 w swoim rodzaju rozwiązana i karta zabrana.
-    threeNeedsType: Kombinacja 3 w swoim rodzaju wymaga wybranego typu karty.
-    threeInvalidType: Wybrany typ karty jest nieprawidłowy w przypadku kombinacji
-      3 takich samych.
-    threeReady: Trzy takie kombinacje w kolejce.
-    threeTaken: Kombinacja 3 w swoim rodzaju rozwiązana i pożądana karta zabrana.
-    threeNoMatch: Nie znaleziono żądanego typu karty w ręce drużyny docelowej.
-    fiveNeedsType: 5 różnych kombinacji wymaga żądanego typu karty.
-    fiveTaken: Rozwiązano 5 różnych kombinacji i wyjęto kartę z talii.
-    fiveNone: Rozwiązano 5 różnych kombinacji, ale żądany typ karty nie jest dostępny
-      w talii.
+    failed: Combo kon niet worden gebruikt.
+    invalid: Ongeldige combo-selectie.
+    cardNotInHand: Een of meer geselecteerde kaarten zitten niet in de hand.
+    needsTarget: Combo vereist een doelteam.
+    targetSelf: Team kan zichzelf niet als doel kiezen voor deze combo.
+    targetInvalid: Doelteam voor combo is ongeldig.
+    twoReady: 2-van-gelijke combo in wachtrij gezet.
+    twoNoCards: Doelteam heeft geen kaarten voor 2-van-gelijke combo.
+    twoTaken: 2-van-gelijke combo afgehandeld en een kaart is genomen.
+    threeNeedsType: 3-van-gelijke combo vereist gewenst kaarttype.
+    threeInvalidType: Gewenst kaarttype is ongeldig voor 3-van-gelijke combo.
+    threeReady: 3-van-gelijke combo in wachtrij gezet.
+    threeTaken: 3-van-gelijke combo afgehandeld en gewenste kaart is genomen.
+    threeNoMatch: Gewenst kaarttype niet gevonden in hand van doelteam.
+    fiveNeedsType: 5-verschillende combo vereist gewenst kaarttype.
+    fiveTaken: 5-verschillende combo afgehandeld en kaart uit deck genomen.
+    fiveNone: 5-verschillende combo afgehandeld maar gewenst kaarttype niet beschikbaar
+      in deck.
 geohunter:
-  gameTypeRequired: Ten punkt końcowy jest dostępny tylko dla gier Geohunter.
+  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Geohunter-games.
   validation:
-    missingPoiId: Wymagany jest identyfikator interesującego miejsca.
+    missingPoiId: Point of interest-id is verplicht.
   answer:
-    recorded: Odpowiedź przesłana pomyślnie.
-    alreadySubmitted: Twój zespół już odpowiedział na ten punkt.
+    recorded: Antwoord succesvol ingediend.
+    alreadySubmitted: Dit punt is al beantwoord door je team.
 blindhike:
-  gameTypeRequired: Ten punkt końcowy jest dostępny tylko w grach Blindhike.
+  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Blindhike-games.
   validation:
-    missingMarkerId: Wymagany jest identyfikator znacznika.
+    missingMarkerId: Marker-id is verplicht.
   marker:
-    added: Znacznik dodano pomyślnie.
-    alreadyAdded: Znacznik został już dodany przez Twój zespół.
-    finished: Twoja drużyna już skończyła i nie może umieszczać dodatkowych znaczników.
+    added: Marker succesvol toegevoegd.
+    alreadyAdded: Marker is al toegevoegd door je team.
+    finished: Je team is al gefinisht en kan geen extra markers plaatsen.
 resource_run:
-  gameTypeRequired: Ten punkt końcowy jest dostępny tylko dla gier Resource Run.
+  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Resource Run-games.
   validation:
-    missingNodeId: Identyfikator węzła zasobu jest wymagany.
+    missingNodeId: Resource node-id is verplicht.
   claim:
-    recorded: Zasób pomyślnie odebrany.
-    alreadyCollected: Zasoby zostały już zebrane przez Twój zespół.
+    recorded: Resource succesvol geclaimd.
+    alreadyCollected: Resource is al verzameld door je team.
 territory_control:
-  gameTypeRequired: Ten punkt końcowy jest dostępny tylko w grach Kontroli Terytorium.
+  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Territory Control-games.
   validation:
-    missingZoneId: Wymagany jest identyfikator strefy.
+    missingZoneId: Zone-id is verplicht.
   claim:
-    recorded: Strefa została pomyślnie przejęta.
-    alreadyOwned: Strefa została już zajęta przez Twój zespół.
+    recorded: Zone succesvol geclaimd.
+    alreadyOwned: Zone is al geclaimd door je team.
 market_crash:
-  gameTypeRequired: Ten punkt końcowy jest dostępny tylko dla gier Market Crash.
+  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Market Crash-games.
   validation:
-    missingTradeId: Identyfikator handlowy jest wymagany.
+    missingTradeId: Trade-id is verplicht.
   resource:
-    invalidName: Nazwa zasobu jest nieprawidłowa.
-    exists: Zasób już istnieje.
-    createFailed: Utworzenie zasobu nie powiodło się.
-    notFound: Nie znaleziono zasobu.
-    updateFailed: Aktualizacja zasobu nie powiodła się.
-    deleteFailed: Nie udało się usunąć zasobu.
+    invalidName: Resourcenaam is ongeldig.
+    exists: Resource bestaat al.
+    createFailed: Resource aanmaken mislukt.
+    notFound: Resource is niet gevonden.
+    updateFailed: Resource bijwerken mislukt.
+    deleteFailed: Resource verwijderen mislukt.
   point:
-    createFailed: Utworzenie punktu nie powiodło się.
-    notFound: Nie znaleziono punktu.
-    updateFailed: Aktualizacja punktu nie powiodła się.
-    deleteFailed: Nie udało się usunąć punktu.
-    invalidTitle: Tytuł punktu jest nieprawidłowy.
-    invalidColor: Kolor znacznika punktu jest nieprawidłowy.
-    invalidResource: Punkt zawiera nieprawidłowe odwołanie do zasobu.
-    resourcesRequired: Dla punktu wymagane jest co najmniej jedno ustawienie zasobu.
-    invalid: Współrzędne punktu są nieprawidłowe.
+    createFailed: Punt aanmaken mislukt.
+    notFound: Punt is niet gevonden.
+    updateFailed: Punt bijwerken mislukt.
+    deleteFailed: Punt verwijderen mislukt.
+    invalidTitle: Punttitel is ongeldig.
+    invalidColor: De kleur van de puntmarkering is ongeldig.
+    invalidResource: Punt bevat een ongeldige resourceverwijzing.
+    resourcesRequired: Minimaal één resource-instelling is verplicht voor een punt.
+    invalid: Puntcoördinaten zijn ongeldig.
   location:
-    required: Aby móc handlować, wymagana jest lokalizacja.
-    invalid: Współrzędne lokalizacji są nieprawidłowe.
-    updated: Lokalizacja zaktualizowana.
+    required: Locatie is verplicht voordat je kunt handelen.
+    invalid: Locatiecoördinaten zijn ongeldig.
+    updated: Locatie bijgewerkt.
   trade:
-    executed: Transakcja zrealizowana pomyślnie.
-    invalidSide: Kierunek handlu jest nieprawidłowy.
-    invalidResource: Zasobami nie można w tym momencie handlować.
-    outOfRange: Jesteś poza zasięgiem tego punktu handlowego.
-    invalidPrice: Cena handlowa jest nieprawidłowa.
-    insufficientCash: Za mało gotówki na tę transakcję.
-    insufficientInventory: Za mało zapasów dla tego handlu.
+    executed: Trade succesvol uitgevoerd.
+    invalidSide: Trade-richting is ongeldig.
+    invalidResource: Resource is niet verhandelbaar op dit punt.
+    outOfRange: Je bent buiten bereik van dit handelspunt.
+    invalidPrice: Trade-prijs is ongeldig.
+    insufficientCash: Onvoldoende cash voor deze trade.
+    insufficientInventory: Onvoldoende voorraad voor deze trade.
 crazy88:
-  gameTypeRequired: Ten punkt końcowy jest dostępny tylko dla gier Crazy 88.
+  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Crazy 88-games.
   validation:
-    missingTaskId: Identyfikator zadania jest wymagany.
-    missingSubmissionId: Wymagany jest identyfikator zgłoszenia.
+    missingTaskId: Task-id is verplicht.
+    missingSubmissionId: Submission-id is verplicht.
   task:
-    submitted: Zadanie przesłane pomyślnie.
+    submitted: Taak succesvol ingediend.
   review:
-    judged: Zgłoszenie uznane za pomyślne.
-    alreadyJudged: Zgłoszenie zostało już ocenione.
+    judged: Inzending succesvol beoordeeld.
+    alreadyJudged: Inzending is al beoordeeld.
 courier_rush:
-  gameTypeRequired: Ten punkt końcowy jest dostępny tylko w grach Courier Rush.
+  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Courier Rush-games.
   validation:
-    missingPickupId: Wymagany jest identyfikator odbioru.
-    missingDropoffId: Wymagany jest identyfikator miejsca nadania.
+    missingPickupId: Pickup-id is verplicht.
+    missingDropoffId: Dropoff-id is verplicht.
   pickup:
-    confirmed: Odbiór został pomyślnie potwierdzony.
-    alreadyConfirmed: Odbiór już potwierdzony.
+    confirmed: Pickup succesvol bevestigd.
+    alreadyConfirmed: Pickup is al bevestigd.
   dropoff:
-    confirmed: Zrzut został pomyślnie potwierdzony.
+    confirmed: Dropoff succesvol bevestigd.
 echo_hunt:
-  gameTypeRequired: Ten punkt końcowy jest dostępny tylko dla gier Echo Hunt.
+  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Echo Hunt-games.
   validation:
-    missingBeaconId: Wymagany jest identyfikator sygnalizatora.
+    missingBeaconId: Beacon-id is verplicht.
   beacon:
-    claimed: Beacon pomyślnie odebrany.
-    alreadyClaimed: Twój zespół przejął już Beacon.
+    claimed: Beacon succesvol geclaimd.
+    alreadyClaimed: Beacon is al geclaimd door je team.
 checkpoint_heist:
-  gameTypeRequired: Ten punkt końcowy jest dostępny tylko w grach Checkpoint Heist.
+  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Checkpoint Heist-games.
   validation:
-    missingCheckpointId: Wymagany jest identyfikator punktu kontrolnego.
+    missingCheckpointId: Checkpoint-id is verplicht.
   capture:
-    recorded: Punkt kontrolny pomyślnie przechwycony.
-    alreadyCaptured: Punkt kontrolny został już przejęty przez twoją drużynę.
+    recorded: Checkpoint succesvol veroverd.
+    alreadyCaptured: Checkpoint is al veroverd door je team.
 pandemic_response:
-  gameTypeRequired: Ten punkt końcowy jest dostępny tylko w przypadku gier Pandemic
-    Response.
+  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Pandemic Response-games.
   validation:
-    missingPickupId: Wymagany jest identyfikator odbioru.
-    missingHotspotId: Wymagany jest identyfikator hotspotu.
+    missingPickupId: Pickup-id is verplicht.
+    missingHotspotId: Hotspot-id is verplicht.
   pickup:
-    collected: Odbiór odebrany pomyślnie.
-    alreadyCollected: Twój zespół odebrał już przesyłkę.
+    collected: Pickup succesvol verzameld.
+    alreadyCollected: Pickup is al verzameld door je team.
   hotspot:
-    resolved: Problem z hotspotem został pomyślnie rozwiązany.
-    alreadyResolved: Twój zespół już rozwiązał problem z hotspotem.
+    resolved: Hotspot succesvol opgelost.
+    alreadyResolved: Hotspot is al opgelost door je team.
 birds_of_prey:
-  gameTypeRequired: Ten punkt końcowy jest dostępny tylko w grach Birds of Prey.
+  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Birds of Prey-games.
   config:
-    updateFailed: Zapisanie ustawień Birds of Prey nie powiodło się.
+    updateFailed: Birds of Prey-instellingen opslaan mislukt.
   location:
-    required: Aby móc wykonać tę akcję, wymagana jest lokalizacja.
-    invalid: Współrzędne lokalizacji są nieprawidłowe.
-    updated: Lokalizacja zaktualizowana.
+    required: Locatie is verplicht voordat je deze actie kunt uitvoeren.
+    invalid: Locatiecoördinaten zijn ongeldig.
+    updated: Locatie bijgewerkt.
   validation:
-    missingEggId: Wymagany jest identyfikator jaja.
+    missingEggId: Egg-id is verplicht.
   egg:
-    dropped: Jajko zostało pomyślnie umieszczone.
-    dropFailed: Jajka nie udało się uratować.
-    alreadyDropped: Jajko zostało już złożone.
-    persistFailed: Upuszczenie jajka zostało zaakceptowane, ale nie można go wczytać
-      z trwałego stanu gry.
-    destroyed: Jajko zostało pomyślnie zniszczone.
-    alreadyDestroyed: Jajko zostało już zniszczone.
-    notFound: Nie znaleziono jajka.
-    cannotDestroyOwn: Nie możesz zniszczyć własnego jajka.
-    notVisible: Jajko nie jest widoczne w twoim zasięgu.
-    protected: Jajko jest chronione, ponieważ właściciel jest w pobliżu.
+    dropped: Egg succesvol geplaatst.
+    dropFailed: Egg kon niet worden opgeslagen.
+    alreadyDropped: Egg is al geplaatst.
+    persistFailed: Egg-drop is geaccepteerd, maar kon niet uit persistente game-state
+      worden geladen.
+    destroyed: Egg succesvol vernietigd.
+    alreadyDestroyed: Egg is al vernietigd.
+    notFound: Egg is niet gevonden.
+    cannotDestroyOwn: Je kunt je eigen egg niet vernietigen.
+    notVisible: Egg is niet zichtbaar binnen je bereik.
+    protected: Egg is beschermd omdat de eigenaar in de buurt is.
 code_conspiracy:
-  gameTypeRequired: Ten punkt końcowy jest dostępny tylko dla gier Code Conspiracy.
+  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Code Conspiracy-games.
   validation:
-    missingTargetTeamId: Wymagany jest identyfikator zespołu docelowego.
-    missingCode: Kod jest wymagany.
+    missingTargetTeamId: Doelteam-id is verplicht.
+    missingCode: Code is verplicht.
   code:
-    submitted: Otrzymano przesłanie kodu.
+    submitted: Code-inzending ontvangen.
 auth:
   locale:
-    unsupported: Nieobsługiwany język. Dozwolone wartości to en i nl.
+    unsupported: Niet-ondersteunde taal. Toegestane waarden zijn en en nl.
   ws:
-    superAdminKeyRequired: Wymagany jest klucz superadministratora WS.
-    superAdminKeyInvalid: Klucz superadministratora WS jest nieprawidłowy.
-    superAdminKeyNotConfigured: Klucz superadministratora WS nie jest skonfigurowany
-      na zapleczu.
+    superAdminKeyRequired: WS super admin-sleutel is verplicht.
+    superAdminKeyInvalid: WS-superbeheerderssleutel is ongeldig.
+    superAdminKeyNotConfigured: WS super admin-sleutel is niet geconfigureerd op de
+      backend.
   user:
-    invalidEmailOrPassword: Nieprawidłowy adres e-mail lub hasło.
-    disallowedRole: To konto nie ma dostępu do tego backendu.
-    superAdminRequired: Aby wykonać tę czynność, wymagany jest dostęp superadministratora.
+    invalidEmailOrPassword: Ongeldig e-mailadres of wachtwoord.
+    disallowedRole: Dit account heeft geen toegang tot deze backend.
+    superAdminRequired: Super admin-toegang is vereist voor deze actie.
   team:
-    invalidCodes: Nieprawidłowy kod gry lub kod zespołu.
+    invalidCodes: Ongeldige gamecode of teamcode.
   token:
-    missingBearerToken: Wymagany jest token okaziciela.
-    invalidBearerHeaderFormat: Format nagłówka tokenu okaziciela jest nieprawidłowy.
-    invalidOrExpired: Token jest nieprawidłowy lub wygasł.
-    gameAccessRequired: Token nie może uzyskać dostępu do żądanej gry.
+    missingBearerToken: Bearer-token is verplicht.
+    invalidBearerHeaderFormat: Bearer-token header-formaat is ongeldig.
+    invalidOrExpired: Token is ongeldig of verlopen.
+    gameAccessRequired: Token heeft geen toegang tot de gevraagde game.
   register:
-    emailAlreadyUsed: Konto już istnieje z tym adresem e-mail.
-    usernameAlreadyUsed: Ta nazwa użytkownika jest już używana.
-    verifyEmailSent: Konto utworzone. Sprawdź swoją pocztę e-mail, aby potwierdzić
-      swój adres.
-    emailSendFailed: Nie można wysłać e-maila weryfikacyjnego.
-    mailerNotConfigured: Usługa e-mail nie jest skonfigurowana.
-    mailerUnsupportedScheme: Schemat DSN usługi e-mail nie jest obsługiwany.
-    mailerFromMissing: Adres nadawcy e-maila nie jest skonfigurowany.
+    emailAlreadyUsed: Er bestaat al een account met dit e-mailadres.
+    usernameAlreadyUsed: Deze gebruikersnaam is al in gebruik.
+    verifyEmailSent: Account aangemaakt. Controleer je e-mail om je adres te bevestigen.
+    emailSendFailed: Verificatie-e-mail kon niet worden verzonden.
+    mailerNotConfigured: E-mailservice is niet geconfigureerd.
+    mailerUnsupportedScheme: Het DSN-schema van de e-mailservice wordt niet ondersteund.
+    mailerFromMissing: Afzenderadres voor e-mail is niet geconfigureerd.
   verify:
-    invalidToken: Ten token uwierzytelniający jest nieprawidłowy lub wygasł.
-    success: Adres e-mail został pomyślnie potwierdzony.
-    pendingEmailConflict: Tego oczekującego adresu e-mail nie można już zastosować,
-      ponieważ jest już używany.
-    tokenColumnMissing: Magazyn tokenów uwierzytelniających nie jest poprawnie skonfigurowany.
+    invalidToken: Deze verificatietoken is ongeldig of verlopen.
+    success: E-mailadres is succesvol bevestigd.
+    pendingEmailConflict: Dit wachtende e-mailadres kan niet meer worden toegepast
+      omdat het al in gebruik is.
+    tokenColumnMissing: Opslag voor verificatietokens is niet correct geconfigureerd.
   reset:
-    requestAccepted: Jeśli konto istnieje i zostało potwierdzone, wysłano wiadomość
-      e-mail z resetem.
-    tokenColumnsMissing: Magazyn tokenów resetowania hasła nie jest poprawnie skonfigurowany.
-    emailSendFailed: Nie można wysłać e-maila dotyczącego resetowania hasła.
+    requestAccepted: Als een account bestaat en bevestigd is, is een reset-e-mail
+      verzonden.
+    tokenColumnsMissing: Opslag voor wachtwoord-resettokens is niet correct geconfigureerd.
+    emailSendFailed: Wachtwoord reset-e-mail kon niet worden verzonden.
 mailer:
   verify:
-    subject: Potwierdź swój adres e-mail
-    title: Potwierdź swój adres e-mail
-    greeting: Cześć %unazwa użytkownika%,
-    intro: Potwierdź swój adres e-mail, klikając przycisk poniżej.
-    cta: Potwierdź adres e-mail
-    outro: Jeśli nie utworzyłeś konta, możesz zignorować tę wiadomość e-mail.
+    subject: Bevestig je e-mailadres
+    title: Bevestig je e-mailadres
+    greeting: Hoi %usernaam%,
+    intro: Bevestig je e-mailadres door op de knop hieronder te klikken.
+    cta: E-mailadres bevestigen
+    outro: Als je geen account hebt aangemaakt, kun je deze e-mail negeren.
   reset:
-    subject: Zresetuj hasło
-    title: Zresetuj hasło
-    greeting: Cześć %unazwa użytkownika%,
-    intro: Zażądano zresetowania hasła do Twojego konta. Użyj poniższego przycisku,
-      aby wybrać nowe hasło.
-    cta: Zresetuj hasło
-    outro: Jeśli nie prosiłeś o to, możesz zignorować tę wiadomość e-mail.
+    subject: Wachtwoord resetten
+    title: Wachtwoord resetten
+    greeting: Hoi %usernaam%,
+    intro: Er is een wachtwoordreset aangevraagd voor je account. Gebruik de knop
+      hieronder om een nieuw wachtwoord te kiezen.
+    cta: Wachtwoord resetten
+    outro: Als je dit niet hebt aangevraagd, kun je deze e-mail negeren.

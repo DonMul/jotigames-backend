@@ -1,344 +1,364 @@
 validation:
-  invalidRequest: De aanvraaginhoud is ongeldig.
+  invalidRequest: Το περιεχόμενο του αιτήματος δεν είναι έγκυρο.
 game:
   auth:
-    userRequired: Een gebruiker-principal is vereist voor gamebeheer-eindpunten.
-    viewAccessRequired: Je hebt geen leestoegang tot deze game.
-    manageAccessRequired: Je hebt geen schrijftoegang tot deze game.
+    userRequired: Απαιτείται μια αρχή χρήστη για τα τελικά σημεία διαχείρισης παιχνιδιού.
+    viewAccessRequired: Δεν έχετε πρόσβαση ανάγνωσης σε αυτό το παιχνίδι.
+    manageAccessRequired: Δεν έχετε πρόσβαση εγγραφής σε αυτό το παιχνίδι.
   teamMessage:
-    sent: Bericht succesvol naar team verstuurd.
-    sendFailed: Bericht kon niet naar team worden verstuurd.
+    sent: Το μήνυμα στάλθηκε με επιτυχία στην ομάδα.
+    sendFailed: Δεν ήταν δυνατή η αποστολή του μηνύματος στην ομάδα.
   chat:
-    emptyMessage: Chatbericht mag niet leeg zijn.
-    sendFailed: Chatbericht kon niet worden verstuurd.
-  notFound: Game is niet gevonden.
+    emptyMessage: Το μήνυμα συνομιλίας δεν μπορεί να είναι κενό.
+    sendFailed: Δεν ήταν δυνατή η αποστολή μηνύματος συνομιλίας.
+  notFound: Το παιχνίδι δεν βρέθηκε.
   member:
-    userNotFound: Gebruiker is niet gevonden.
-    emailNotFound: Er is geen gebruiker gevonden met dat e-mailadres.
+    userNotFound: Ο χρήστης δεν βρέθηκε.
+    emailNotFound: Δεν βρέθηκε χρήστης με αυτήν τη διεύθυνση email.
   schema:
-    columnMissing: Het schema van de gametabel mist een verplichte kolom.
+    columnMissing: Από το σχήμα του πίνακα παιχνιδιού λείπει μια υποχρεωτική στήλη.
   types:
-    columnMissing: Het schema van game type availability mist een verplichte kolom.
+    columnMissing: Από το πρόγραμμα διαθεσιμότητας τύπου παιχνιδιού λείπει μια υποχρεωτική
+      στήλη.
   validation:
-    requiredFieldsMissing: Verplichte gamevelden ontbreken.
-    startBeforeEndRequired: De starttijd van een game moet vóór de eindtijd liggen.
-    unknownSetting: Eén of meer game-instellingen-sleutels zijn onbekend.
+    requiredFieldsMissing: Λείπουν υποχρεωτικά πεδία παιχνιδιού.
+    startBeforeEndRequired: Η ώρα έναρξης ενός παιχνιδιού πρέπει να είναι πριν από
+      την ώρα λήξης.
+    unknownSetting: Ένα ή περισσότερα πλήκτρα ρυθμίσεων παιχνιδιού είναι άγνωστα.
   create:
-    failed: Game kon niet worden aangemaakt.
+    failed: Δεν ήταν δυνατή η δημιουργία του παιχνιδιού.
   update:
-    failed: Game kon niet worden bijgewerkt.
+    failed: Δεν ήταν δυνατή η ενημέρωση του παιχνιδιού.
   delete:
-    failed: Game kon niet worden verwijderd.
-    success: Game succesvol verwijderd.
+    failed: Δεν ήταν δυνατή η διαγραφή του παιχνιδιού.
+    success: Το παιχνίδι διαγράφηκε με επιτυχία.
   reset:
-    failed: Game kon niet worden gereset.
-    success: Game succesvol gereset.
+    failed: Δεν ήταν δυνατή η επαναφορά του παιχνιδιού.
+    success: Επιτυχής επαναφορά του παιχνιδιού.
   admin:
     add:
-      failed: Game admin kon niet worden toegevoegd.
-      success: Game admin succesvol toegevoegd.
+      failed: Δεν ήταν δυνατή η προσθήκη του διαχειριστή του παιχνιδιού.
+      success: Ο διαχειριστής του παιχνιδιού προστέθηκε με επιτυχία.
     remove:
-      failed: Game admin kon niet worden verwijderd.
-      success: Game admin succesvol verwijderd.
-      ownerForbidden: De game-eigenaar kan niet als admin worden verwijderd.
-      selfForbidden: Je kunt jezelf niet uit game admins verwijderen.
+      failed: Δεν ήταν δυνατή η κατάργηση του διαχειριστή του παιχνιδιού.
+      success: Ο διαχειριστής του παιχνιδιού καταργήθηκε με επιτυχία.
+      ownerForbidden: Ο ιδιοκτήτης του παιχνιδιού δεν μπορεί να αφαιρεθεί ως διαχειριστής.
+      selfForbidden: Δεν μπορείτε να αφαιρέσετε τον εαυτό σας από τους διαχειριστές
+        του παιχνιδιού.
   gameMaster:
     add:
-      failed: Game master kon niet worden toegevoegd.
-      success: Game master succesvol toegevoegd.
+      failed: Δεν ήταν δυνατή η προσθήκη του κύριου παιχνιδιού.
+      success: Ο κύριος παιχνιδιού προστέθηκε με επιτυχία.
     remove:
-      failed: Game master kon niet worden verwijderd.
-      success: Game master succesvol verwijderd.
+      failed: Δεν ήταν δυνατή η κατάργηση του κύριου παιχνιδιού.
+      success: Ο κύριος παιχνιδιού καταργήθηκε με επιτυχία.
 team:
-  notFound: Team is niet gevonden in deze game.
+  notFound: Η ομάδα δεν βρέθηκε σε αυτό το παιχνίδι.
   auth:
-    selfRequired: Teamtokens hebben alleen toegang tot hun eigen team.
+    selfRequired: Τα διακριτικά ομάδας έχουν πρόσβαση μόνο στη δική τους ομάδα.
   validation:
-    codeAlreadyUsed: Teamcode is al in gebruik voor deze game.
+    codeAlreadyUsed: Ο κωδικός ομάδας χρησιμοποιείται ήδη για αυτό το παιχνίδι.
   create:
-    failed: Team kon niet worden aangemaakt.
-    codeGenerationFailed: Er kon geen unieke teamcode worden gegenereerd.
+    failed: Δεν ήταν δυνατή η δημιουργία ομάδας.
+    codeGenerationFailed: Δεν ήταν δυνατή η δημιουργία ενός μοναδικού κωδικού ομάδας.
   update:
-    failed: Team kon niet worden bijgewerkt.
+    failed: Δεν ήταν δυνατή η ενημέρωση της ομάδας.
   delete:
-    failed: Team kon niet worden verwijderd.
-    success: Team succesvol verwijderd.
+    failed: Δεν ήταν δυνατή η διαγραφή της ομάδας.
+    success: Η ομάδα διαγράφηκε με επιτυχία.
 explodingKittens:
-  gameTypeRequired: Dit eindpunt is alleen beschikbaar voor Exploding Kittens-games.
+  gameTypeRequired: Αυτό το τελικό σημείο είναι διαθέσιμο μόνο για παιχνίδια Exploding
+    Kittens.
   lives:
-    invalidDelta: Leven-delta moet ongelijk aan nul zijn.
-    updated: Teamlevens succesvol bijgewerkt.
-    updateFailed: Teamlevens konden niet worden bijgewerkt.
+    invalidDelta: Το Leven-delta πρέπει να είναι μη μηδενικό.
+    updated: Οι ζωές της ομάδας ενημερώθηκαν με επιτυχία.
+    updateFailed: Δεν ήταν δυνατή η ενημέρωση των ζωών της ομάδας.
   play:
-    failed: Kaart kon niet worden gespeeld.
-    cardNotInHand: Kaart zit niet in de hand van dit team.
-    cardNotPlayable: Deze kaart kan niet direct gespeeld worden.
-    needsTarget: Voor deze kaart is een doelteam vereist.
-    targetSelf: Een team kan zichzelf niet targeten.
-    targetInvalid: Doelteam is ongeldig voor deze game.
-    attackAlreadyPending: Er staat al een aanval in de wachtrij voor dit team.
-    peekAlreadyPending: See the future staat al in de wachtrij voor dit team.
-    skipAlreadyPending: Skip staat al in de wachtrij voor dit team.
-    attackReady: Attack-kaart succesvol gespeeld.
-    favorTargeted: Favor-kaart gespeeld en doelactie aangemaakt.
-    peekReady: See the future-kaart succesvol gespeeld.
-    shuffleDone: Shuffle-kaart succesvol gespeeld.
-    skipReady: Skip-kaart succesvol gespeeld.
+    failed: Δεν ήταν δυνατή η αναπαραγωγή της κάρτας.
+    cardNotInHand: Η κάρτα δεν είναι στο χέρι αυτής της ομάδας.
+    cardNotPlayable: Αυτή η κάρτα δεν μπορεί να παιχτεί απευθείας.
+    needsTarget: Αυτή η κάρτα απαιτεί ομάδα-στόχο.
+    targetSelf: Δεν μπορεί μια ομάδα να στοχεύει τον εαυτό της.
+    targetInvalid: Η ομάδα στόχος δεν είναι έγκυρη για αυτό το παιχνίδι.
+    attackAlreadyPending: Υπάρχει ήδη μια επίθεση για αυτήν την ομάδα.
+    peekAlreadyPending: Δείτε το μέλλον είναι ήδη στην ουρά για αυτήν την ομάδα.
+    skipAlreadyPending: Το Skip βρίσκεται ήδη στην ουρά για αυτήν την ομάδα.
+    attackReady: Η κάρτα επίθεσης παίχτηκε με επιτυχία.
+    favorTargeted: Παίχτηκε η κάρτα χάρη και δημιουργήθηκε η ενέργεια στόχος.
+    peekReady: Δείτε τη μελλοντική κάρτα που παίχτηκε με επιτυχία.
+    shuffleDone: Αναπαραγωγή κάρτας με επιτυχία.
+    skipReady: Παράλειψη κάρτας που παίχτηκε με επιτυχία.
   hand:
-    addFailed: Willekeurige handkaart kon niet worden toegevoegd.
-    removeFailed: Willekeurige handkaart kon niet worden verwijderd.
+    addFailed: Δεν ήταν δυνατή η προσθήκη τυχαίας κάρτας.
+    removeFailed: Δεν ήταν δυνατή η αφαίρεση της τυχαίας κάρτας.
   cards:
-    invalidType: Kaarttype is ongeldig voor Exploding Kittens.
-    notFound: Kaart is niet gevonden.
-    addFailed: Kaarten konden niet worden toegevoegd.
-    addSuccess: Kaarten succesvol toegevoegd.
-    createFailed: Kaart kon niet worden aangemaakt.
-    updateFailed: Kaart kon niet worden bijgewerkt.
-    deleteFailed: Kaart kon niet worden verwijderd.
-    deleteSuccess: Kaart succesvol verwijderd.
-    removeBlocked: Kaart kan niet worden verwijderd zolang deze in een hand zit of
-      vergrendeld is.
-    pdfDependenciesMissing: QR-PDF exportafhankelijkheden zijn niet beschikbaar op
-      de server.
-    pdfLogoInvalid: Middenlogo moet een afbeeldingsbestand zijn.
-    pdfLogoTooLarge: Middenlogo is te groot. Maximale grootte is 2 MB.
+    invalidType: Ο τύπος κάρτας δεν είναι έγκυρος για Exploding Kittens.
+    notFound: Ο χάρτης δεν βρέθηκε.
+    addFailed: Δεν ήταν δυνατή η προσθήκη καρτών.
+    addSuccess: Οι κάρτες προστέθηκαν με επιτυχία.
+    createFailed: Δεν ήταν δυνατή η δημιουργία χάρτη.
+    updateFailed: Δεν ήταν δυνατή η ενημέρωση του χάρτη.
+    deleteFailed: Δεν ήταν δυνατή η αφαίρεση της κάρτας.
+    deleteSuccess: Η κάρτα αφαιρέθηκε με επιτυχία.
+    removeBlocked: Η κάρτα δεν μπορεί να αφαιρεθεί όσο είναι στο χέρι ή είναι κλειδωμένη.
+    pdfDependenciesMissing: Οι εξαρτήσεις εξαγωγής QR-PDF δεν είναι διαθέσιμες στον
+      διακομιστή.
+    pdfLogoInvalid: Το κεντρικό λογότυπο πρέπει να είναι αρχείο εικόνας.
+    pdfLogoTooLarge: Το κεντρικό λογότυπο είναι πολύ μεγάλο. Το μέγιστο μέγεθος είναι
+      2 MB.
   scan:
-    failed: Kaart scannen is mislukt.
-    cardNotFound: Kaart is niet gevonden voor deze game.
-    cardInHand: Kaart zit al in een teamhand.
-    cardLocked: Kaart is momenteel vergrendeld.
-    cardAdded: Kaart aan hand toegevoegd.
-    cardNoEffect: Kaart heeft geen effect.
-    felixGain: Felix-kaart gaf één leven erbij.
-    felixAlreadyUsed: Felix-kaart is al gebruikt door dit team.
-    explodingDefused: Exploding kitten is onschadelijk gemaakt.
-    explodingHit: Exploding kitten heeft het team geraakt.
-    attackTargeted: Aanval is gericht en wacht op afhandeling.
+    failed: Η σάρωση κάρτας απέτυχε.
+    cardNotFound: Ο χάρτης δεν βρέθηκε για αυτό το παιχνίδι.
+    cardInHand: Η κάρτα βρίσκεται ήδη σε ένα χέρι ομάδας.
+    cardLocked: Ο χάρτης είναι κλειδωμένος αυτήν τη στιγμή.
+    cardAdded: Η κάρτα προστέθηκε στο χέρι.
+    cardNoEffect: Η κάρτα δεν έχει αποτέλεσμα.
+    felixGain: Η κάρτα Felix έδωσε μια επιπλέον ζωή.
+    felixAlreadyUsed: Η κάρτα Felix έχει ήδη χρησιμοποιηθεί από αυτήν την ομάδα.
+    explodingDefused: Το εκρηκτικό γατάκι έχει εξουδετερωθεί.
+    explodingHit: Εκρηκτικό γατάκι χτύπησε την ομάδα.
+    attackTargeted: Η επίθεση είναι στοχευμένη και περιμένει να αντιμετωπιστεί.
   state:
-    fetched: Teamstatus opgehaald.
-    resolveFailed: Status kon niet worden afgehandeld.
-    none: Geen wachtende status om af te handelen.
-    skipPending: Skip staat in wachtrij voor dit team.
-    skipResolved: Skip-status afgehandeld.
-    peekPending: See the future staat in wachtrij voor dit team.
-    peekNeedsConfirm: See the future vereist bevestiging om af te handelen.
-    peekResolved: See the future-status afgehandeld.
-    attackNeedsTarget: Attack vereist een doelteam en gescande kaart.
-    attackInvalidTarget: Doelteam voor attack is ongeldig.
+    fetched: Η κατάσταση της ομάδας ανακτήθηκε.
+    resolveFailed: Δεν ήταν δυνατός ο χειρισμός της κατάστασης.
+    none: Δεν υπάρχει κατάσταση σε εκκρεμότητα για χειρισμό.
+    skipPending: Το Skip βρίσκεται στην ουρά για αυτήν την ομάδα.
+    skipResolved: Χειρισμός παράλειψης κατάστασης.
+    peekPending: Δείτε το μέλλον είναι στην ουρά για αυτήν την ομάδα.
+    peekNeedsConfirm: Για να δείτε το μέλλον απαιτείται επιβεβαίωση για να ολοκληρωθεί.
+    peekResolved: Δείτε τη μελλοντική κατάσταση ολοκληρωμένη.
+    attackNeedsTarget: Η επίθεση απαιτεί ομάδα στόχο και σαρωμένο χάρτη.
+    attackInvalidTarget: Η ομάδα στόχος για επίθεση δεν είναι έγκυρη.
   action:
-    invalid: Actie is ongeldig.
-    notAllowed: Actie kan niet door dit team worden afgehandeld.
-    nopeMissing: Nope-kaart is vereist om deze actie te annuleren.
-    nopeUsed: Actie geannuleerd met Nope.
-    favorNoCards: Doelteam heeft geen kaarten voor Favor.
-    favorTaken: Favor afgehandeld en een kaart is genomen.
-    resolveFailed: Actie kon niet worden afgehandeld.
+    invalid: Η ενέργεια δεν είναι έγκυρη.
+    notAllowed: Δεν είναι δυνατή η διαχείριση της ενέργειας από αυτήν την ομάδα.
+    nopeMissing: Δεν απαιτείται κάρτα για την ακύρωση αυτής της προσφοράς.
+    nopeUsed: Η προσφορά ακυρώθηκε με Όχι.
+    favorNoCards: Η Target Team δεν έχει κάρτες για Favor.
+    favorTaken: Η εύνοια λύθηκε και πάρθηκε μια κάρτα.
+    resolveFailed: Δεν ήταν δυνατή η ολοκλήρωση της ενέργειας.
   combo:
-    failed: Combo kon niet worden gebruikt.
-    invalid: Ongeldige combo-selectie.
-    cardNotInHand: Een of meer geselecteerde kaarten zitten niet in de hand.
-    needsTarget: Combo vereist een doelteam.
-    targetSelf: Team kan zichzelf niet als doel kiezen voor deze combo.
-    targetInvalid: Doelteam voor combo is ongeldig.
-    twoReady: 2-van-gelijke combo in wachtrij gezet.
-    twoNoCards: Doelteam heeft geen kaarten voor 2-van-gelijke combo.
-    twoTaken: 2-van-gelijke combo afgehandeld en een kaart is genomen.
-    threeNeedsType: 3-van-gelijke combo vereist gewenst kaarttype.
-    threeInvalidType: Gewenst kaarttype is ongeldig voor 3-van-gelijke combo.
-    threeReady: 3-van-gelijke combo in wachtrij gezet.
-    threeTaken: 3-van-gelijke combo afgehandeld en gewenste kaart is genomen.
-    threeNoMatch: Gewenst kaarttype niet gevonden in hand van doelteam.
-    fiveNeedsType: 5-verschillende combo vereist gewenst kaarttype.
-    fiveTaken: 5-verschillende combo afgehandeld en kaart uit deck genomen.
-    fiveNone: 5-verschillende combo afgehandeld maar gewenst kaarttype niet beschikbaar
-      in deck.
+    failed: Δεν ήταν δυνατή η χρήση του Combo.
+    invalid: Μη έγκυρη σύνθετη επιλογή.
+    cardNotInHand: Ένα ή περισσότερα επιλεγμένα φύλλα δεν είναι στο χέρι.
+    needsTarget: Το Combo απαιτεί μια ομάδα στόχο.
+    targetSelf: Η ομάδα δεν μπορεί να στοχεύσει τον εαυτό της για αυτόν τον συνδυασμό.
+    targetInvalid: Η ομάδα στόχος για σύνθετο δεν είναι έγκυρη.
+    twoReady: 2-του ενός είδους combo σε ουρά.
+    twoNoCards: Η ομάδα-στόχος δεν έχει κάρτες για σύνθετο 2 του είδους.
+    twoTaken: Επιλύθηκε ο συνδυασμός 2 του είδους και λήφθηκε μια κάρτα.
+    threeNeedsType: Ο συνδυασμός 3 του είδους απαιτεί τον επιθυμητό τύπο κάρτας.
+    threeInvalidType: Ο επιθυμητός τύπος κάρτας δεν είναι έγκυρος για συνδυασμούς
+      3 του είδους.
+    threeReady: 3-ένα είδος συνδυασμού σε ουρά.
+    threeTaken: Επιλύθηκε ο συνδυασμός 3 του είδους και λήφθηκε η επιθυμητή κάρτα.
+    threeNoMatch: Δεν βρέθηκε ο επιθυμητός τύπος κάρτας στο χέρι της ομάδας στόχου.
+    fiveNeedsType: Ο συνδυασμός 5 διαφορετικών απαιτεί τον επιθυμητό τύπο κάρτας.
+    fiveTaken: Επιλύθηκαν 5 διαφορετικοί συνδυασμοί και η κάρτα ελήφθη από την τράπουλα.
+    fiveNone: Επιλύθηκαν 5 διαφορετικοί συνδυασμοί, αλλά ο επιθυμητός τύπος κάρτας
+      δεν είναι διαθέσιμος στο κατάστρωμα.
 geohunter:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Geohunter-games.
+  gameTypeRequired: Αυτό το τελικό σημείο είναι διαθέσιμο μόνο για παιχνίδια Geohunter.
   validation:
-    missingPoiId: Point of interest-id is verplicht.
+    missingPoiId: Απαιτείται αναγνωριστικό σημείου ενδιαφέροντος.
   answer:
-    recorded: Antwoord succesvol ingediend.
-    alreadySubmitted: Dit punt is al beantwoord door je team.
+    recorded: Η απάντηση υποβλήθηκε με επιτυχία.
+    alreadySubmitted: Αυτό το σημείο έχει ήδη απαντηθεί από την ομάδα σας.
 blindhike:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Blindhike-games.
+  gameTypeRequired: Αυτό το τελικό σημείο είναι διαθέσιμο μόνο για παιχνίδια Blindhike.
   validation:
-    missingMarkerId: Marker-id is verplicht.
+    missingMarkerId: Απαιτείται αναγνωριστικό δείκτη.
   marker:
-    added: Marker succesvol toegevoegd.
-    alreadyAdded: Marker is al toegevoegd door je team.
-    finished: Je team is al gefinisht en kan geen extra markers plaatsen.
+    added: Ο δείκτης προστέθηκε με επιτυχία.
+    alreadyAdded: Ο δείκτης έχει ήδη προστεθεί από την ομάδα σας.
+    finished: Η ομάδα σας έχει ήδη τελειώσει και δεν μπορεί να τοποθετήσει επιπλέον
+      δείκτες.
 resource_run:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Resource Run-games.
+  gameTypeRequired: Αυτό το τελικό σημείο είναι διαθέσιμο μόνο για παιχνίδια Resource
+    Run.
   validation:
-    missingNodeId: Resource node-id is verplicht.
+    missingNodeId: Απαιτείται αναγνωριστικό κόμβου πόρων.
   claim:
-    recorded: Resource succesvol geclaimd.
-    alreadyCollected: Resource is al verzameld door je team.
+    recorded: Ο πόρος διεκδικήθηκε με επιτυχία.
+    alreadyCollected: Ο πόρος έχει ήδη συλλεχθεί από την ομάδα σας.
 territory_control:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Territory Control-games.
+  gameTypeRequired: Αυτό το τελικό σημείο είναι διαθέσιμο μόνο για παιχνίδια Ελέγχου
+    Επικράτειας.
   validation:
-    missingZoneId: Zone-id is verplicht.
+    missingZoneId: Απαιτείται αναγνωριστικό ζώνης.
   claim:
-    recorded: Zone succesvol geclaimd.
-    alreadyOwned: Zone is al geclaimd door je team.
+    recorded: Ζώνη διεκδικήθηκε με επιτυχία.
+    alreadyOwned: Ζώνη έχει ήδη διεκδικηθεί από την ομάδα σας.
 market_crash:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Market Crash-games.
+  gameTypeRequired: Αυτό το τελικό σημείο είναι διαθέσιμο μόνο για παιχνίδια Market
+    Crash.
   validation:
-    missingTradeId: Trade-id is verplicht.
+    missingTradeId: Απαιτείται ταυτότητα εμπορίου.
   resource:
-    invalidName: Resourcenaam is ongeldig.
-    exists: Resource bestaat al.
-    createFailed: Resource aanmaken mislukt.
-    notFound: Resource is niet gevonden.
-    updateFailed: Resource bijwerken mislukt.
-    deleteFailed: Resource verwijderen mislukt.
+    invalidName: Το όνομα του πόρου δεν είναι έγκυρο.
+    exists: Ο πόρος υπάρχει ήδη.
+    createFailed: Η δημιουργία πόρων απέτυχε.
+    notFound: Ο πόρος δεν βρέθηκε.
+    updateFailed: Η ενημέρωση πόρων απέτυχε.
+    deleteFailed: Η διαγραφή πόρων απέτυχε.
   point:
-    createFailed: Punt aanmaken mislukt.
-    notFound: Punt is niet gevonden.
-    updateFailed: Punt bijwerken mislukt.
-    deleteFailed: Punt verwijderen mislukt.
-    invalidTitle: Punttitel is ongeldig.
-    invalidColor: Punt-markerkleur is ongeldig.
-    invalidResource: Punt bevat een ongeldige resourceverwijzing.
-    resourcesRequired: Minimaal één resource-instelling is verplicht voor een punt.
-    invalid: Puntcoördinaten zijn ongeldig.
+    createFailed: Η δημιουργία σημείου απέτυχε.
+    notFound: Το σημείο δεν βρέθηκε.
+    updateFailed: Η ενημέρωση σημείου απέτυχε.
+    deleteFailed: Η διαγραφή σημείου απέτυχε.
+    invalidTitle: Ο τίτλος του σημείου δεν είναι έγκυρος.
+    invalidColor: Το χρώμα του δείκτη σημείου δεν είναι έγκυρο.
+    invalidResource: Το σημείο περιέχει μια μη έγκυρη αναφορά πόρου.
+    resourcesRequired: Απαιτείται τουλάχιστον μία ρύθμιση πόρων για ένα σημείο.
+    invalid: Οι συντεταγμένες σημείων δεν είναι έγκυρες.
   location:
-    required: Locatie is verplicht voordat je kunt handelen.
-    invalid: Locatiecoördinaten zijn ongeldig.
-    updated: Locatie bijgewerkt.
+    required: Η τοποθεσία είναι απαραίτητη για να μπορέσετε να πραγματοποιήσετε συναλλαγές.
+    invalid: Οι συντεταγμένες τοποθεσίας δεν είναι έγκυρες.
+    updated: Η τοποθεσία ενημερώθηκε.
   trade:
-    executed: Trade succesvol uitgevoerd.
-    invalidSide: Trade-richting is ongeldig.
-    invalidResource: Resource is niet verhandelbaar op dit punt.
-    outOfRange: Je bent buiten bereik van dit handelspunt.
-    invalidPrice: Trade-prijs is ongeldig.
-    insufficientCash: Onvoldoende cash voor deze trade.
-    insufficientInventory: Onvoldoende voorraad voor deze trade.
+    executed: Η συναλλαγή ολοκληρώθηκε με επιτυχία.
+    invalidSide: Η εμπορική κατεύθυνση δεν είναι έγκυρη.
+    invalidResource: Ο πόρος δεν είναι εμπορεύσιμος σε αυτό το σημείο.
+    outOfRange: Είστε εκτός εύρους αυτού του σημείου συναλλαγών.
+    invalidPrice: Η τιμή συναλλαγών δεν είναι έγκυρη.
+    insufficientCash: Ανεπαρκή μετρητά για αυτό το εμπόριο.
+    insufficientInventory: Ανεπαρκές απόθεμα για αυτό το εμπόριο.
 crazy88:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Crazy 88-games.
+  gameTypeRequired: Αυτό το τελικό σημείο είναι διαθέσιμο μόνο για παιχνίδια Crazy
+    88.
   validation:
-    missingTaskId: Task-id is verplicht.
-    missingSubmissionId: Submission-id is verplicht.
+    missingTaskId: Απαιτείται αναγνωριστικό εργασίας.
+    missingSubmissionId: Απαιτείται ταυτότητα υποβολής.
   task:
-    submitted: Taak succesvol ingediend.
+    submitted: Η εργασία υποβλήθηκε με επιτυχία.
   review:
-    judged: Inzending succesvol beoordeeld.
-    alreadyJudged: Inzending is al beoordeeld.
+    judged: Η υποβολή κρίθηκε επιτυχής.
+    alreadyJudged: Η υποβολή έχει ήδη αξιολογηθεί.
 courier_rush:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Courier Rush-games.
+  gameTypeRequired: Αυτό το τελικό σημείο είναι διαθέσιμο μόνο για παιχνίδια Courier
+    Rush.
   validation:
-    missingPickupId: Pickup-id is verplicht.
-    missingDropoffId: Dropoff-id is verplicht.
+    missingPickupId: Απαιτείται αναγνωριστικό παραλαβής.
+    missingDropoffId: Απαιτείται αναγνωριστικό απόρριψης.
   pickup:
-    confirmed: Pickup succesvol bevestigd.
-    alreadyConfirmed: Pickup is al bevestigd.
+    confirmed: Η παραλαβή επιβεβαιώθηκε με επιτυχία.
+    alreadyConfirmed: Η παραλαβή έχει ήδη επιβεβαιωθεί.
   dropoff:
-    confirmed: Dropoff succesvol bevestigd.
+    confirmed: Το Dropoff επιβεβαιώθηκε με επιτυχία.
 echo_hunt:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Echo Hunt-games.
+  gameTypeRequired: Αυτό το τελικό σημείο είναι διαθέσιμο μόνο για παιχνίδια Echo
+    Hunt.
   validation:
-    missingBeaconId: Beacon-id is verplicht.
+    missingBeaconId: Απαιτείται αναγνωριστικό Beacon.
   beacon:
-    claimed: Beacon succesvol geclaimd.
-    alreadyClaimed: Beacon is al geclaimd door je team.
+    claimed: Ο Beacon διεκδίκησε με επιτυχία.
+    alreadyClaimed: Το Beacon έχει ήδη διεκδικηθεί από την ομάδα σας.
 checkpoint_heist:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Checkpoint Heist-games.
+  gameTypeRequired: Αυτό το τελικό σημείο είναι διαθέσιμο μόνο για παιχνίδια Checkpoint
+    Heist.
   validation:
-    missingCheckpointId: Checkpoint-id is verplicht.
+    missingCheckpointId: Απαιτείται αναγνωριστικό σημείου ελέγχου.
   capture:
-    recorded: Checkpoint succesvol veroverd.
-    alreadyCaptured: Checkpoint is al veroverd door je team.
+    recorded: Το σημείο ελέγχου καταγράφηκε με επιτυχία.
+    alreadyCaptured: Το σημείο ελέγχου έχει ήδη καταληφθεί από την ομάδα σας.
 pandemic_response:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Pandemic Response-games.
+  gameTypeRequired: Αυτό το τελικό σημείο είναι διαθέσιμο μόνο για παιχνίδια Pandemic
+    Response.
   validation:
-    missingPickupId: Pickup-id is verplicht.
-    missingHotspotId: Hotspot-id is verplicht.
+    missingPickupId: Απαιτείται αναγνωριστικό παραλαβής.
+    missingHotspotId: Απαιτείται αναγνωριστικό σημείου πρόσβασης.
   pickup:
-    collected: Pickup succesvol verzameld.
-    alreadyCollected: Pickup is al verzameld door je team.
+    collected: Η παραλαβή πραγματοποιήθηκε με επιτυχία.
+    alreadyCollected: Η παραλαβή έχει ήδη συλλεχθεί από την ομάδα σας.
   hotspot:
-    resolved: Hotspot succesvol opgelost.
-    alreadyResolved: Hotspot is al opgelost door je team.
+    resolved: Το hotspot επιλύθηκε με επιτυχία.
+    alreadyResolved: Το hotspot έχει ήδη λυθεί από την ομάδα σας.
 birds_of_prey:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Birds of Prey-games.
+  gameTypeRequired: Αυτό το τελικό σημείο είναι διαθέσιμο μόνο για παιχνίδια Birds
+    of Prey.
   config:
-    updateFailed: Birds of Prey-instellingen opslaan mislukt.
+    updateFailed: Η αποθήκευση των ρυθμίσεων Birds of Prey απέτυχε.
   location:
-    required: Locatie is verplicht voordat je deze actie kunt uitvoeren.
-    invalid: Locatiecoördinaten zijn ongeldig.
-    updated: Locatie bijgewerkt.
+    required: Η τοποθεσία απαιτείται για να μπορέσετε να εκτελέσετε αυτήν την ενέργεια.
+    invalid: Οι συντεταγμένες τοποθεσίας δεν είναι έγκυρες.
+    updated: Η τοποθεσία ενημερώθηκε.
   validation:
-    missingEggId: Egg-id is verplicht.
+    missingEggId: Απαιτείται ταυτότητα αυγού.
   egg:
-    dropped: Egg succesvol geplaatst.
-    dropFailed: Egg kon niet worden opgeslagen.
-    alreadyDropped: Egg is al geplaatst.
-    persistFailed: Egg-drop is geaccepteerd, maar kon niet uit persistente game-state
-      worden geladen.
-    destroyed: Egg succesvol vernietigd.
-    alreadyDestroyed: Egg is al vernietigd.
-    notFound: Egg is niet gevonden.
-    cannotDestroyOwn: Je kunt je eigen egg niet vernietigen.
-    notVisible: Egg is niet zichtbaar binnen je bereik.
-    protected: Egg is beschermd omdat de eigenaar in de buurt is.
+    dropped: Το αυγό τοποθετήθηκε με επιτυχία.
+    dropFailed: Το αυγό δεν μπορούσε να σωθεί.
+    alreadyDropped: Το αυγό έχει ήδη τοποθετηθεί.
+    persistFailed: Η πτώση αυγού έγινε αποδεκτή, αλλά δεν ήταν δυνατή η φόρτωση από
+      την κατάσταση επίμονου παιχνιδιού.
+    destroyed: Αυγό καταστράφηκε επιτυχώς.
+    alreadyDestroyed: Το αυγό έχει ήδη καταστραφεί.
+    notFound: Το αυγό δεν βρέθηκε.
+    cannotDestroyOwn: Δεν μπορείς να καταστρέψεις το δικό σου αυγό.
+    notVisible: Το αυγό δεν είναι ορατό εντός του εύρους σας.
+    protected: Το αυγό προστατεύεται επειδή ο ιδιοκτήτης είναι κοντά.
 code_conspiracy:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Code Conspiracy-games.
+  gameTypeRequired: Αυτό το τελικό σημείο είναι διαθέσιμο μόνο για παιχνίδια Code
+    Conspiracy.
   validation:
-    missingTargetTeamId: Doelteam-id is verplicht.
-    missingCode: Code is verplicht.
+    missingTargetTeamId: Απαιτείται αναγνωριστικό ομάδας στόχου.
+    missingCode: Απαιτείται κωδικός.
   code:
-    submitted: Code-inzending ontvangen.
+    submitted: Λήφθηκε η υποβολή κωδικού.
 auth:
   locale:
-    unsupported: Niet-ondersteunde taal. Toegestane waarden zijn en en nl.
+    unsupported: Μη υποστηριζόμενη γλώσσα. Οι επιτρεπόμενες τιμές είναι en και nl.
   ws:
-    superAdminKeyRequired: WS super admin-sleutel is verplicht.
-    superAdminKeyInvalid: WS super admin-sleutel is ongeldig.
-    superAdminKeyNotConfigured: WS super admin-sleutel is niet geconfigureerd op de
-      backend.
+    superAdminKeyRequired: Απαιτείται το κλειδί super admin WS.
+    superAdminKeyInvalid: Το κλειδί super admin WS δεν είναι έγκυρο.
+    superAdminKeyNotConfigured: Το κλειδί super admin WS δεν έχει ρυθμιστεί στο backend.
   user:
-    invalidEmailOrPassword: Ongeldig e-mailadres of wachtwoord.
-    disallowedRole: Dit account heeft geen toegang tot deze backend.
-    superAdminRequired: Super admin-toegang is vereist voor deze actie.
+    invalidEmailOrPassword: Μη έγκυρη διεύθυνση email ή κωδικός πρόσβασης.
+    disallowedRole: Αυτός ο λογαριασμός δεν έχει πρόσβαση σε αυτό το backend.
+    superAdminRequired: Απαιτείται σούπερ πρόσβαση διαχειριστή για αυτήν την ενέργεια.
   team:
-    invalidCodes: Ongeldige gamecode of teamcode.
+    invalidCodes: Μη έγκυρος κωδικός παιχνιδιού ή κωδικός ομάδας.
   token:
-    missingBearerToken: Bearer-token is verplicht.
-    invalidBearerHeaderFormat: Bearer-token header-formaat is ongeldig.
-    invalidOrExpired: Token is ongeldig of verlopen.
-    gameAccessRequired: Token heeft geen toegang tot de gevraagde game.
+    missingBearerToken: Απαιτείται διακριτικό φορέα.
+    invalidBearerHeaderFormat: Η μορφή κεφαλίδας διακριτικού φορέα δεν είναι έγκυρη.
+    invalidOrExpired: Το διακριτικό δεν είναι έγκυρο ή έχει λήξει.
+    gameAccessRequired: Το Token δεν έχει πρόσβαση στο ζητούμενο παιχνίδι.
   register:
-    emailAlreadyUsed: Er bestaat al een account met dit e-mailadres.
-    usernameAlreadyUsed: Deze gebruikersnaam is al in gebruik.
-    verifyEmailSent: Account aangemaakt. Controleer je e-mail om je adres te bevestigen.
-    emailSendFailed: Verificatie-e-mail kon niet worden verzonden.
-    mailerNotConfigured: E-mailservice is niet geconfigureerd.
-    mailerUnsupportedScheme: Het DSN-schema van de e-mailservice wordt niet ondersteund.
-    mailerFromMissing: Afzenderadres voor e-mail is niet geconfigureerd.
+    emailAlreadyUsed: Υπάρχει ήδη λογαριασμός με αυτήν τη διεύθυνση email.
+    usernameAlreadyUsed: Αυτό το όνομα χρήστη χρησιμοποιείται ήδη.
+    verifyEmailSent: Ο λογαριασμός δημιουργήθηκε. Ελέγξτε το email σας για να επιβεβαιώσετε
+      τη διεύθυνσή σας.
+    emailSendFailed: Δεν ήταν δυνατή η αποστολή email επαλήθευσης.
+    mailerNotConfigured: Η υπηρεσία email δεν έχει ρυθμιστεί.
+    mailerUnsupportedScheme: Η υπηρεσία email DSN δεν υποστηρίζεται.
+    mailerFromMissing: Η διεύθυνση αποστολέα email δεν έχει διαμορφωθεί.
   verify:
-    invalidToken: Deze verificatietoken is ongeldig of verlopen.
-    success: E-mailadres is succesvol bevestigd.
-    pendingEmailConflict: Dit wachtende e-mailadres kan niet meer worden toegepast
-      omdat het al in gebruik is.
-    tokenColumnMissing: Opslag voor verificatietokens is niet correct geconfigureerd.
+    invalidToken: Αυτό το διακριτικό ελέγχου ταυτότητας δεν είναι έγκυρο ή έχει λήξει.
+    success: Η διεύθυνση email επιβεβαιώθηκε με επιτυχία.
+    pendingEmailConflict: Αυτή η εκκρεμής διεύθυνση email δεν μπορεί πλέον να εφαρμοστεί
+      επειδή χρησιμοποιείται ήδη.
+    tokenColumnMissing: Η αποθήκευση διακριτικού ελέγχου ταυτότητας δεν έχει ρυθμιστεί
+      σωστά.
   reset:
-    requestAccepted: Als een account bestaat en bevestigd is, is een reset-e-mail
-      verzonden.
-    tokenColumnsMissing: Opslag voor wachtwoord-resettokens is niet correct geconfigureerd.
-    emailSendFailed: Wachtwoord reset-e-mail kon niet worden verzonden.
+    requestAccepted: Εάν υπάρχει λογαριασμός και έχει επιβεβαιωθεί, έχει σταλεί ένα
+      email επαναφοράς.
+    tokenColumnsMissing: Η αποθήκευση διακριτικού επαναφοράς κωδικού πρόσβασης δεν
+      έχει ρυθμιστεί σωστά.
+    emailSendFailed: Δεν ήταν δυνατή η αποστολή email επαναφοράς κωδικού πρόσβασης.
 mailer:
   verify:
-    subject: Bevestig je e-mailadres
-    title: Bevestig je e-mailadres
-    greeting: Hoi %username%,
-    intro: Bevestig je e-mailadres door op de knop hieronder te klikken.
-    cta: E-mailadres bevestigen
-    outro: Als je geen account hebt aangemaakt, kun je deze e-mail negeren.
+    subject: Επιβεβαιώστε τη διεύθυνση email σας
+    title: Επιβεβαιώστε τη διεύθυνση email σας
+    greeting: Γεια %username%,
+    intro: Επιβεβαιώστε τη διεύθυνση email σας κάνοντας κλικ στο παρακάτω κουμπί.
+    cta: Επιβεβαιώστε τη διεύθυνση email
+    outro: Εάν δεν έχετε δημιουργήσει λογαριασμό, μπορείτε να αγνοήσετε αυτό το μήνυμα
+      ηλεκτρονικού ταχυδρομείου.
   reset:
-    subject: Wachtwoord resetten
-    title: Wachtwoord resetten
-    greeting: Hoi %username%,
-    intro: Er is een wachtwoordreset aangevraagd voor je account. Gebruik de knop
-      hieronder om een nieuw wachtwoord te kiezen.
-    cta: Wachtwoord resetten
-    outro: Als je dit niet hebt aangevraagd, kun je deze e-mail negeren.
+    subject: Επαναφορά κωδικού πρόσβασης
+    title: Επαναφορά κωδικού πρόσβασης
+    greeting: Γεια %username%,
+    intro: Ζητήθηκε επαναφορά κωδικού πρόσβασης για τον λογαριασμό σας. Χρησιμοποιήστε
+      το παρακάτω κουμπί για να επιλέξετε νέο κωδικό πρόσβασης.
+    cta: Επαναφορά κωδικού πρόσβασης
+    outro: Εάν δεν το έχετε ζητήσει, μπορείτε να αγνοήσετε αυτό το μήνυμα ηλεκτρονικού
+      ταχυδρομείου.

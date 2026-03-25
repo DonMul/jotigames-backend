@@ -198,7 +198,7 @@ market_crash:
     updateFailed: Punt bijwerken mislukt.
     deleteFailed: Punt verwijderen mislukt.
     invalidTitle: Punttitel is ongeldig.
-    invalidColor: Punt-markerkleur is ongeldig.
+    invalidColor: De kleur van de puntmarkering is ongeldig.
     invalidResource: Punt bevat een ongeldige resourceverwijzing.
     resourcesRequired: Minimaal één resource-instelling is verplicht voor een punt.
     invalid: Puntcoördinaten zijn ongeldig.
@@ -293,7 +293,7 @@ auth:
     unsupported: Niet-ondersteunde taal. Toegestane waarden zijn en en nl.
   ws:
     superAdminKeyRequired: WS super admin-sleutel is verplicht.
-    superAdminKeyInvalid: WS super admin-sleutel is ongeldig.
+    superAdminKeyInvalid: WS-superbeheerderssleutel is ongeldig.
     superAdminKeyNotConfigured: WS super admin-sleutel is niet geconfigureerd op de
       backend.
   user:
@@ -330,14 +330,14 @@ mailer:
   verify:
     subject: Bevestig je e-mailadres
     title: Bevestig je e-mailadres
-    greeting: Hoi %username%,
+    greeting: Hoi %usernaam%,
     intro: Bevestig je e-mailadres door op de knop hieronder te klikken.
     cta: E-mailadres bevestigen
     outro: Als je geen account hebt aangemaakt, kun je deze e-mail negeren.
   reset:
     subject: Wachtwoord resetten
     title: Wachtwoord resetten
-    greeting: Hoi %username%,
+    greeting: Hoi %usernaam%,
     intro: Er is een wachtwoordreset aangevraagd voor je account. Gebruik de knop
       hieronder om een nieuw wachtwoord te kiezen.
     cta: Wachtwoord resetten
