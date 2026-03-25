@@ -6,16 +6,21 @@ from app.dependencies import DbSession
 
 
 class GameResetRepository:
+    """Utility repository for clearing game-scoped state across many tables."""
+
     def __init__(self) -> None:
+        """Initialize metadata used for dynamic table reflection."""
         self._metadata = MetaData()
 
     def _getTableOrNone(self, db: DbSession, table_name: str) -> Optional[Table]:
+        """Return reflected table metadata or `None` when table is unavailable."""
         try:
             return Table(table_name, self._metadata, autoload_with=db.get_bind())
         except Exception:
             return None
 
     def resetTeamsByGameId(self, db: DbSession, game_id: str, reset_geo_score: bool) -> None:
+        """Reset transient team flags and optional scores for a game."""
         team_table = self._getTableOrNone(db, "team")
         if team_table is None:
             return
@@ -40,6 +45,7 @@ class GameResetRepository:
         )
 
     def resetCardsByGameId(self, db: DbSession, game_id: str) -> None:
+        """Reset card holder/lock state for all cards in a game."""
         card_table = self._getTableOrNone(db, "card")
         if card_table is None:
             return
@@ -60,6 +66,7 @@ class GameResetRepository:
         )
 
     def deleteByGameId(self, db: DbSession, table_name: str, game_id: str) -> None:
+        """Delete rows in a table by direct `game_id` scope."""
         table = self._getTableOrNone(db, table_name)
         if table is None or "game_id" not in table.c:
             return
@@ -73,6 +80,7 @@ class GameResetRepository:
         parent_table_name: str,
         game_id: str,
     ) -> None:
+        """Delete rows by joining through parent rows that are game-scoped."""
         table = self._getTableOrNone(db, table_name)
         parent_table = self._getTableOrNone(db, parent_table_name)
         if table is None or parent_table is None:
@@ -84,6 +92,7 @@ class GameResetRepository:
         db.execute(delete(table).where(table.c[foreign_key_column].in_(subquery)))
 
     def deleteByTeamGameId(self, db: DbSession, table_name: str, team_fk_column: str, game_id: str) -> None:
+        """Delete rows whose team foreign key belongs to teams in a game."""
         table = self._getTableOrNone(db, table_name)
         team_table = self._getTableOrNone(db, "team")
         if table is None or team_table is None:
@@ -95,6 +104,7 @@ class GameResetRepository:
         db.execute(delete(table).where(table.c[team_fk_column].in_(subquery)))
 
     def resetTerritoryZonesByGameId(self, db: DbSession, game_id: str) -> None:
+        """Clear ownership/capture metadata for all zones in a game."""
         zone_table = self._getTableOrNone(db, "territory_zone")
         if zone_table is None or "game_id" not in zone_table.c:
             return
@@ -111,6 +121,7 @@ class GameResetRepository:
         db.execute(update(zone_table).where(zone_table.c["game_id"] == game_id).values(**values))
 
     def resetCodeConspiracyWinnerByGameId(self, db: DbSession, game_id: str) -> None:
+        """Clear stored Code Conspiracy winner field on a game record."""
         game_table = self._getTableOrNone(db, "game")
         if game_table is None or "id" not in game_table.c or "code_conspiracy_winner_team_id" not in game_table.c:
             return
@@ -122,6 +133,7 @@ class GameResetRepository:
         )
 
     def deleteCardUsageByGameId(self, db: DbSession, game_id: str) -> None:
+        """Delete card usage rows associated with cards in the given game."""
         usage_table = self._getTableOrNone(db, "card_usage")
         card_table = self._getTableOrNone(db, "card")
         if usage_table is None or card_table is None:

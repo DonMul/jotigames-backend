@@ -8,14 +8,18 @@ from app.repositories.game_logic_state_repository import GameLogicStateRepositor
 
 
 class BirdsOfPreyRepository(GameLogicStateRepository):
+    """Persistence helpers for Birds of Prey configuration, eggs, and locations."""
+
     @staticmethod
     def _first_present(row: Dict[str, Any], keys: list[str], default: Any = None) -> Any:
+        """Return the first available value from alternative column names."""
         for key in keys:
             if key in row:
                 return row.get(key)
         return default
 
     def get_configuration(self, db: DbSession, game_id: str) -> Dict[str, Any]:
+        """Load Birds of Prey game configuration with legacy-column compatibility."""
         game = self.get_game_by_id(db, game_id)
         if game is None:
             return {}
@@ -28,6 +32,7 @@ class BirdsOfPreyRepository(GameLogicStateRepository):
 
     @staticmethod
     def _safe_float(value: Any) -> Optional[float]:
+        """Parse a float or return `None` for invalid or NaN values."""
         try:
             numeric = float(value)
         except (TypeError, ValueError):
@@ -35,6 +40,7 @@ class BirdsOfPreyRepository(GameLogicStateRepository):
         return numeric if numeric == numeric else None
 
     def _extract_team_location(self, row: Dict[str, Any]) -> Dict[str, Any]:
+        """Normalize team location columns into the public location schema."""
         latitude = self._safe_float(self._first_present(row, ["geo_latitude", "geoLatitude", "latitude"]))
         longitude = self._safe_float(self._first_present(row, ["geo_longitude", "geoLongitude", "longitude"]))
         updated_at_raw = self._first_present(row, ["geo_updated_at", "geoUpdatedAt", "updated_at", "updatedAt"])
@@ -52,6 +58,7 @@ class BirdsOfPreyRepository(GameLogicStateRepository):
         }
 
     def get_team_location(self, db: DbSession, game_id: str, team_id: str) -> Dict[str, Any]:
+        """Return normalized location for a single team within a game."""
         team = self.get_team_by_game_and_id(db, game_id, team_id)
         if not isinstance(team, dict):
             return {
@@ -62,6 +69,7 @@ class BirdsOfPreyRepository(GameLogicStateRepository):
         return self._extract_team_location(team)
 
     def fetch_team_locations_by_game_id(self, db: DbSession, game_id: str) -> Dict[str, Dict[str, Any]]:
+        """Return all team locations in a game keyed by team id."""
         teams = self.fetch_teams_by_game_id(db, game_id)
         by_team: Dict[str, Dict[str, Any]] = {}
         for team in teams:
@@ -72,6 +80,7 @@ class BirdsOfPreyRepository(GameLogicStateRepository):
         return by_team
 
     def update_team_location_without_commit(self, db: DbSession, game_id: str, team_id: str, *, latitude: float, longitude: float) -> None:
+        """Update a team's coordinates and timestamp without committing."""
         table = self.get_team_table(db)
         lat_col = self._pick_column(table, ["geo_latitude", "geoLatitude", "latitude"])
         lon_col = self._pick_column(table, ["geo_longitude", "geoLongitude", "longitude"])
@@ -95,20 +104,24 @@ class BirdsOfPreyRepository(GameLogicStateRepository):
         )
 
     def fetch_active_team_ids_for_game(self, db: DbSession, game_id: str) -> list[str]:
+        """List active team identifiers for fan-out operations."""
         table = self.get_team_table(db)
         rows = db.execute(select(table.c["id"]).where(table.c["game_id"] == game_id)).all()
         return [str(row[0]) for row in rows if str(row[0] or "").strip()]
 
     def get_egg_table(self, db: DbSession):
+        """Resolve the Birds of Prey egg table."""
         return self._get_table(db, "birds_of_prey_egg")
 
     @staticmethod
     def _to_iso(value: Any) -> str:
+        """Convert date-like values into ISO strings for API payloads."""
         if isinstance(value, datetime):
             return value.isoformat()
         return str(value or "")
 
     def _normalize_egg_row(self, row: Dict[str, Any]) -> Dict[str, Any]:
+        """Normalize raw egg row mappings into stable field names."""
         return {
             "id": str(self._first_present(row, ["id"], "") or ""),
             "game_id": str(self._first_present(row, ["game_id", "gameId"], "") or ""),
@@ -122,6 +135,7 @@ class BirdsOfPreyRepository(GameLogicStateRepository):
         }
 
     def fetch_active_eggs_by_game_id(self, db: DbSession, game_id: str) -> list[Dict[str, Any]]:
+        """Return all currently undestroyed eggs for a game."""
         table = self.get_egg_table(db)
         game_col = self._pick_column(table, ["game_id", "gameId"])
         destroyed_col = self._pick_column(table, ["destroyed_at", "destroyedAt"])
@@ -140,6 +154,7 @@ class BirdsOfPreyRepository(GameLogicStateRepository):
         return [self._normalize_egg_row(dict(row)) for row in rows]
 
     def get_active_egg_by_id(self, db: DbSession, game_id: str, egg_id: str) -> Optional[Dict[str, Any]]:
+        """Return a single active egg by id, or `None` when absent."""
         table = self.get_egg_table(db)
         game_col = self._pick_column(table, ["game_id", "gameId"])
         destroyed_col = self._pick_column(table, ["destroyed_at", "destroyedAt"])
@@ -173,6 +188,7 @@ class BirdsOfPreyRepository(GameLogicStateRepository):
         longitude: float,
         automatic: bool,
     ) -> None:
+        """Insert a newly dropped egg row without committing the transaction."""
         table = self.get_egg_table(db)
 
         values: Dict[str, Any] = {}
@@ -202,6 +218,7 @@ class BirdsOfPreyRepository(GameLogicStateRepository):
         db.execute(insert(table).values(**values))
 
     def mark_egg_destroyed_without_commit(self, db: DbSession, *, egg_id: str, destroyed_by_team_id: str) -> bool:
+        """Mark an egg as destroyed and optionally record the destroying team."""
         table = self.get_egg_table(db)
         id_col = self._pick_column(table, ["id"])
         destroyed_at_col = self._pick_column(table, ["destroyed_at", "destroyedAt"])
@@ -224,6 +241,7 @@ class BirdsOfPreyRepository(GameLogicStateRepository):
         return int(result.rowcount or 0) > 0
 
     def get_last_drop_at_for_team(self, db: DbSession, *, game_id: str, team_id: str) -> Optional[datetime]:
+        """Return the latest egg drop timestamp for one team in one game."""
         table = self.get_egg_table(db)
         game_col = self._pick_column(table, ["game_id", "gameId"])
         owner_col = self._pick_column(table, ["owner_team_id", "ownerTeamId"])
@@ -249,6 +267,7 @@ class BirdsOfPreyRepository(GameLogicStateRepository):
         return None
 
     def update_configuration_without_commit(self, db: DbSession, game_id: str, values: Dict[str, Any]) -> None:
+        """Persist configurable Birds of Prey settings without committing."""
         table = self.get_game_table(db)
         updates: Dict[str, Any] = {}
 

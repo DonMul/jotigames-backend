@@ -1,0 +1,343 @@
+validation:
+  invalidRequest: Anmodningsindholdet er ugyldigt.
+game:
+  auth:
+    userRequired: En brugerprincipal er påkrævet for spiladministrationsslutpunkter.
+    viewAccessRequired: Du har ikke læseadgang til dette spil.
+    manageAccessRequired: Du har ikke skriveadgang til dette spil.
+  teamMessage:
+    sent: Beskeden er sendt til teamet.
+    sendFailed: Beskeden kunne ikke sendes til teamet.
+  chat:
+    emptyMessage: Chatbeskeden må ikke være tom.
+    sendFailed: Chatbeskeden kunne ikke sendes.
+  notFound: Spil ikke fundet.
+  member:
+    userNotFound: Bruger ikke fundet.
+    emailNotFound: Der blev ikke fundet nogen bruger med den e-mailadresse.
+  schema:
+    columnMissing: Spilletabelskemaet mangler en obligatorisk kolonne.
+  types:
+    columnMissing: Tidsplanen for tilgængelighed af spiltypen mangler en obligatorisk
+      kolonne.
+  validation:
+    requiredFieldsMissing: Obligatoriske spillefelter mangler.
+    startBeforeEndRequired: Starttidspunktet for et spil skal være før sluttidspunktet.
+    unknownSetting: En eller flere spilindstillingsnøgler er ukendte.
+  create:
+    failed: Spillet kunne ikke oprettes.
+  update:
+    failed: Spillet kunne ikke opdateres.
+  delete:
+    failed: Spillet kunne ikke slettes.
+    success: Spillet blev slettet.
+  reset:
+    failed: Spillet kunne ikke nulstilles.
+    success: Spillet blev nulstillet.
+  admin:
+    add:
+      failed: Spiladministrator kunne ikke tilføjes.
+      success: Spiladministrator blev tilføjet.
+    remove:
+      failed: Spiladministratoren kunne ikke fjernes.
+      success: Spiladministratoren blev fjernet.
+      ownerForbidden: Spillejeren kan ikke fjernes som admin.
+      selfForbidden: Du kan ikke fjerne dig selv fra spiladministratorer.
+  gameMaster:
+    add:
+      failed: Spilmaster kunne ikke tilføjes.
+      success: Spilmester blev tilføjet.
+    remove:
+      failed: Spilmesteren kunne ikke fjernes.
+      success: Spilmesteren blev fjernet.
+team:
+  notFound: Holdet blev ikke fundet i dette spil.
+  auth:
+    selfRequired: Team-tokens har kun adgang til deres eget hold.
+  validation:
+    codeAlreadyUsed: Teamcode er allerede i brug til dette spil.
+  create:
+    failed: Teamet kunne ikke oprettes.
+    codeGenerationFailed: En unik teamkode kunne ikke genereres.
+  update:
+    failed: Holdet kunne ikke opdateres.
+  delete:
+    failed: Teamet kunne ikke slettes.
+    success: Teamet blev slettet.
+explodingKittens:
+  gameTypeRequired: Dette slutpunkt er kun tilgængeligt for Exploding Kittens-spil.
+  lives:
+    invalidDelta: Leven-delta skal være ikke-nul.
+    updated: Holdets liv blev opdateret.
+    updateFailed: Holdets liv kunne ikke opdateres.
+  play:
+    failed: Kort kunne ikke spilles.
+    cardNotInHand: Kortet er ikke i dette holds hånd.
+    cardNotPlayable: Dette kort kan ikke spilles direkte.
+    needsTarget: Dette kort kræver et målhold.
+    targetSelf: Et hold kan ikke målrette sig selv.
+    targetInvalid: Målholdet er ugyldigt for dette spil.
+    attackAlreadyPending: Der er allerede et angreb på vej til dette hold.
+    peekAlreadyPending: Se fremtiden er allerede i køen til dette hold.
+    skipAlreadyPending: Skip er allerede i køen for dette hold.
+    attackReady: Angrebskort blev spillet med succes.
+    favorTargeted: Fordelskort spillet og målhandlingen oprettet.
+    peekReady: Se det fremtidige kort spillet med succes.
+    shuffleDone: Bland kortet blev spillet.
+    skipReady: Spring kort spillet over.
+  hand:
+    addFailed: Tilfældigt håndkort kunne ikke tilføjes.
+    removeFailed: Tilfældigt håndkort kunne ikke fjernes.
+  cards:
+    invalidType: Korttypen er ugyldig for eksploderende killinger.
+    notFound: Kort ikke fundet.
+    addFailed: Kortene kunne ikke tilføjes.
+    addSuccess: Kort blev tilføjet.
+    createFailed: Kort kunne ikke oprettes.
+    updateFailed: Kortet kunne ikke opdateres.
+    deleteFailed: Kortet kunne ikke fjernes.
+    deleteSuccess: Kortet blev fjernet.
+    removeBlocked: Kortet kan ikke fjernes, mens det er i en hånd eller låst.
+    pdfDependenciesMissing: QR-PDF-eksportafhængigheder er ikke tilgængelige på serveren.
+    pdfLogoInvalid: Centerlogoet skal være en billedfil.
+    pdfLogoTooLarge: Midterlogoet er for stort. Maksimal størrelse er 2 MB.
+  scan:
+    failed: Kortscanning mislykkedes.
+    cardNotFound: Kort blev ikke fundet for dette spil.
+    cardInHand: Kortet er allerede i en holdhånd.
+    cardLocked: Kortet er i øjeblikket låst.
+    cardAdded: Kort lagt til hånden.
+    cardNoEffect: Kortet har ingen effekt.
+    felixGain: Felix-kortet gav et ekstra liv.
+    felixAlreadyUsed: Felix-kortet er allerede blevet brugt af dette hold.
+    explodingDefused: Eksploderende killing er blevet uskadeliggjort.
+    explodingHit: Eksploderende killing ramte holdet.
+    attackTargeted: Angrebet er målrettet og venter på at blive behandlet.
+  state:
+    fetched: Holdstatus hentet.
+    resolveFailed: Status kunne ikke håndteres.
+    none: Ingen afventende status at håndtere.
+    skipPending: Skip står i kø for dette hold.
+    skipResolved: Skip status håndteret.
+    peekPending: Se fremtiden er i kø for dette hold.
+    peekNeedsConfirm: Se fremtiden kræver bekræftelse for at fuldføre.
+    peekResolved: Se den fremtidige status afsluttet.
+    attackNeedsTarget: Angreb kræver et målhold og scannet kort.
+    attackInvalidTarget: Målhold for angreb er ugyldigt.
+  action:
+    invalid: Handlingen er ugyldig.
+    notAllowed: Handlingen kan ikke håndteres af dette team.
+    nopeMissing: Der kræves intet kort for at annullere denne kampagne.
+    nopeUsed: Kampagnen annulleret med Nej.
+    favorNoCards: Target Team har ingen kort til Favor.
+    favorTaken: Gunst løst og et kort tages.
+    resolveFailed: Handlingen kunne ikke fuldføres.
+  combo:
+    failed: Combo kunne ikke bruges.
+    invalid: Ugyldig kombinationsvalg.
+    cardNotInHand: Et eller flere valgte kort er ikke på hånden.
+    needsTarget: Combo kræver et målhold.
+    targetSelf: Teamet kan ikke målrette sig selv for denne kombination.
+    targetInvalid: Målteamet for kombinationen er ugyldigt.
+    twoReady: 2-of-a-kind combo i kø.
+    twoNoCards: Målteamet har ingen kort til 2-af-en-slags kombination.
+    twoTaken: 2-of-a-kind combo løst og et kort taget.
+    threeNeedsType: 3-af-en- slags kombination kræver den ønskede korttype.
+    threeInvalidType: Den ønskede korttype er ugyldig for kombinationen af ​​3-af-en-slag.
+    threeReady: 3-of-a-kind combo i kø.
+    threeTaken: 3-af-en-slags kombination løst og ønsket kort taget.
+    threeNoMatch: Den ønskede korttype findes ikke i målholdets hånd.
+    fiveNeedsType: 5-forskellige combo kræver ønsket korttype.
+    fiveTaken: 5 forskellige kombinationer løst og kort taget fra bunken.
+    fiveNone: 5-forskellige kombinationsløsninger, men den ønskede korttype er ikke
+      tilgængelig i bunken.
+geohunter:
+  gameTypeRequired: Dette slutpunkt er kun tilgængeligt for Geohunter-spil.
+  validation:
+    missingPoiId: Point of interest ID er påkrævet.
+  answer:
+    recorded: Svaret blev indsendt.
+    alreadySubmitted: Dette punkt er allerede blevet besvaret af dit team.
+blindhike:
+  gameTypeRequired: Dette endepunkt er kun tilgængeligt for Blindhike-spil.
+  validation:
+    missingMarkerId: Markør-id er påkrævet.
+  marker:
+    added: Markør blev tilføjet.
+    alreadyAdded: Markør er allerede blevet tilføjet af dit team.
+    finished: Dit hold er allerede færdig og kan ikke placere yderligere markører.
+resource_run:
+  gameTypeRequired: Dette slutpunkt er kun tilgængeligt for Resource Run-spil.
+  validation:
+    missingNodeId: Ressource node-id er påkrævet.
+  claim:
+    recorded: Ressourcen er gjort krav på.
+    alreadyCollected: Ressourcen er allerede blevet indsamlet af dit team.
+territory_control:
+  gameTypeRequired: Dette slutpunkt er kun tilgængeligt for Territory Control-spil.
+  validation:
+    missingZoneId: Zone-id er påkrævet.
+  claim:
+    recorded: Zone er gjort krav på.
+    alreadyOwned: Zone er allerede blevet gjort krav på af dit team.
+market_crash:
+  gameTypeRequired: Dette slutpunkt er kun tilgængeligt for Market Crash-spil.
+  validation:
+    missingTradeId: Handels-id er påkrævet.
+  resource:
+    invalidName: Ressourcenavnet er ugyldigt.
+    exists: Ressourcen findes allerede.
+    createFailed: Ressourceoprettelse mislykkedes.
+    notFound: Ressource ikke fundet.
+    updateFailed: Ressourceopdatering mislykkedes.
+    deleteFailed: Ressourcesletning mislykkedes.
+  point:
+    createFailed: Punktoprettelse mislykkedes.
+    notFound: Punkt ikke fundet.
+    updateFailed: Punktopdatering mislykkedes.
+    deleteFailed: Slet punkt mislykkedes.
+    invalidTitle: Punkttitel er ugyldig.
+    invalidColor: Punktmarkørfarven er ugyldig.
+    invalidResource: Punktet indeholder en ugyldig ressourcereference.
+    resourcesRequired: Der kræves mindst én ressourceindstilling for et punkt.
+    invalid: Punktkoordinater er ugyldige.
+  location:
+    required: Placering er påkrævet, før du kan handle.
+    invalid: Placeringskoordinaterne er ugyldige.
+    updated: Placering opdateret.
+  trade:
+    executed: Handel udført med succes.
+    invalidSide: Handelsretningen er ugyldig.
+    invalidResource: Ressource er ikke omsættelig på dette tidspunkt.
+    outOfRange: Du er uden for rækkevidde af dette handelspunkt.
+    invalidPrice: Handelsprisen er ugyldig.
+    insufficientCash: Ikke nok kontanter til denne handel.
+    insufficientInventory: Utilstrækkeligt lager til denne handel.
+crazy88:
+  gameTypeRequired: Dette slutpunkt er kun tilgængeligt for Crazy 88-spil.
+  validation:
+    missingTaskId: Opgave-id er påkrævet.
+    missingSubmissionId: Indsendelses-id er påkrævet.
+  task:
+    submitted: Job indsendt.
+  review:
+    judged: Indsendelse bedømt som vellykket.
+    alreadyJudged: Indsendelsen er allerede blevet vurderet.
+courier_rush:
+  gameTypeRequired: Dette slutpunkt er kun tilgængeligt for Courier Rush-spil.
+  validation:
+    missingPickupId: Afhentnings-id er påkrævet.
+    missingDropoffId: Afleverings-id er påkrævet.
+  pickup:
+    confirmed: Afhentning bekræftet.
+    alreadyConfirmed: Afhentning allerede bekræftet.
+  dropoff:
+    confirmed: Aflevering blev bekræftet.
+echo_hunt:
+  gameTypeRequired: Dette slutpunkt er kun tilgængeligt for Echo Hunt-spil.
+  validation:
+    missingBeaconId: Beacon ID er påkrævet.
+  beacon:
+    claimed: Beacon blev gjort krav på.
+    alreadyClaimed: Beacon er allerede blevet gjort krav på af dit team.
+checkpoint_heist:
+  gameTypeRequired: Dette slutpunkt er kun tilgængeligt for Checkpoint Heist-spil.
+  validation:
+    missingCheckpointId: Checkpoint ID er påkrævet.
+  capture:
+    recorded: Checkpoint blev fanget.
+    alreadyCaptured: Checkpoint er allerede blevet fanget af dit team.
+pandemic_response:
+  gameTypeRequired: Dette endepunkt er kun tilgængeligt for Pandemic Response-spil.
+  validation:
+    missingPickupId: Afhentnings-id er påkrævet.
+    missingHotspotId: Hotspot-id er påkrævet.
+  pickup:
+    collected: Afhentningen blev afhentet.
+    alreadyCollected: Afhentning er allerede blevet afhentet af dit team.
+  hotspot:
+    resolved: Hotspot blev løst.
+    alreadyResolved: Hotspot er allerede blevet løst af dit team.
+birds_of_prey:
+  gameTypeRequired: Dette slutpunkt er kun tilgængeligt for Birds of Prey-spil.
+  config:
+    updateFailed: Gem af Birds of Prey-indstillinger mislykkedes.
+  location:
+    required: Placering er påkrævet, før du kan udføre denne handling.
+    invalid: Placeringskoordinaterne er ugyldige.
+    updated: Placering opdateret.
+  validation:
+    missingEggId: Ægge-id er påkrævet.
+  egg:
+    dropped: Ægget er anbragt med succes.
+    dropFailed: Ægget kunne ikke reddes.
+    alreadyDropped: Ægget er allerede placeret.
+    persistFailed: Egg drop blev accepteret, men kunne ikke indlæses fra persistent
+      game state.
+    destroyed: Ægget blev ødelagt.
+    alreadyDestroyed: Ægget er allerede blevet ødelagt.
+    notFound: Ægget ikke fundet.
+    cannotDestroyOwn: Du kan ikke ødelægge dit eget æg.
+    notVisible: Æg er ikke synligt inden for dit område.
+    protected: Ægget er beskyttet, fordi ejeren er i nærheden.
+code_conspiracy:
+  gameTypeRequired: Dette slutpunkt er kun tilgængeligt for Code Conspiracy-spil.
+  validation:
+    missingTargetTeamId: Målteam-id er påkrævet.
+    missingCode: Kode er påkrævet.
+  code:
+    submitted: Modtaget kodeindsendelse.
+auth:
+  locale:
+    unsupported: Ikke-understøttet sprog. Tilladte værdier er en og nl.
+  ws:
+    superAdminKeyRequired: WS super admin nøgle er påkrævet.
+    superAdminKeyInvalid: WS super admin nøgle er ugyldig.
+    superAdminKeyNotConfigured: WS super admin nøgle er ikke konfigureret på backend.
+  user:
+    invalidEmailOrPassword: Ugyldig e-mailadresse eller adgangskode.
+    disallowedRole: Denne konto har ikke adgang til denne backend.
+    superAdminRequired: Superadministratoradgang er påkrævet for denne handling.
+  team:
+    invalidCodes: Ugyldig spilkode eller holdkode.
+  token:
+    missingBearerToken: Ihændehavertegn er påkrævet.
+    invalidBearerHeaderFormat: Bærer tokens headerformat er ugyldigt.
+    invalidOrExpired: Token er ugyldigt eller udløbet.
+    gameAccessRequired: Token kan ikke få adgang til det anmodede spil.
+  register:
+    emailAlreadyUsed: Der findes allerede en konto med denne e-mailadresse.
+    usernameAlreadyUsed: Dette brugernavn er allerede i brug.
+    verifyEmailSent: Konto oprettet. Tjek din e-mail for at bekræfte din adresse.
+    emailSendFailed: Bekræftelses-e-mail kunne ikke sendes.
+    mailerNotConfigured: E-mail-tjenesten er ikke konfigureret.
+    mailerUnsupportedScheme: E-mail-tjenestens DSN-skema er ikke understøttet.
+    mailerFromMissing: E-mail-afsenderadressen er ikke konfigureret.
+  verify:
+    invalidToken: Dette godkendelsestoken er ugyldigt eller udløbet.
+    success: E-mailadressen er blevet bekræftet.
+    pendingEmailConflict: Denne afventende e-mailadresse kan ikke længere anvendes,
+      fordi den allerede er i brug.
+    tokenColumnMissing: Opbevaring af godkendelsestoken er ikke konfigureret korrekt.
+  reset:
+    requestAccepted: Hvis en konto eksisterer og er blevet bekræftet, er der sendt
+      en nulstillings-e-mail.
+    tokenColumnsMissing: Lagring af token til nulstilling af adgangskode er ikke konfigureret
+      korrekt.
+    emailSendFailed: E-mail til nulstilling af adgangskode kunne ikke sendes.
+mailer:
+  verify:
+    subject: Bekræft din e-mailadresse
+    title: Bekræft din e-mailadresse
+    greeting: Hej %username%
+    intro: Bekræft din e-mailadresse ved at klikke på knappen nedenfor.
+    cta: Bekræft e-mailadresse
+    outro: Hvis du ikke har oprettet en konto, kan du ignorere denne e-mail.
+  reset:
+    subject: Nulstil adgangskode
+    title: Nulstil adgangskode
+    greeting: Hej %username%
+    intro: Der er blevet anmodet om en nulstilling af adgangskoden til din konto.
+      Brug knappen nedenfor til at vælge en ny adgangskode.
+    cta: Nulstil adgangskode
+    outro: Hvis du ikke har anmodet om dette, kan du ignorere denne e-mail.

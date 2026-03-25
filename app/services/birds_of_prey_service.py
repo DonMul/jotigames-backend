@@ -9,15 +9,19 @@ from app.services.game_logic_service import GameActionResult, GameLogicService
 
 
 class BirdsOfPreyService(GameLogicService):
+    """Game logic orchestration for Birds of Prey actions and projections."""
+
     _EGG_DROP_ACTION = "birds_of_prey.egg.drop"
     _EGG_DESTROY_ACTION = "birds_of_prey.egg.destroy"
     _EARTH_RADIUS_METERS = 6371000.0
 
     def __init__(self) -> None:
+        """Initialize the service with Birds of Prey-specific repository wiring."""
         super().__init__("birds_of_prey", repository=BirdsOfPreyRepository())
 
     @staticmethod
     def _safe_float(value: Any) -> Optional[float]:
+        """Convert a raw value to float, returning `None` on invalid input."""
         try:
             numeric = float(value)
         except (TypeError, ValueError):
@@ -26,6 +30,7 @@ class BirdsOfPreyService(GameLogicService):
 
     @staticmethod
     def _safe_int(value: Any, default: int) -> int:
+        """Parse an integer value, or return the provided default fallback."""
         try:
             return int(value)
         except (TypeError, ValueError):
@@ -33,6 +38,7 @@ class BirdsOfPreyService(GameLogicService):
 
     @staticmethod
     def _distance_meters(lat_a: float, lon_a: float, lat_b: float, lon_b: float) -> float:
+        """Compute geodesic distance in meters using the Haversine formula."""
         lat1 = radians(lat_a)
         lon1 = radians(lon_a)
         lat2 = radians(lat_b)
@@ -46,6 +52,7 @@ class BirdsOfPreyService(GameLogicService):
 
     @staticmethod
     def _parse_timestamp(raw: Any) -> Optional[datetime]:
+        """Normalize permissive timestamp values into UTC datetimes."""
         if isinstance(raw, datetime):
             return raw.replace(tzinfo=UTC) if raw.tzinfo is None else raw.astimezone(UTC)
 
@@ -66,6 +73,7 @@ class BirdsOfPreyService(GameLogicService):
         return parsed.astimezone(UTC)
 
     def _configuration(self, db: DbSession, game_id: str) -> Dict[str, int]:
+        """Load and clamp Birds of Prey configuration values for gameplay."""
         config = self._repository.get_configuration(db, game_id)
         return {
             "visibility_radius_meters": max(10, self._safe_int(config.get("visibility_radius_meters"), 100)),
@@ -74,6 +82,7 @@ class BirdsOfPreyService(GameLogicService):
         }
 
     def _extract_active_eggs(self, game_state: Dict[str, Any]) -> Dict[str, Dict[str, Any]]:
+        """Reconstruct active eggs from historical action entries in game state."""
         actions = game_state.get("actions")
         if not isinstance(actions, list):
             return {}
@@ -122,6 +131,11 @@ class BirdsOfPreyService(GameLogicService):
         visibility_radius_meters: int,
         protection_radius_meters: int,
     ) -> list[Dict[str, Any]]:
+        """Build the viewer-specific list of enemy eggs currently visible.
+
+        Visibility is determined by distance to egg and whether the owner is
+        currently protecting the egg inside the configured protection radius.
+        """
         viewer_lat = self._safe_float(viewer_location.get("lat"))
         viewer_lon = self._safe_float(viewer_location.get("lon"))
         if viewer_lat is None or viewer_lon is None:
@@ -164,6 +178,7 @@ class BirdsOfPreyService(GameLogicService):
         return visible
 
     def get_team_bootstrap(self, db: DbSession, game_id: str, team_id: str) -> Dict[str, Any]:
+        """Build full team bootstrap data including scores and visible eggs."""
         settings = self._load_game_state(db, game_id)
         game_state = self._game_state_from_settings(settings)
         config = self._configuration(db, game_id)
@@ -220,6 +235,7 @@ class BirdsOfPreyService(GameLogicService):
         }
 
     def get_admin_overview(self, db: DbSession, game_id: str) -> Dict[str, Any]:
+        """Build an admin-centric overview of teams, eggs, and configuration."""
         settings = self._load_game_state(db, game_id)
         game_state = self._game_state_from_settings(settings)
         config = self._configuration(db, game_id)
@@ -279,6 +295,7 @@ class BirdsOfPreyService(GameLogicService):
         latitude: float,
         longitude: float,
     ) -> Dict[str, Any]:
+        """Validate and persist a team's latest location coordinates."""
         lat = self._safe_float(latitude)
         lon = self._safe_float(longitude)
         if lat is None or lon is None or lat < -90 or lat > 90 or lon < -180 or lon > 180:
@@ -296,6 +313,7 @@ class BirdsOfPreyService(GameLogicService):
         return self._repository.get_team_location(db, game_id, team_id)
 
     def should_publish_location_event(self, db: DbSession, *, game_id: str, team_id: str, min_interval_seconds: int = 10) -> bool:
+        """Throttle team location publication events using persisted timestamps."""
         settings = self._load_game_state(db, game_id)
         game_state = self._game_state_from_settings(settings)
         entry = self._team_state_entry(game_state, team_id)
@@ -311,6 +329,7 @@ class BirdsOfPreyService(GameLogicService):
         return True
 
     def get_visible_enemy_eggs_for_team(self, db: DbSession, *, game_id: str, team_id: str) -> list[Dict[str, Any]]:
+        """Convenience wrapper returning visible enemy eggs for one team."""
         config = self._configuration(db, game_id)
         eggs = self.get_active_eggs(db, game_id=game_id)
         teams = self._repository.fetch_teams_by_game_id(db, game_id)
@@ -329,6 +348,7 @@ class BirdsOfPreyService(GameLogicService):
         )
 
     def get_active_eggs(self, db: DbSession, *, game_id: str) -> Dict[str, Dict[str, Any]]:
+        """Fetch and normalize active egg rows keyed by egg identifier."""
         rows = self._repository.fetch_active_eggs_by_game_id(db, game_id)
         eggs: Dict[str, Dict[str, Any]] = {}
         for row in rows:
@@ -346,9 +366,11 @@ class BirdsOfPreyService(GameLogicService):
         return eggs
 
     def get_last_drop_at_for_team(self, db: DbSession, *, game_id: str, team_id: str) -> Optional[datetime]:
+        """Return the most recent egg drop timestamp for the specified team."""
         return self._repository.get_last_drop_at_for_team(db, game_id=game_id, team_id=team_id)
 
     def drop_egg(self, db: DbSession, *, game_id: str, team_id: str, egg_id: str = "", automatic: bool = False) -> GameActionResult:
+        """Create an egg at the team's current location and log the action."""
         location = self._repository.get_team_location(db, game_id, team_id)
         latitude = self._safe_float(location.get("lat"))
         longitude = self._safe_float(location.get("lon"))
@@ -391,6 +413,7 @@ class BirdsOfPreyService(GameLogicService):
         )
 
     def destroy_egg(self, db: DbSession, *, game_id: str, team_id: str, egg_id: str, points: int = 1) -> GameActionResult:
+        """Destroy a visible, unprotected enemy egg and award points."""
         config = self._configuration(db, game_id)
         eggs = self.get_active_eggs(db, game_id=game_id)
         egg = eggs.get(str(egg_id or "").strip())

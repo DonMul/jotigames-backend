@@ -21,20 +21,28 @@ from app.services.ws_client import WsEventPublisher
 
 
 class TeamBootstrapResponse(BaseModel):
+    """Response payload containing team bootstrap state."""
+
     state: Dict[str, Any]
 
 
 class AdminOverviewResponse(BaseModel):
+    """Response payload containing admin overview state."""
+
     overview: Dict[str, Any]
 
 
 class SubmitTaskRequest(BaseModel):
+    """Request body for submitting task evidence for review."""
+
     task_id: str = Field(min_length=1, max_length=64)
     team_message: Optional[str] = Field(default=None, max_length=5000)
     proof_text: Optional[str] = Field(default=None, max_length=5000)
 
 
 class JudgeSubmissionRequest(BaseModel):
+    """Request body used by admins to judge pending submissions."""
+
     team_id: str = Field(min_length=1, max_length=64)
     submission_id: str = Field(min_length=1, max_length=64)
     accepted: bool = False
@@ -42,6 +50,8 @@ class JudgeSubmissionRequest(BaseModel):
 
 
 class ActionResponse(BaseModel):
+    """Standardized action response containing status and metadata."""
+
     success: bool
     message_key: str
     action_id: Optional[str] = None
@@ -50,14 +60,20 @@ class ActionResponse(BaseModel):
 
 
 class Crazy88ConfigResponse(BaseModel):
+    """Response wrapper around Crazy88 configuration."""
+
     config: Dict[str, Any]
 
 
 class Crazy88ConfigUpdateRequest(BaseModel):
+    """Request body for Crazy88 configuration updates."""
+
     visibility_mode: str = Field(default="all_visible", min_length=3, max_length=24)
 
 
 class Crazy88TaskPayload(BaseModel):
+    """Payload used to create or update Crazy88 tasks."""
+
     title: str = Field(min_length=1, max_length=180)
     description: Optional[str] = None
     points: int = Field(default=1, ge=1, le=100000)
@@ -68,27 +84,38 @@ class Crazy88TaskPayload(BaseModel):
 
 
 class Crazy88TaskResponse(BaseModel):
+    """Response wrapper containing one task record."""
+
     task: Dict[str, Any]
 
 
 class Crazy88TaskListResponse(BaseModel):
+    """Response wrapper containing multiple task records."""
+
     tasks: list[Dict[str, Any]]
 
 
 class Crazy88ReviewsResponse(BaseModel):
+    """Response payload for the Crazy88 review queue view."""
+
     pending_count: int
     has_assigned_submission: bool
     threads: list[Dict[str, Any]]
 
 
 class Crazy88ExportFilesRequest(BaseModel):
+    """Request body controlling proof-file export grouping."""
+
     grouping: str = Field(default="team_task", min_length=4, max_length=24)
 
 
 class Crazy88Module(ApiModule, SharedModuleBase):
+    """FastAPI module for Crazy88 gameplay, review, and exports."""
+
     name = "crazy88"
 
     def __init__(self, ws_publisher: WsEventPublisher) -> None:
+        """Initialize module dependencies and shared access configuration."""
         SharedModuleBase.__init__(
             self,
             game_type="crazy_88",
@@ -99,10 +126,12 @@ class Crazy88Module(ApiModule, SharedModuleBase):
         self._repository = Crazy88Repository()
 
     def build_router(self) -> APIRouter:
+        """Build and return the Crazy88 API router."""
         router = APIRouter(prefix="/crazy88", tags=["crazy88"])
 
         @router.get("/{game_id}/teams/{team_id}/bootstrap", response_model=TeamBootstrapResponse, summary=f"{ACCESS_BOTH_LABEL} Team bootstrap")
         def team_bootstrap(game_id: str, team_id: str, principal: CurrentPrincipal, db: DbSession) -> TeamBootstrapResponse:
+            """Return team bootstrap state including configured tasks."""
             self._require_game(db, game_id)
             self._require_team_self_or_manage_access(db, game_id, team_id, principal)
             state = self._service.get_team_bootstrap(db, game_id, team_id)
@@ -112,6 +141,7 @@ class Crazy88Module(ApiModule, SharedModuleBase):
 
         @router.get("/{game_id}/overview", response_model=AdminOverviewResponse, summary=f"{ACCESS_ADMIN_LABEL} Admin overview")
         def overview(game_id: str, principal: CurrentPrincipal, db: DbSession) -> AdminOverviewResponse:
+            """Return admin overview data for Crazy88."""
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
             return AdminOverviewResponse(overview=self._service.get_admin_overview(db, game_id))
@@ -122,6 +152,7 @@ class Crazy88Module(ApiModule, SharedModuleBase):
             summary=f"{ACCESS_ADMIN_LABEL} Get crazy88 config",
         )
         def get_config(game_id: str, principal: CurrentPrincipal, db: DbSession) -> Crazy88ConfigResponse:
+            """Return persisted Crazy88 configuration values."""
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
             return Crazy88ConfigResponse(config=self._repository.get_configuration(db, game_id))
@@ -137,6 +168,7 @@ class Crazy88Module(ApiModule, SharedModuleBase):
             principal: CurrentPrincipal,
             db: DbSession,
         ) -> Crazy88ConfigResponse:
+            """Validate and persist Crazy88 configuration updates."""
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
 
@@ -159,6 +191,7 @@ class Crazy88Module(ApiModule, SharedModuleBase):
             summary=f"{ACCESS_ADMIN_LABEL} List crazy88 tasks",
         )
         def list_tasks(game_id: str, principal: CurrentPrincipal, db: DbSession) -> Crazy88TaskListResponse:
+            """List all configured Crazy88 tasks for admins."""
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
             tasks = [self._serialize_task(task) for task in self._repository.fetch_tasks_by_game_id(db, game_id)]
@@ -170,6 +203,7 @@ class Crazy88Module(ApiModule, SharedModuleBase):
             summary=f"{ACCESS_ADMIN_LABEL} Get crazy88 review queue",
         )
         def get_reviews(game_id: str, principal: CurrentPrincipal, db: DbSession) -> Crazy88ReviewsResponse:
+            """Acquire and return review threads for the current judge."""
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
             if principal.principal_type != "user":
@@ -218,6 +252,7 @@ class Crazy88Module(ApiModule, SharedModuleBase):
             principal: CurrentPrincipal,
             db: DbSession,
         ) -> FileResponse:
+            """Export Crazy88 submission proof files as a zipped archive."""
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
 
@@ -282,6 +317,7 @@ class Crazy88Module(ApiModule, SharedModuleBase):
             summary=f"{ACCESS_ADMIN_LABEL} Create crazy88 task",
         )
         def create_task(game_id: str, body: Crazy88TaskPayload, principal: CurrentPrincipal, db: DbSession) -> Crazy88TaskResponse:
+            """Create a new Crazy88 task definition."""
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
 
@@ -312,6 +348,7 @@ class Crazy88Module(ApiModule, SharedModuleBase):
             principal: CurrentPrincipal,
             db: DbSession,
         ) -> Crazy88TaskResponse:
+            """Update an existing Crazy88 task definition."""
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
 
@@ -339,6 +376,7 @@ class Crazy88Module(ApiModule, SharedModuleBase):
             summary=f"{ACCESS_ADMIN_LABEL} Delete crazy88 task",
         )
         def delete_task(game_id: str, task_id: str, principal: CurrentPrincipal, db: DbSession) -> None:
+            """Delete a Crazy88 task by id."""
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
 
@@ -355,6 +393,7 @@ class Crazy88Module(ApiModule, SharedModuleBase):
 
         @router.post("/{game_id}/teams/{team_id}/task/submit", response_model=ActionResponse, summary=f"{ACCESS_BOTH_LABEL} Submit task")
         def submit_task(game_id: str, team_id: str, body: SubmitTaskRequest, principal: CurrentPrincipal, db: DbSession, locale: CurrentLocale) -> ActionResponse:
+            """Submit a team task proof entry for admin review."""
             self._require_game(db, game_id)
             self._require_team_self_or_manage_access(db, game_id, team_id, principal)
             task_id = body.task_id.strip()
@@ -417,6 +456,7 @@ class Crazy88Module(ApiModule, SharedModuleBase):
 
         @router.post("/{game_id}/review/judge", response_model=ActionResponse, summary=f"{ACCESS_ADMIN_LABEL} Judge submission")
         def judge_submission(game_id: str, body: JudgeSubmissionRequest, principal: CurrentPrincipal, db: DbSession, locale: CurrentLocale) -> ActionResponse:
+            """Judge a pending submission and optionally award team points."""
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
             if not body.submission_id.strip():
@@ -481,6 +521,7 @@ class Crazy88Module(ApiModule, SharedModuleBase):
 
     @staticmethod
     def _serialize_task(record: Dict[str, Any]) -> Dict[str, Any]:
+        """Normalize raw task rows for API response contracts."""
         return {
             "id": str(record.get("id") or ""),
             "title": str(record.get("title") or ""),
@@ -494,6 +535,7 @@ class Crazy88Module(ApiModule, SharedModuleBase):
 
     @staticmethod
     def _serialize_submission(record: Dict[str, Any]) -> Dict[str, Any]:
+        """Normalize raw submission rows for review API payloads."""
         return {
             "id": str(record.get("id") or ""),
             "task_id": str(record.get("task_id") or ""),
@@ -512,6 +554,7 @@ class Crazy88Module(ApiModule, SharedModuleBase):
 
     @staticmethod
     def _to_iso(value: Any) -> Optional[str]:
+        """Convert a supported timestamp-like value to ISO text."""
         if value is None:
             return None
         if isinstance(value, datetime):
@@ -521,18 +564,21 @@ class Crazy88Module(ApiModule, SharedModuleBase):
 
     @staticmethod
     def _sanitize_zip_segment(value: str) -> str:
+        """Sanitize path segment values used inside exported ZIP archives."""
         cleaned = re.sub(r"[^\w\- ]+", "_", value.strip(), flags=re.UNICODE)
         cleaned = re.sub(r"\s+", " ", cleaned, flags=re.UNICODE).strip()
         return cleaned or "unknown"
 
     @staticmethod
     def _sanitize_zip_filename(value: str) -> str:
+        """Sanitize and normalize filenames used in exported ZIP archives."""
         cleaned = re.sub(r"[^\w\-_. ]+", "_", value.strip(), flags=re.UNICODE)
         cleaned = re.sub(r"\s+", " ", cleaned, flags=re.UNICODE).strip(" .")
         return cleaned or "proof.bin"
 
     @staticmethod
     def _submission_timestamp(value: Any) -> str:
+        """Build a stable timestamp label for exported proof filenames."""
         if isinstance(value, datetime):
             return value.strftime("%Y%m%d_%H%M%S")
         text = str(value or "").strip()
@@ -545,6 +591,7 @@ class Crazy88Module(ApiModule, SharedModuleBase):
 
     @staticmethod
     def _submission_order_value(value: Any) -> int:
+        """Produce sortable numeric submission ordering keys."""
         if isinstance(value, datetime):
             return int(value.timestamp())
         text = str(value or "").strip()
@@ -560,10 +607,12 @@ class Crazy88Module(ApiModule, SharedModuleBase):
 
     @staticmethod
     def _workspace_root() -> Path:
+        """Return the repository workspace root directory."""
         return Path(__file__).resolve().parents[3]
 
     @classmethod
     def _resolve_proof_path(cls, proof_path: str) -> Optional[Path]:
+        """Resolve a stored public proof path to an existing file on disk."""
         relative = proof_path.strip().lstrip("/")
         if not relative:
             return None
@@ -581,6 +630,7 @@ class Crazy88Module(ApiModule, SharedModuleBase):
 
     @staticmethod
     def _remove_file_safely(path: str) -> None:
+        """Best-effort removal for temporary export files."""
         try:
             if path and os.path.exists(path):
                 os.unlink(path)
@@ -589,6 +639,7 @@ class Crazy88Module(ApiModule, SharedModuleBase):
 
     @staticmethod
     def _validate_task_payload(payload: Dict[str, Any], config: Dict[str, Any]) -> Dict[str, Any]:
+        """Validate and normalize Crazy88 task payload input values."""
         title = str(payload.get("title") or "").strip()
         if not title:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="crazy88.task.invalidTitle")

@@ -69,12 +69,14 @@ class ResourceRunModule(ApiModule, SharedModuleBase):
     name = "resource-run"
 
     def __init__(self, ws_publisher: WsEventPublisher) -> None:
+        """Initialize Resource Run module dependencies."""
         SharedModuleBase.__init__(self, game_type="resource_run", ws_publisher=ws_publisher)
         self._service = ResourceRunService()
         self._repository = ResourceRunRepository()
 
     @staticmethod
     def _serialize_node(node: Dict[str, Any]) -> Dict[str, Any]:
+        """Serialize resource node row to API response payload."""
         return {
             "id": str(node.get("id") or ""),
             "game_id": str(node.get("game_id") or ""),
@@ -89,22 +91,26 @@ class ResourceRunModule(ApiModule, SharedModuleBase):
 
     @staticmethod
     def _validate_node_payload(*, latitude: float, longitude: float, marker_color: str) -> None:
+        """Validate node coordinates and hex marker color format."""
         if latitude < -90 or latitude > 90 or longitude < -180 or longitude > 180:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="resource_run.node.invalidCoordinates")
         if len(marker_color) != 7 or not marker_color.startswith("#"):
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="resource_run.node.invalidColor")
 
     def build_router(self) -> APIRouter:
+        """Build Resource Run admin/team routes for nodes and claims."""
         router = APIRouter(prefix="/resource-run", tags=["resource-run"])
 
         @router.get("/{game_id}/teams/{team_id}/bootstrap", response_model=TeamBootstrapResponse, summary=f"{ACCESS_BOTH_LABEL} Team bootstrap")
         def team_bootstrap(game_id: str, team_id: str, principal: CurrentPrincipal, db: DbSession) -> TeamBootstrapResponse:
+            """Return team-specific Resource Run bootstrap state."""
             self._require_game(db, game_id)
             self._require_team_self_or_manage_access(db, game_id, team_id, principal)
             return TeamBootstrapResponse(state=self._service.get_team_bootstrap(db, game_id, team_id))
 
         @router.get("/{game_id}/overview", response_model=AdminOverviewResponse, summary=f"{ACCESS_ADMIN_LABEL} Admin overview")
         def overview(game_id: str, principal: CurrentPrincipal, db: DbSession) -> AdminOverviewResponse:
+            """Return admin overview data for Resource Run."""
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
             return AdminOverviewResponse(overview=self._service.get_admin_overview(db, game_id))
@@ -115,6 +121,7 @@ class ResourceRunModule(ApiModule, SharedModuleBase):
             summary=f"{ACCESS_ADMIN_LABEL} List nodes",
         )
         def list_nodes(game_id: str, principal: CurrentPrincipal, db: DbSession) -> ResourceRunNodeListResponse:
+            """List all configured resource nodes for this game."""
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
             nodes = self._repository.fetch_nodes_by_game_id(db, game_id)
@@ -126,6 +133,7 @@ class ResourceRunModule(ApiModule, SharedModuleBase):
             summary=f"{ACCESS_ADMIN_LABEL} Get node",
         )
         def get_node(game_id: str, node_id: str, principal: CurrentPrincipal, db: DbSession) -> ResourceRunNodeRecordResponse:
+            """Return one resource node by identifier."""
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
             node = self._repository.get_node_by_game_id_and_node_id(db, game_id, node_id)
@@ -144,6 +152,7 @@ class ResourceRunModule(ApiModule, SharedModuleBase):
             principal: CurrentPrincipal,
             db: DbSession,
         ) -> ResourceRunNodeRecordResponse:
+            """Create a new resource node after validation."""
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
             self._validate_node_payload(latitude=body.latitude, longitude=body.longitude, marker_color=body.marker_color)
@@ -185,6 +194,7 @@ class ResourceRunModule(ApiModule, SharedModuleBase):
             principal: CurrentPrincipal,
             db: DbSession,
         ) -> ResourceRunNodeRecordResponse:
+            """Update one resource node after merged-state validation."""
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
 
@@ -231,6 +241,7 @@ class ResourceRunModule(ApiModule, SharedModuleBase):
             summary=f"{ACCESS_ADMIN_LABEL} Delete node",
         )
         def delete_node(game_id: str, node_id: str, principal: CurrentPrincipal, db: DbSession) -> MessageResponse:
+            """Delete a resource node and return confirmation key."""
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
 
@@ -249,6 +260,7 @@ class ResourceRunModule(ApiModule, SharedModuleBase):
 
         @router.post("/{game_id}/teams/{team_id}/resource/claim", response_model=ActionResponse, summary=f"{ACCESS_BOTH_LABEL} Claim resource")
         def claim_resource(game_id: str, team_id: str, body: ClaimResourceRequest, principal: CurrentPrincipal, db: DbSession, locale: CurrentLocale) -> ActionResponse:
+            """Record a resource claim action by a team."""
             self._require_game(db, game_id)
             self._require_team_self_or_manage_access(db, game_id, team_id, principal)
             if not body.node_id.strip():

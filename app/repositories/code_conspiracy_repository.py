@@ -9,14 +9,18 @@ from app.repositories.game_logic_state_repository import GameLogicStateRepositor
 
 
 class CodeConspiracyRepository(GameLogicStateRepository):
+    """Repository helpers for Code Conspiracy configuration and outcome writes."""
+
     @staticmethod
     def _first_present(row: Dict[str, Any], keys: list[str], default: Any = None) -> Any:
+        """Return the first existing key from a row among candidate names."""
         for key in keys:
             if key in row:
                 return row.get(key)
         return default
 
     def get_configuration(self, db: DbSession, game_id: str) -> Dict[str, Any]:
+        """Load Code Conspiracy settings from game columns with fallback defaults."""
         game = self.get_game_by_id(db, game_id)
         if game is None:
             return {}
@@ -34,6 +38,7 @@ class CodeConspiracyRepository(GameLogicStateRepository):
         }
 
     def update_configuration_without_commit(self, db: DbSession, game_id: str, values: Dict[str, Any]) -> None:
+        """Update Code Conspiracy configuration columns without commit."""
         table = self.get_game_table(db)
         updates: Dict[str, Any] = {}
 
@@ -65,6 +70,7 @@ class CodeConspiracyRepository(GameLogicStateRepository):
             )
 
     def end_game_without_commit(self, db: DbSession, game_id: str) -> None:
+        """Set game end timestamp and persist current leading team as winner."""
         game_table = self.get_game_table(db)
         teams = self.fetch_teams_by_game_id(db, game_id)
         winner_team_id = None

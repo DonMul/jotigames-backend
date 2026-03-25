@@ -1,0 +1,341 @@
+validation:
+  invalidRequest: Pyynnön sisältö on virheellinen.
+game:
+  auth:
+    userRequired: Pelinhallinnan päätepisteisiin vaaditaan pääkäyttäjätunnus.
+    viewAccessRequired: Sinulla ei ole lukuoikeutta tähän peliin.
+    manageAccessRequired: Sinulla ei ole kirjoitusoikeutta tähän peliin.
+  teamMessage:
+    sent: Viesti lähetetty tiimille onnistuneesti.
+    sendFailed: Viestiä ei voitu lähettää tiimille.
+  chat:
+    emptyMessage: Chat-viesti ei voi olla tyhjä.
+    sendFailed: Chat-viestiä ei voitu lähettää.
+  notFound: Peliä ei löydy.
+  member:
+    userNotFound: Käyttäjää ei löydy.
+    emailNotFound: Tällä sähköpostiosoitteella ei löytynyt käyttäjää.
+  schema:
+    columnMissing: Pelipöytäkaaviosta puuttuu pakollinen sarake.
+  types:
+    columnMissing: Pelityypin saatavuusaikataulusta puuttuu pakollinen sarake.
+  validation:
+    requiredFieldsMissing: Pakolliset pelikentät puuttuvat.
+    startBeforeEndRequired: Pelin alkamisajan tulee olla ennen lopetusaikaa.
+    unknownSetting: Yksi tai useampi peliasetusnäppäin on tuntematon.
+  create:
+    failed: Peliä ei voitu luoda.
+  update:
+    failed: Peliä ei voitu päivittää.
+  delete:
+    failed: Peliä ei voitu poistaa.
+    success: Pelin poistaminen onnistui.
+  reset:
+    failed: Peliä ei voitu nollata.
+    success: Pelin nollaus onnistui.
+  admin:
+    add:
+      failed: Pelin ylläpitäjää ei voitu lisätä.
+      success: Pelin ylläpitäjä lisätty onnistuneesti.
+    remove:
+      failed: Pelin ylläpitäjää ei voitu poistaa.
+      success: Pelin ylläpitäjä poistettu onnistuneesti.
+      ownerForbidden: Pelin omistajaa ei voi poistaa järjestelmänvalvojasta.
+      selfForbidden: Et voi poistaa itseäsi pelin ylläpitäjistä.
+  gameMaster:
+    add:
+      failed: Pelimestaria ei voitu lisätä.
+      success: Pelipäällikön lisäys onnistui.
+    remove:
+      failed: Pelimestaria ei voitu poistaa.
+      success: Pelimestari poistettiin onnistuneesti.
+team:
+  notFound: Joukkuetta ei löytynyt tästä pelistä.
+  auth:
+    selfRequired: Joukkueen tokeneilla on pääsy vain omaan joukkueeseensa.
+  validation:
+    codeAlreadyUsed: Teamcode on jo käytössä tässä pelissä.
+  create:
+    failed: Joukkuetta ei voitu luoda.
+    codeGenerationFailed: Yksilöllistä tiimikoodia ei voitu luoda.
+  update:
+    failed: Joukkuetta ei voitu päivittää.
+  delete:
+    failed: Joukkuetta ei voitu poistaa.
+    success: Ryhmän poistaminen onnistui.
+explodingKittens:
+  gameTypeRequired: Tämä lopetuskohta on käytettävissä vain Exploding Kittens -peleissä.
+  lives:
+    invalidDelta: Leven-deltan on oltava nollasta poikkeava.
+    updated: Joukkueen elämä päivitetty onnistuneesti.
+    updateFailed: Joukkueen elämää ei voitu päivittää.
+  play:
+    failed: Korttia ei voitu pelata.
+    cardNotInHand: Kortti ei ole tämän joukkueen käsissä.
+    cardNotPlayable: Tätä korttia ei voi pelata suoraan.
+    needsTarget: Tämä kortti vaatii kohderyhmän.
+    targetSelf: Joukkue ei voi kohdistaa itseään.
+    targetInvalid: Kohdejoukkue on virheellinen tässä pelissä.
+    attackAlreadyPending: Tälle joukkueelle on jo tehty hyökkäys.
+    peekAlreadyPending: Katso tulevaisuus on jo jonossa tälle joukkueelle.
+    skipAlreadyPending: Skip on jo jonossa tälle joukkueelle.
+    attackReady: Hyökkäyskortti pelattu onnistuneesti.
+    favorTargeted: Pelikortti pelattu ja kohdetoiminto luotu.
+    peekReady: Katso tulevan kortin onnistuneesti pelattu.
+    shuffleDone: Sekoituskortti pelattiin onnistuneesti.
+    skipReady: Ohituskortti pelattu onnistuneesti.
+  hand:
+    addFailed: Satunnaiskäsikorttia ei voitu lisätä.
+    removeFailed: Satunnaiskäsikorttia ei voitu poistaa.
+  cards:
+    invalidType: Korttityyppi ei kelpaa Räjähtäville kissanpennuille.
+    notFound: Karttaa ei löydy.
+    addFailed: Kortteja ei voitu lisätä.
+    addSuccess: Kortit lisätty onnistuneesti.
+    createFailed: Karttaa ei voitu luoda.
+    updateFailed: Karttaa ei voitu päivittää.
+    deleteFailed: Korttia ei voitu poistaa.
+    deleteSuccess: Kortti poistettu onnistuneesti.
+    removeBlocked: Korttia ei voi poistaa sen ollessa kädessä tai lukittuna.
+    pdfDependenciesMissing: QR-PDF-vientiriippuvuudet eivät ole käytettävissä palvelimella.
+    pdfLogoInvalid: Keskuksen logon on oltava kuvatiedosto.
+    pdfLogoTooLarge: Keskuksen logo on liian suuri. Enimmäiskoko on 2 MB.
+  scan:
+    failed: Kortin skannaus epäonnistui.
+    cardNotFound: Tämän pelin karttaa ei löydy.
+    cardInHand: Kortti on jo joukkueen kädessä.
+    cardLocked: Kartta on tällä hetkellä lukittu.
+    cardAdded: Kortti lisätty käteen.
+    cardNoEffect: Kortilla ei ole vaikutusta.
+    felixGain: Felix-kortti antoi yhden lisäelämän.
+    felixAlreadyUsed: Felix-kortti on jo käytössä tässä joukkueessa.
+    explodingDefused: Räjähtävä kissanpentu on purettu.
+    explodingHit: Räjähtävä kissanpentu osui joukkueeseen.
+    attackTargeted: Hyökkäys on kohdennettu ja odottaa käsittelyä.
+  state:
+    fetched: Joukkueen tila haettu.
+    resolveFailed: Tilaa ei voitu käsitellä.
+    none: Ei käsiteltävää odottavaa tilaa.
+    skipPending: Skip on jonossa tälle joukkueelle.
+    skipResolved: Ohituksen tila käsitelty.
+    peekPending: Katso tulevaisuus on jonossa tälle joukkueelle.
+    peekNeedsConfirm: Tulevaisuuden näkeminen vaatii vahvistuksen suorittamiseen.
+    peekResolved: Katso tuleva tila valmis.
+    attackNeedsTarget: Hyökkäys vaatii kohderyhmän ja skannatun kartan.
+    attackInvalidTarget: Hyökkäyksen kohderyhmä on virheellinen.
+  action:
+    invalid: Toiminto on virheellinen.
+    notAllowed: Tämä tiimi ei voi hoitaa toimia.
+    nopeMissing: Tämän tarjouksen peruuttaminen ei vaadi Nope-korttia.
+    nopeUsed: Kampanja peruttu Nopella.
+    favorNoCards: Kohderyhmällä ei ole korttia Favorille.
+    favorTaken: Arvonta ratkaistu ja kortti otetaan.
+    resolveFailed: Toimintoa ei voitu suorittaa loppuun.
+  combo:
+    failed: Comboa ei voitu käyttää.
+    invalid: Virheellinen yhdistelmävalinta.
+    cardNotInHand: Yksi tai useampi valittu kortti ei ole kädessä.
+    needsTarget: Combo vaatii kohderyhmän.
+    targetSelf: Joukkue ei voi kohdistaa itseään tähän yhdistelmään.
+    targetInvalid: Yhdistelmän kohderyhmä on virheellinen.
+    twoReady: 2-of-a-kind yhdistelmä jonossa.
+    twoNoCards: Kohderyhmällä ei ole kortteja 2-of-a-kind-yhdistelmälle.
+    twoTaken: 2-of-a-kind yhdistelmä ratkaistu ja kortti otettu.
+    threeNeedsType: 3-of-a-kind-yhdistelmä vaatii halutun korttityypin.
+    threeInvalidType: Haluttu korttityyppi ei kelpaa 3-of-a-kind-yhdistelmälle.
+    threeReady: 3-of-a-kind yhdistelmä jonossa.
+    threeTaken: Kolmiosainen yhdistelmä ratkaistu ja haluttu kortti otettu.
+    threeNoMatch: Haluttua korttityyppiä ei löydy kohdejoukkueen kädestä.
+    fiveNeedsType: 5-erilainen yhdistelmä vaatii halutun korttityypin.
+    fiveTaken: 5 erilaista yhdistelmää ratkaistu ja kortti otettu pakkasta.
+    fiveNone: 5 erilaista yhdistelmäratkaisua, mutta haluttua korttityyppiä ei ole
+      saatavilla pakassa.
+geohunter:
+  gameTypeRequired: Tämä päätepiste on käytettävissä vain Geohunter-peleissä.
+  validation:
+    missingPoiId: Kohdetunnus vaaditaan.
+  answer:
+    recorded: Vastaus lähetetty onnistuneesti.
+    alreadySubmitted: Ryhmäsi on jo vastannut tähän kohtaan.
+blindhike:
+  gameTypeRequired: Tämä päätepiste on käytettävissä vain Blindhike-peleissä.
+  validation:
+    missingMarkerId: Merkin tunnus vaaditaan.
+  marker:
+    added: Merkin lisäys onnistui.
+    alreadyAdded: Tiimisi on jo lisännyt merkin.
+    finished: Joukkueesi on jo lopettanut, eikä se voi asettaa lisämerkkejä.
+resource_run:
+  gameTypeRequired: Tämä päätepiste on käytettävissä vain Resource Run -peleissä.
+  validation:
+    missingNodeId: Resurssisolmun tunnus vaaditaan.
+  claim:
+    recorded: Resurssi on lunastettu.
+    alreadyCollected: Ryhmäsi on jo kerännyt resurssin.
+territory_control:
+  gameTypeRequired: Tämä päätepiste on käytettävissä vain Territory Control -peleissä.
+  validation:
+    missingZoneId: Aluetunnus vaaditaan.
+  claim:
+    recorded: Alue lunastettu onnistuneesti.
+    alreadyOwned: Joukkueesi on jo lunastanut alueen.
+market_crash:
+  gameTypeRequired: Tämä päätepiste on käytettävissä vain Market Crash -peleissä.
+  validation:
+    missingTradeId: Kauppatunnus vaaditaan.
+  resource:
+    invalidName: Resurssin nimi on virheellinen.
+    exists: Resurssi on jo olemassa.
+    createFailed: Resurssin luominen epäonnistui.
+    notFound: Resurssia ei löydy.
+    updateFailed: Resurssien päivitys epäonnistui.
+    deleteFailed: Resurssin poistaminen epäonnistui.
+  point:
+    createFailed: Pisteen luominen epäonnistui.
+    notFound: Pistettä ei löytynyt.
+    updateFailed: Pistepäivitys epäonnistui.
+    deleteFailed: Pisteen poistaminen epäonnistui.
+    invalidTitle: Pisteen otsikko on virheellinen.
+    invalidColor: Pistemerkin väri on virheellinen.
+    invalidResource: Piste sisältää virheellisen resurssiviittauksen.
+    resourcesRequired: Pisteelle vaaditaan vähintään yksi resurssiasetus.
+    invalid: Pistekoordinaatit ovat virheellisiä.
+  location:
+    required: Sijainti vaaditaan ennen kaupankäyntiä.
+    invalid: Sijaintikoordinaatit ovat virheellisiä.
+    updated: Sijainti päivitetty.
+  trade:
+    executed: Kauppa suoritettu onnistuneesti.
+    invalidSide: Kaupan suunta on virheellinen.
+    invalidResource: Resurssi ei ole tällä hetkellä kaupankäynnin kohteena.
+    outOfRange: Olet tämän kaupankäyntipisteen kantaman ulkopuolella.
+    invalidPrice: Kauppahinta on virheellinen.
+    insufficientCash: Rahat eivät riitä tähän kauppaan.
+    insufficientInventory: Varasto ei riitä tähän kauppaan.
+crazy88:
+  gameTypeRequired: Tämä päätepiste on käytettävissä vain Crazy 88 -peleissä.
+  validation:
+    missingTaskId: Tehtävätunnus vaaditaan.
+    missingSubmissionId: Lähetystunnus vaaditaan.
+  task:
+    submitted: Työ lähetetty onnistuneesti.
+  review:
+    judged: Lähetys arvioitiin onnistuneeksi.
+    alreadyJudged: Esitys on jo arvioitu.
+courier_rush:
+  gameTypeRequired: Tämä päätepiste on käytettävissä vain Courier Rush -peleissä.
+  validation:
+    missingPickupId: Noutotunnus vaaditaan.
+    missingDropoffId: Palautustunnus vaaditaan.
+  pickup:
+    confirmed: Nouto on vahvistettu.
+    alreadyConfirmed: Nouto jo vahvistettu.
+  dropoff:
+    confirmed: Pudotus on vahvistettu.
+echo_hunt:
+  gameTypeRequired: Tämä päätepiste on käytettävissä vain Echo Hunt -peleissä.
+  validation:
+    missingBeaconId: Majakan tunnus vaaditaan.
+  beacon:
+    claimed: Majakka lunastettiin onnistuneesti.
+    alreadyClaimed: Tiimisi on jo lunastanut majakan.
+checkpoint_heist:
+  gameTypeRequired: Tämä päätepiste on käytettävissä vain Checkpoint Heist -peleissä.
+  validation:
+    missingCheckpointId: Tarkistuspisteen tunnus vaaditaan.
+  capture:
+    recorded: Tarkistuspiste kaapattu onnistuneesti.
+    alreadyCaptured: Joukkueesi on jo vallannut tarkistuspisteen.
+pandemic_response:
+  gameTypeRequired: Tämä päätepiste on käytettävissä vain Pandemic Response -peleissä.
+  validation:
+    missingPickupId: Noutotunnus vaaditaan.
+    missingHotspotId: Hotspot-tunnus vaaditaan.
+  pickup:
+    collected: Nouto kerätty onnistuneesti.
+    alreadyCollected: Ryhmäsi on jo noutanut noudon.
+  hotspot:
+    resolved: Hotspot ratkaistu onnistuneesti.
+    alreadyResolved: Hotspot on jo ratkaistu tiimisi toimesta.
+birds_of_prey:
+  gameTypeRequired: Tämä päätepiste on käytettävissä vain Birds of Prey -peleissä.
+  config:
+    updateFailed: Bird of Prey -asetusten tallennus epäonnistui.
+  location:
+    required: Sijainti vaaditaan ennen kuin voit suorittaa tämän toiminnon.
+    invalid: Sijaintikoordinaatit ovat virheellisiä.
+    updated: Sijainti päivitetty.
+  validation:
+    missingEggId: Munatunnus vaaditaan.
+  egg:
+    dropped: Muna asetettu onnistuneesti.
+    dropFailed: Munaa ei voitu pelastaa.
+    alreadyDropped: Muna on jo laitettu.
+    persistFailed: Egg drop hyväksyttiin, mutta sitä ei voitu ladata jatkuvasta pelitilasta.
+    destroyed: Muna tuhottu onnistuneesti.
+    alreadyDestroyed: Muna on jo tuhottu.
+    notFound: Munaa ei löytynyt.
+    cannotDestroyOwn: Et voi tuhota omaa munaasi.
+    notVisible: Kananmuna ei näy kantama-alueellasi.
+    protected: Muna on suojattu, koska omistaja on lähellä.
+code_conspiracy:
+  gameTypeRequired: Tämä päätepiste on käytettävissä vain Code Conspiracy -peleissä.
+  validation:
+    missingTargetTeamId: Kohderyhmän tunnus vaaditaan.
+    missingCode: Koodi vaaditaan.
+  code:
+    submitted: Vastaanotettu koodin lähetys.
+auth:
+  locale:
+    unsupported: Kieltä ei tueta. Sallitut arvot ovat en ja nl.
+  ws:
+    superAdminKeyRequired: WS-superadmin-avain vaaditaan.
+    superAdminKeyInvalid: WS-pääkäyttäjän avain on virheellinen.
+    superAdminKeyNotConfigured: WS-superadmin-avainta ei ole määritetty taustajärjestelmässä.
+  user:
+    invalidEmailOrPassword: Virheellinen sähköpostiosoite tai salasana.
+    disallowedRole: Tällä tilillä ei ole pääsyä tähän taustajärjestelmään.
+    superAdminRequired: Tätä toimintoa varten tarvitaan pääkäyttäjän oikeudet.
+  team:
+    invalidCodes: Virheellinen peli- tai joukkuekoodi.
+  token:
+    missingBearerToken: Kantajatunnus vaaditaan.
+    invalidBearerHeaderFormat: Verkkotunnuksen otsikon muoto on virheellinen.
+    invalidOrExpired: Tunnus on virheellinen tai vanhentunut.
+    gameAccessRequired: Token ei voi käyttää pyydettyä peliä.
+  register:
+    emailAlreadyUsed: Tällä sähköpostiosoitteella on jo tili.
+    usernameAlreadyUsed: Tämä käyttäjätunnus on jo käytössä.
+    verifyEmailSent: Tili luotu. Tarkista sähköpostisi vahvistaaksesi osoitteesi.
+    emailSendFailed: Vahvistussähköpostia ei voitu lähettää.
+    mailerNotConfigured: Sähköpostipalvelua ei ole määritetty.
+    mailerUnsupportedScheme: Sähköpostipalvelun DSN-mallia ei tueta.
+    mailerFromMissing: Sähköpostin lähettäjän osoitetta ei ole määritetty.
+  verify:
+    invalidToken: Tämä todennustunnus on virheellinen tai vanhentunut.
+    success: Sähköpostiosoite on vahvistettu onnistuneesti.
+    pendingEmailConflict: Tätä odottavaa sähköpostiosoitetta ei voi enää käyttää,
+      koska se on jo käytössä.
+    tokenColumnMissing: Todennustunnuksen tallennustilaa ei ole määritetty oikein.
+  reset:
+    requestAccepted: Jos tili on olemassa ja se on vahvistettu, palautusviesti on
+      lähetetty.
+    tokenColumnsMissing: Salasanan palautustunnuksen tallennustilaa ei ole määritetty
+      oikein.
+    emailSendFailed: Salasanan palautusviestiä ei voitu lähettää.
+mailer:
+  verify:
+    subject: Vahvista sähköpostiosoitteesi
+    title: Vahvista sähköpostiosoitteesi
+    greeting: Hei %username%,
+    intro: Vahvista sähköpostiosoitteesi napsauttamalla alla olevaa painiketta.
+    cta: Vahvista sähköpostiosoite
+    outro: Jos et ole luonut tiliä, voit jättää tämän sähköpostin huomioimatta.
+  reset:
+    subject: Palauta salasana
+    title: Palauta salasana
+    greeting: Hei %username%,
+    intro: Tilisi salasanan vaihtoa on pyydetty. Valitse uusi salasana alla olevalla
+      painikkeella.
+    cta: Palauta salasana
+    outro: Jos et ole pyytänyt tätä, voit jättää tämän sähköpostin huomioimatta.

@@ -1,0 +1,345 @@
+validation:
+  invalidRequest: De aanvraaginhoud is ongeldig.
+game:
+  auth:
+    userRequired: Een gebruiker-principal is vereist voor gamebeheer-eindpunten.
+    viewAccessRequired: Je hebt geen leestoegang tot deze game.
+    manageAccessRequired: Je hebt geen schrijftoegang tot deze game.
+  teamMessage:
+    sent: Bericht succesvol naar team verstuurd.
+    sendFailed: Bericht kon niet naar team worden verstuurd.
+  chat:
+    emptyMessage: Chatbericht mag niet leeg zijn.
+    sendFailed: Chatbericht kon niet worden verstuurd.
+  notFound: Game is niet gevonden.
+  member:
+    userNotFound: Gebruiker is niet gevonden.
+    emailNotFound: Er is geen gebruiker gevonden met dat e-mailadres.
+  schema:
+    columnMissing: Het schema van de gametabel mist een verplichte kolom.
+  types:
+    columnMissing: Het schema van game type availability mist een verplichte kolom.
+  validation:
+    requiredFieldsMissing: Verplichte gamevelden ontbreken.
+    startBeforeEndRequired: De starttijd van een game moet vóór de eindtijd liggen.
+    unknownSetting: Eén of meer game-instellingen-sleutels zijn onbekend.
+  create:
+    failed: Game kon niet worden aangemaakt.
+  update:
+    failed: Game kon niet worden bijgewerkt.
+  delete:
+    failed: Game kon niet worden verwijderd.
+    success: Game succesvol verwijderd.
+  reset:
+    failed: Game kon niet worden gereset.
+    success: Game succesvol gereset.
+  admin:
+    add:
+      failed: Game admin kon niet worden toegevoegd.
+      success: Game admin succesvol toegevoegd.
+    remove:
+      failed: Game admin kon niet worden verwijderd.
+      success: Game admin succesvol verwijderd.
+      ownerForbidden: De game-eigenaar kan niet als admin worden verwijderd.
+      selfForbidden: Je kunt jezelf niet uit game admins verwijderen.
+  gameMaster:
+    add:
+      failed: Game master kon niet worden toegevoegd.
+      success: Game master succesvol toegevoegd.
+    remove:
+      failed: Game master kon niet worden verwijderd.
+      success: Game master succesvol verwijderd.
+team:
+  notFound: Team is niet gevonden in deze game.
+  auth:
+    selfRequired: Teamtokens hebben alleen toegang tot hun eigen team.
+  validation:
+    codeAlreadyUsed: Teamcode is al in gebruik voor deze game.
+  create:
+    failed: Team kon niet worden aangemaakt.
+    codeGenerationFailed: Er kon geen unieke teamcode worden gegenereerd.
+  update:
+    failed: Team kon niet worden bijgewerkt.
+  delete:
+    failed: Team kon niet worden verwijderd.
+    success: Team succesvol verwijderd.
+explodingKittens:
+  gameTypeRequired: Dit eindpunt is alleen beschikbaar voor Exploding Kittens-games.
+  lives:
+    invalidDelta: Leven-delta moet ongelijk aan nul zijn.
+    updated: Teamlevens succesvol bijgewerkt.
+    updateFailed: Teamlevens konden niet worden bijgewerkt.
+  play:
+    failed: Kaart kon niet worden gespeeld.
+    cardNotInHand: Kaart zit niet in de hand van dit team.
+    cardNotPlayable: Deze kaart kan niet direct gespeeld worden.
+    needsTarget: Voor deze kaart is een doelteam vereist.
+    targetSelf: Een team kan zichzelf niet targeten.
+    targetInvalid: Doelteam is ongeldig voor deze game.
+    attackAlreadyPending: Er staat al een aanval in de wachtrij voor dit team.
+    peekAlreadyPending: See the future staat al in de wachtrij voor dit team.
+    skipAlreadyPending: Skip staat al in de wachtrij voor dit team.
+    attackReady: Attack-kaart succesvol gespeeld.
+    favorTargeted: Favor-kaart gespeeld en doelactie aangemaakt.
+    peekReady: See the future-kaart succesvol gespeeld.
+    shuffleDone: Shuffle-kaart succesvol gespeeld.
+    skipReady: Skip-kaart succesvol gespeeld.
+  hand:
+    addFailed: Willekeurige handkaart kon niet worden toegevoegd.
+    removeFailed: Willekeurige handkaart kon niet worden verwijderd.
+  cards:
+    invalidType: Kaarttype is ongeldig voor Exploding Kittens.
+    notFound: Kaart is niet gevonden.
+    addFailed: Kaarten konden niet worden toegevoegd.
+    addSuccess: Kaarten succesvol toegevoegd.
+    createFailed: Kaart kon niet worden aangemaakt.
+    updateFailed: Kaart kon niet worden bijgewerkt.
+    deleteFailed: Kaart kon niet worden verwijderd.
+    deleteSuccess: Kaart succesvol verwijderd.
+    removeBlocked: Kaart kan niet worden verwijderd zolang deze in een hand zit of
+      vergrendeld is.
+    pdfDependenciesMissing: QR-PDF exportafhankelijkheden zijn niet beschikbaar op
+      de server.
+    pdfLogoInvalid: Middenlogo moet een afbeeldingsbestand zijn.
+    pdfLogoTooLarge: Middenlogo is te groot. Maximale grootte is 2 MB.
+  scan:
+    failed: Kaart scannen is mislukt.
+    cardNotFound: Kaart is niet gevonden voor deze game.
+    cardInHand: Kaart zit al in een teamhand.
+    cardLocked: Kaart is momenteel vergrendeld.
+    cardAdded: Kaart aan hand toegevoegd.
+    cardNoEffect: Kaart heeft geen effect.
+    felixGain: Felix-kaart gaf één leven erbij.
+    felixAlreadyUsed: Felix-kaart is al gebruikt door dit team.
+    explodingDefused: Exploding kitten is onschadelijk gemaakt.
+    explodingHit: Exploding kitten heeft het team geraakt.
+    attackTargeted: Aanval is gericht en wacht op afhandeling.
+  state:
+    fetched: Teamstatus opgehaald.
+    resolveFailed: Status kon niet worden afgehandeld.
+    none: Geen wachtende status om af te handelen.
+    skipPending: Skip staat in wachtrij voor dit team.
+    skipResolved: Skip-status afgehandeld.
+    peekPending: See the future staat in wachtrij voor dit team.
+    peekNeedsConfirm: See the future vereist bevestiging om af te handelen.
+    peekResolved: See the future-status afgehandeld.
+    attackNeedsTarget: Attack vereist een doelteam en gescande kaart.
+    attackInvalidTarget: Doelteam voor attack is ongeldig.
+  action:
+    invalid: Actie is ongeldig.
+    notAllowed: Actie kan niet door dit team worden afgehandeld.
+    nopeMissing: Nope-kaart is vereist om deze actie te annuleren.
+    nopeUsed: Actie geannuleerd met Nope.
+    favorNoCards: Doelteam heeft geen kaarten voor Favor.
+    favorTaken: Favor afgehandeld en een kaart is genomen.
+    resolveFailed: Actie kon niet worden afgehandeld.
+  combo:
+    failed: Combo kon niet worden gebruikt.
+    invalid: Ongeldige combo-selectie.
+    cardNotInHand: Een of meer geselecteerde kaarten zitten niet in de hand.
+    needsTarget: Combo vereist een doelteam.
+    targetSelf: Team kan zichzelf niet als doel kiezen voor deze combo.
+    targetInvalid: Doelteam voor combo is ongeldig.
+    twoReady: 2-van-gelijke combo in wachtrij gezet.
+    twoNoCards: Doelteam heeft geen kaarten voor 2-van-gelijke combo.
+    twoTaken: 2-van-gelijke combo afgehandeld en een kaart is genomen.
+    threeNeedsType: 3-van-gelijke combo vereist gewenst kaarttype.
+    threeInvalidType: Gewenst kaarttype is ongeldig voor 3-van-gelijke combo.
+    threeReady: 3-van-gelijke combo in wachtrij gezet.
+    threeTaken: 3-van-gelijke combo afgehandeld en gewenste kaart is genomen.
+    threeNoMatch: Gewenst kaarttype niet gevonden in hand van doelteam.
+    fiveNeedsType: 5-verschillende combo vereist gewenst kaarttype.
+    fiveTaken: 5-verschillende combo afgehandeld en kaart uit deck genomen.
+    fiveNone: 5-verschillende combo afgehandeld maar gewenst kaarttype niet beschikbaar
+      in deck.
+geohunter:
+  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Geohunter-games.
+  validation:
+    missingPoiId: Point of interest-id is verplicht.
+  answer:
+    recorded: Antwoord succesvol ingediend.
+    alreadySubmitted: Dit punt is al beantwoord door je team.
+blindhike:
+  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Blindhike-games.
+  validation:
+    missingMarkerId: Marker-id is verplicht.
+  marker:
+    added: Marker succesvol toegevoegd.
+    alreadyAdded: Marker is al toegevoegd door je team.
+    finished: Je team is al gefinisht en kan geen extra markers plaatsen.
+resource_run:
+  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Resource Run-games.
+  validation:
+    missingNodeId: Resource node-id is verplicht.
+  claim:
+    recorded: Resource succesvol geclaimd.
+    alreadyCollected: Resource is al verzameld door je team.
+territory_control:
+  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Territory Control-games.
+  validation:
+    missingZoneId: Zone-id is verplicht.
+  claim:
+    recorded: Zone succesvol geclaimd.
+    alreadyOwned: Zone is al geclaimd door je team.
+market_crash:
+  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Market Crash-games.
+  validation:
+    missingTradeId: Trade-id is verplicht.
+  resource:
+    invalidName: Resourcenaam is ongeldig.
+    exists: Resource bestaat al.
+    createFailed: Resource aanmaken mislukt.
+    notFound: Resource is niet gevonden.
+    updateFailed: Resource bijwerken mislukt.
+    deleteFailed: Resource verwijderen mislukt.
+  point:
+    createFailed: Punt aanmaken mislukt.
+    notFound: Punt is niet gevonden.
+    updateFailed: Punt bijwerken mislukt.
+    deleteFailed: Punt verwijderen mislukt.
+    invalidTitle: Punttitel is ongeldig.
+    invalidColor: Punt-markerkleur is ongeldig.
+    invalidResource: Punt bevat een ongeldige resourceverwijzing.
+    resourcesRequired: Minimaal één resource-instelling is verplicht voor een punt.
+    invalid: Puntcoördinaten zijn ongeldig.
+  location:
+    required: Locatie is verplicht voordat je kunt handelen.
+    invalid: Locatiecoördinaten zijn ongeldig.
+    updated: Locatie bijgewerkt.
+  trade:
+    executed: Trade succesvol uitgevoerd.
+    invalidSide: Trade-richting is ongeldig.
+    invalidResource: Resource is niet verhandelbaar op dit punt.
+    outOfRange: Je bent buiten bereik van dit handelspunt.
+    invalidPrice: Trade-prijs is ongeldig.
+    insufficientCash: Onvoldoende cash voor deze trade.
+    insufficientInventory: Onvoldoende voorraad voor deze trade.
+crazy88:
+  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Crazy 88-games.
+  validation:
+    missingTaskId: Task-id is verplicht.
+    missingSubmissionId: Submission-id is verplicht.
+  task:
+    submitted: Taak succesvol ingediend.
+  review:
+    judged: Inzending succesvol beoordeeld.
+    alreadyJudged: Inzending is al beoordeeld.
+courier_rush:
+  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Courier Rush-games.
+  validation:
+    missingPickupId: Pickup-id is verplicht.
+    missingDropoffId: Dropoff-id is verplicht.
+  pickup:
+    confirmed: Pickup succesvol bevestigd.
+    alreadyConfirmed: Pickup is al bevestigd.
+  dropoff:
+    confirmed: Dropoff succesvol bevestigd.
+echo_hunt:
+  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Echo Hunt-games.
+  validation:
+    missingBeaconId: Beacon-id is verplicht.
+  beacon:
+    claimed: Beacon succesvol geclaimd.
+    alreadyClaimed: Beacon is al geclaimd door je team.
+checkpoint_heist:
+  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Checkpoint Heist-games.
+  validation:
+    missingCheckpointId: Checkpoint-id is verplicht.
+  capture:
+    recorded: Checkpoint succesvol veroverd.
+    alreadyCaptured: Checkpoint is al veroverd door je team.
+pandemic_response:
+  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Pandemic Response-games.
+  validation:
+    missingPickupId: Pickup-id is verplicht.
+    missingHotspotId: Hotspot-id is verplicht.
+  pickup:
+    collected: Pickup succesvol verzameld.
+    alreadyCollected: Pickup is al verzameld door je team.
+  hotspot:
+    resolved: Hotspot succesvol opgelost.
+    alreadyResolved: Hotspot is al opgelost door je team.
+birds_of_prey:
+  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Birds of Prey-games.
+  config:
+    updateFailed: Birds of Prey-instellingen opslaan mislukt.
+  location:
+    required: Locatie is verplicht voordat je deze actie kunt uitvoeren.
+    invalid: Locatiecoördinaten zijn ongeldig.
+    updated: Locatie bijgewerkt.
+  validation:
+    missingEggId: Egg-id is verplicht.
+  egg:
+    dropped: Egg succesvol geplaatst.
+    dropFailed: Egg kon niet worden opgeslagen.
+    alreadyDropped: Egg is al geplaatst.
+    persistFailed: Egg-drop is geaccepteerd, maar kon niet uit persistente game-state
+      worden geladen.
+    destroyed: Egg succesvol vernietigd.
+    alreadyDestroyed: Egg is al vernietigd.
+    notFound: Egg is niet gevonden.
+    cannotDestroyOwn: Je kunt je eigen egg niet vernietigen.
+    notVisible: Egg is niet zichtbaar binnen je bereik.
+    protected: Egg is beschermd omdat de eigenaar in de buurt is.
+code_conspiracy:
+  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Code Conspiracy-games.
+  validation:
+    missingTargetTeamId: Auðkenni markhóps er krafist.
+    missingCode: Kóði er krafist.
+  code:
+    submitted: Móttekið kóðaskil.
+auth:
+  locale:
+    unsupported: Óstudd tungumál. Leyfileg gildi eru en og nl.
+  ws:
+    superAdminKeyRequired: WS ofur stjórnunarlykill er nauðsynlegur.
+    superAdminKeyInvalid: WS ofur stjórnunarlykill er ógildur.
+    superAdminKeyNotConfigured: WS ofur stjórnunarlykill er ekki stilltur á bakendanum.
+  user:
+    invalidEmailOrPassword: Ógilt netfang eða lykilorð.
+    disallowedRole: Þessi reikningur hefur ekki aðgang að þessum bakenda.
+    superAdminRequired: Ofurstjórnandaaðgangur er nauðsynlegur fyrir þessa aðgerð.
+  team:
+    invalidCodes: Ógildur leikkóði eða liðskóði.
+  token:
+    missingBearerToken: Handhafamerki er krafist.
+    invalidBearerHeaderFormat: Snið haus fyrir burðartákn er ógilt.
+    invalidOrExpired: Auðkenni er ógilt eða útrunnið.
+    gameAccessRequired: Token hefur ekki aðgang að umbeðnum leik.
+  register:
+    emailAlreadyUsed: Reikningur er þegar til með þessu netfangi.
+    usernameAlreadyUsed: Þetta notendanafn er þegar í notkun.
+    verifyEmailSent: Reikningur búinn til. Athugaðu tölvupóstinn þinn til að staðfesta
+      heimilisfangið þitt.
+    emailSendFailed: Ekki var hægt að senda staðfestingartölvupóst.
+    mailerNotConfigured: Tölvupóstþjónusta er ekki stillt.
+    mailerUnsupportedScheme: DSN kerfi tölvupóstþjónustunnar er ekki stutt.
+    mailerFromMissing: Netfang sendanda er ekki stillt.
+  verify:
+    invalidToken: Þessi auðkenningarlykill er ógildur eða útrunninn.
+    success: Netfang hefur verið staðfest.
+    pendingEmailConflict: Ekki er lengur hægt að nota þetta netfang í bið þar sem
+      það er þegar í notkun.
+    tokenColumnMissing: Geymsla auðkenningartákna er ekki rétt stillt.
+  reset:
+    requestAccepted: Ef reikningur er til og hefur verið staðfestur hefur endurstillingarpóstur
+      verið sendur.
+    tokenColumnsMissing: Geymsla tákna fyrir endurstillingu lykilorðs er ekki rétt
+      stillt.
+    emailSendFailed: Ekki var hægt að senda tölvupóst til að endurstilla lykilorð.
+mailer:
+  verify:
+    subject: Staðfestu netfangið þitt
+    title: Staðfestu netfangið þitt
+    greeting: Hæ %username%,
+    intro: Staðfestu netfangið þitt með því að smella á hnappinn hér að neðan.
+    cta: Staðfestu netfang
+    outro: Ef þú hefur ekki stofnað reikning geturðu hunsað þennan tölvupóst.
+  reset:
+    subject: Endurstilla lykilorð
+    title: Endurstilla lykilorð
+    greeting: Hæ %username%,
+    intro: Beðið hefur verið um endurstillingu lykilorðs fyrir reikninginn þinn. Notaðu
+      hnappinn hér að neðan til að velja nýtt lykilorð.
+    cta: Endurstilla lykilorð
+    outro: Ef þú hefur ekki beðið um þetta geturðu hunsað þennan tölvupóst.

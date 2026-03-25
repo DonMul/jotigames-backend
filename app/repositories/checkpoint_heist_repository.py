@@ -7,10 +7,14 @@ from app.repositories.game_logic_state_repository import GameLogicStateRepositor
 
 
 class CheckpointHeistRepository(GameLogicStateRepository):
+    """Persistence helpers for Checkpoint Heist checkpoint entities."""
+
     def get_checkpoint_heist_checkpoint_table(self, db: DbSession) -> Table:
+        """Return reflected `checkpoint_heist_checkpoint` table."""
         return self._get_table(db, "checkpoint_heist_checkpoint")
 
     def fetch_checkpoints_by_game_id(self, db: DbSession, game_id: str) -> list[Dict[str, Any]]:
+        """List checkpoints for game ordered by configured sequence."""
         table = self.get_checkpoint_heist_checkpoint_table(db)
         order_column = table.c[self.get_order_column_name(db)]
         rows = (
@@ -25,6 +29,7 @@ class CheckpointHeistRepository(GameLogicStateRepository):
         return [dict(row) for row in rows]
 
     def get_checkpoint_by_game_id_and_checkpoint_id(self, db: DbSession, game_id: str, checkpoint_id: str) -> Optional[Dict[str, Any]]:
+        """Fetch checkpoint by scoped identifiers."""
         table = self.get_checkpoint_heist_checkpoint_table(db)
         row = (
             db.execute(
@@ -41,10 +46,12 @@ class CheckpointHeistRepository(GameLogicStateRepository):
         return dict(row)
 
     def create_checkpoint_without_commit(self, db: DbSession, values: Dict[str, Any]) -> None:
+        """Insert checkpoint row without committing transaction."""
         table = self.get_checkpoint_heist_checkpoint_table(db)
         db.execute(insert(table).values(**values))
 
     def update_checkpoint_without_commit(self, db: DbSession, game_id: str, checkpoint_id: str, values: Dict[str, Any]) -> None:
+        """Update checkpoint fields without commit."""
         if not values:
             return
         table = self.get_checkpoint_heist_checkpoint_table(db)
@@ -56,6 +63,7 @@ class CheckpointHeistRepository(GameLogicStateRepository):
         )
 
     def delete_checkpoint_without_commit(self, db: DbSession, game_id: str, checkpoint_id: str) -> None:
+        """Delete checkpoint by scoped identifiers without commit."""
         table = self.get_checkpoint_heist_checkpoint_table(db)
         db.execute(
             delete(table)
@@ -64,6 +72,7 @@ class CheckpointHeistRepository(GameLogicStateRepository):
         )
 
     def get_next_order_index(self, db: DbSession, game_id: str) -> int:
+        """Compute next checkpoint order index for game."""
         checkpoints = self.fetch_checkpoints_by_game_id(db, game_id)
         highest = 0
         for checkpoint in checkpoints:
@@ -74,10 +83,12 @@ class CheckpointHeistRepository(GameLogicStateRepository):
         return highest + 1
 
     def get_order_column_name(self, db: DbSession) -> str:
+        """Resolve active order column name across schema variants."""
         table = self.get_checkpoint_heist_checkpoint_table(db)
         return "order_index" if "order_index" in table.c else "sequence_order"
 
     def reorder_checkpoints_without_commit(self, db: DbSession, game_id: str, ordered_ids: list[str]) -> None:
+        """Apply checkpoint ordering list and append missing ids afterward."""
         table = self.get_checkpoint_heist_checkpoint_table(db)
         order_column_name = "order_index" if "order_index" in table.c else "sequence_order"
         checkpoint_ids = [str(entry) for entry in ordered_ids if str(entry).strip()]

@@ -14,10 +14,12 @@ class BlindHikeService(GameLogicService):
     _EARTH_RADIUS_METERS = 6371000.0
 
     def __init__(self) -> None:
+        """Initialize Blind Hike game logic service."""
         super().__init__("blindhike", repository=BlindHikeRepository())
 
     @staticmethod
     def _safe_float(value: Any) -> float | None:
+        """Best-effort float conversion returning `None` for invalid values."""
         try:
             numeric = float(value)
         except (TypeError, ValueError):
@@ -26,6 +28,7 @@ class BlindHikeService(GameLogicService):
 
     @staticmethod
     def _parse_marker_coordinates(marker_id: str) -> tuple[float, float] | None:
+        """Parse marker id strings into latitude/longitude coordinates."""
         raw = str(marker_id or "").strip()
         if raw == "":
             return None
@@ -62,6 +65,7 @@ class BlindHikeService(GameLogicService):
         return (latitude, longitude)
 
     def _extract_team_markers(self, game_state: dict[str, Any], team_id: str) -> list[dict[str, Any]]:
+        """Extract team marker trail from game-state claims payload."""
         claims = game_state.get("claims")
         if not isinstance(claims, dict):
             return []
@@ -95,6 +99,7 @@ class BlindHikeService(GameLogicService):
 
     @staticmethod
     def _extract_team_markers_from_rows(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+        """Convert marker rows to normalized marker list sorted by placement time."""
         markers: list[dict[str, Any]] = []
         for row in rows:
             lat = BlindHikeService._safe_float(row.get("latitude"))
@@ -125,6 +130,7 @@ class BlindHikeService(GameLogicService):
         marker_rows: list[dict[str, Any]],
         finished_team_ids: set[str] | None = None,
     ) -> list[dict[str, Any]]:
+        """Build highscore rows from persisted marker records."""
         counts_by_team: dict[str, int] = {}
         for row in marker_rows:
             team_id = str(row.get("team_id") or "")
@@ -151,6 +157,7 @@ class BlindHikeService(GameLogicService):
 
     @staticmethod
     def _distance_meters(lat_a: float, lon_a: float, lat_b: float, lon_b: float) -> float:
+        """Compute distance between two coordinates in meters via Haversine."""
         lat1 = radians(lat_a)
         lon1 = radians(lon_a)
         lat2 = radians(lat_b)
@@ -170,6 +177,7 @@ class BlindHikeService(GameLogicService):
         target_lon: float | None,
         finish_radius_meters: float,
     ) -> bool:
+        """Return whether a marker falls within finish radius of target location."""
         if marker_lat is None or marker_lon is None:
             return False
         if target_lat is None or target_lon is None:
@@ -180,6 +188,7 @@ class BlindHikeService(GameLogicService):
         return self._distance_meters(marker_lat, marker_lon, target_lat, target_lon) <= finish_radius_meters
 
     def _resolve_finish_radius_meters(self, config: dict[str, Any]) -> float:
+        """Resolve configured finish radius with safe fallback default."""
         configured = self._safe_float(config.get("finish_radius_meters"))
         if configured is None or configured <= 0:
             return self._DEFAULT_FINISH_RADIUS_METERS
@@ -193,6 +202,7 @@ class BlindHikeService(GameLogicService):
         target_lon: float | None,
         finish_radius_meters: float,
     ) -> set[str]:
+        """Derive teams that have placed at least one finishing marker."""
         finished: set[str] = set()
         if target_lat is None or target_lon is None:
             return finished
@@ -213,6 +223,7 @@ class BlindHikeService(GameLogicService):
         longitude: float | None,
         config: dict[str, Any],
     ) -> tuple[float, float] | None:
+        """Apply configured flips, scaling, and rotation to one coordinate pair."""
         if latitude is None or longitude is None:
             return None
 
@@ -242,6 +253,7 @@ class BlindHikeService(GameLogicService):
         return (transformed_lat, transformed_lon)
 
     def _build_marker_highscore(self, db: DbSession, game_id: str, game_state: dict[str, Any]) -> list[dict[str, Any]]:
+        """Build marker highscore rows from in-memory game state data."""
         team_state = game_state.get("team_state")
         team_state_by_id = team_state if isinstance(team_state, dict) else {}
         teams = self._repository.fetch_teams_by_game_id(db, game_id)
@@ -262,6 +274,7 @@ class BlindHikeService(GameLogicService):
         return highscore
 
     def get_team_bootstrap(self, db: DbSession, game_id: str, team_id: str) -> dict[str, Any]:
+        """Build team bootstrap payload including transformed markers and target."""
         config = self._repository.get_configuration(db, game_id)
         marker_rows = self._repository.fetch_markers_by_game_id(db, game_id)
         team_marker_rows = [row for row in marker_rows if str(row.get("team_id") or "") == str(team_id)]
@@ -320,6 +333,7 @@ class BlindHikeService(GameLogicService):
         }
 
     def get_admin_overview(self, db: DbSession, game_id: str) -> dict[str, Any]:
+        """Build admin overview including marker map and team progress."""
         config = self._repository.get_configuration(db, game_id)
         marker_rows = self._repository.fetch_markers_by_game_id(db, game_id)
 
@@ -382,6 +396,7 @@ class BlindHikeService(GameLogicService):
         }
 
     def add_marker(self, db: DbSession, *, game_id: str, team_id: str, marker_id: str) -> GameActionResult:
+        """Validate and store a team marker, enforcing finish/limit/cooldown rules."""
         parsed_marker = self._parse_marker_coordinates(marker_id)
         if parsed_marker is None:
             return GameActionResult(

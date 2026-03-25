@@ -65,12 +65,14 @@ class TerritoryControlModule(ApiModule, SharedModuleBase):
     name = "territory-control"
 
     def __init__(self, ws_publisher: WsEventPublisher) -> None:
+        """Initialize Territory Control module dependencies."""
         SharedModuleBase.__init__(self, game_type="territory_control", ws_publisher=ws_publisher)
         self._service = TerritoryControlService()
         self._repository = TerritoryControlRepository()
 
     @staticmethod
     def _serialize_zone(zone: Dict[str, Any]) -> Dict[str, Any]:
+        """Serialize territory zone row to API response structure."""
         return {
             "id": str(zone.get("id") or ""),
             "game_id": str(zone.get("game_id") or ""),
@@ -85,20 +87,24 @@ class TerritoryControlModule(ApiModule, SharedModuleBase):
 
     @staticmethod
     def _validate_zone_payload(*, latitude: float, longitude: float) -> None:
+        """Validate zone coordinate bounds."""
         if latitude < -90 or latitude > 90 or longitude < -180 or longitude > 180:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="territory_control.zone.invalidCoordinates")
 
     def build_router(self) -> APIRouter:
+        """Build Territory Control routes for bootstrap, zones, and claims."""
         router = APIRouter(prefix="/territory-control", tags=["territory-control"])
 
         @router.get("/{game_id}/teams/{team_id}/bootstrap", response_model=TeamBootstrapResponse, summary=f"{ACCESS_BOTH_LABEL} Team bootstrap")
         def team_bootstrap(game_id: str, team_id: str, principal: CurrentPrincipal, db: DbSession) -> TeamBootstrapResponse:
+            """Return team-specific Territory Control bootstrap state."""
             self._require_game(db, game_id)
             self._require_team_self_or_manage_access(db, game_id, team_id, principal)
             return TeamBootstrapResponse(state=self._service.get_team_bootstrap(db, game_id, team_id))
 
         @router.get("/{game_id}/overview", response_model=AdminOverviewResponse, summary=f"{ACCESS_ADMIN_LABEL} Admin overview")
         def overview(game_id: str, principal: CurrentPrincipal, db: DbSession) -> AdminOverviewResponse:
+            """Return admin overview data for Territory Control."""
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
             return AdminOverviewResponse(overview=self._service.get_admin_overview(db, game_id))
@@ -109,6 +115,7 @@ class TerritoryControlModule(ApiModule, SharedModuleBase):
             summary=f"{ACCESS_ADMIN_LABEL} List zones",
         )
         def list_zones(game_id: str, principal: CurrentPrincipal, db: DbSession) -> TerritoryZoneListResponse:
+            """List all zones configured for this game."""
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
             zones = self._repository.fetch_zones_by_game_id(db, game_id)
@@ -120,6 +127,7 @@ class TerritoryControlModule(ApiModule, SharedModuleBase):
             summary=f"{ACCESS_ADMIN_LABEL} Get zone",
         )
         def get_zone(game_id: str, zone_id: str, principal: CurrentPrincipal, db: DbSession) -> TerritoryZoneRecordResponse:
+            """Return one zone record by identifier."""
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
             zone = self._repository.get_zone_by_game_id_and_zone_id(db, game_id, zone_id)
@@ -138,6 +146,7 @@ class TerritoryControlModule(ApiModule, SharedModuleBase):
             principal: CurrentPrincipal,
             db: DbSession,
         ) -> TerritoryZoneRecordResponse:
+            """Create a new territory zone after validation."""
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
             self._validate_zone_payload(latitude=body.latitude, longitude=body.longitude)
@@ -177,6 +186,7 @@ class TerritoryControlModule(ApiModule, SharedModuleBase):
             principal: CurrentPrincipal,
             db: DbSession,
         ) -> TerritoryZoneRecordResponse:
+            """Update one territory zone after merged-state validation."""
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
 
@@ -218,6 +228,7 @@ class TerritoryControlModule(ApiModule, SharedModuleBase):
             summary=f"{ACCESS_ADMIN_LABEL} Delete zone",
         )
         def delete_zone(game_id: str, zone_id: str, principal: CurrentPrincipal, db: DbSession) -> MessageResponse:
+            """Delete a zone and return a confirmation message key."""
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
 
@@ -236,6 +247,7 @@ class TerritoryControlModule(ApiModule, SharedModuleBase):
 
         @router.post("/{game_id}/teams/{team_id}/zone/claim", response_model=ActionResponse, summary=f"{ACCESS_BOTH_LABEL} Claim zone")
         def claim_zone(game_id: str, team_id: str, body: ClaimZoneRequest, principal: CurrentPrincipal, db: DbSession, locale: CurrentLocale) -> ActionResponse:
+            """Record a zone-claim action by a team."""
             self._require_game(db, game_id)
             self._require_team_self_or_manage_access(db, game_id, team_id, principal)
             if not body.zone_id.strip():

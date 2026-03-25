@@ -1,0 +1,354 @@
+validation:
+  invalidRequest: Il contenuto della richiesta non è valido.
+game:
+  auth:
+    userRequired: Per gli endpoint di gestione del gioco è necessaria un'entità utente.
+    viewAccessRequired: Non hai accesso in lettura a questo gioco.
+    manageAccessRequired: Non hai accesso in scrittura a questo gioco.
+  teamMessage:
+    sent: Messaggio inviato con successo al team.
+    sendFailed: Impossibile inviare il messaggio al team.
+  chat:
+    emptyMessage: Il messaggio di chat non può essere vuoto.
+    sendFailed: Impossibile inviare il messaggio di chat.
+  notFound: Gioco non trovato.
+  member:
+    userNotFound: Utente non trovato.
+    emailNotFound: Nessun utente trovato con quell'indirizzo email.
+  schema:
+    columnMissing: Nello schema del tavolo da gioco manca una colonna obbligatoria.
+  types:
+    columnMissing: Nel programma di disponibilità del tipo di gioco manca una colonna
+      obbligatoria.
+  validation:
+    requiredFieldsMissing: Mancano i campi di gioco obbligatori.
+    startBeforeEndRequired: L'ora di inizio di una partita deve essere antecedente
+      all'ora di fine.
+    unknownSetting: Uno o più tasti delle impostazioni di gioco sono sconosciuti.
+  create:
+    failed: Impossibile creare il gioco.
+  update:
+    failed: Impossibile aggiornare il gioco.
+  delete:
+    failed: Impossibile eliminare il gioco.
+    success: Gioco eliminato con successo.
+  reset:
+    failed: Impossibile ripristinare il gioco.
+    success: Ripristino del gioco riuscito.
+  admin:
+    add:
+      failed: Impossibile aggiungere l'amministratore del gioco.
+      success: Amministratore del gioco aggiunto con successo.
+    remove:
+      failed: Impossibile rimuovere l'amministratore del gioco.
+      success: L'amministratore del gioco è stato rimosso con successo.
+      ownerForbidden: Il proprietario del gioco non può essere rimosso come amministratore.
+      selfForbidden: Non puoi rimuoverti dagli amministratori del gioco.
+  gameMaster:
+    add:
+      failed: Impossibile aggiungere il Game Master.
+      success: Master del gioco aggiunto con successo.
+    remove:
+      failed: Impossibile rimuovere il Game Master.
+      success: Game master è stato rimosso con successo.
+team:
+  notFound: La squadra non è stata trovata in questo gioco.
+  auth:
+    selfRequired: I token della squadra hanno accesso solo alla propria squadra.
+  validation:
+    codeAlreadyUsed: Teamcode è già in uso per questo gioco.
+  create:
+    failed: Impossibile creare la squadra.
+    codeGenerationFailed: Non è stato possibile generare un codice team univoco.
+  update:
+    failed: Impossibile aggiornare la squadra.
+  delete:
+    failed: Impossibile eliminare la squadra.
+    success: Team eliminato con successo.
+explodingKittens:
+  gameTypeRequired: Questo punto finale è disponibile solo per i giochi Exploding
+    Kittens.
+  lives:
+    invalidDelta: Leven-delta deve essere diverso da zero.
+    updated: Le vite del team sono state aggiornate con successo.
+    updateFailed: Impossibile aggiornare le vite della squadra.
+  play:
+    failed: Impossibile giocare la carta.
+    cardNotInHand: La carta non è nella mano di questa squadra.
+    cardNotPlayable: Questa carta non può essere giocata direttamente.
+    needsTarget: Questa carta richiede una squadra bersaglio.
+    targetSelf: Una squadra non può prendere di mira se stessa.
+    targetInvalid: La squadra target non è valida per questo gioco.
+    attackAlreadyPending: C'è già un attacco pronto per questa squadra.
+    peekAlreadyPending: Vedi, il futuro è già in coda per questa squadra.
+    skipAlreadyPending: Skip è già in coda per questa squadra.
+    attackReady: Carta attacco giocata con successo.
+    favorTargeted: Carta favore giocata e azione bersaglio creata.
+    peekReady: Guarda la carta futura giocata con successo.
+    shuffleDone: Mescola la carta giocata con successo.
+    skipReady: Salta la carta giocata con successo.
+  hand:
+    addFailed: Non è stato possibile aggiungere una carta casuale.
+    removeFailed: Non è stato possibile rimuovere la carta dalla mano casuale.
+  cards:
+    invalidType: Il tipo di carta non è valido per Exploding Kittens.
+    notFound: Mappa non trovata.
+    addFailed: Impossibile aggiungere le carte.
+    addSuccess: Carte aggiunte con successo.
+    createFailed: Impossibile creare la mappa.
+    updateFailed: Impossibile aggiornare la mappa.
+    deleteFailed: Impossibile rimuovere la carta.
+    deleteSuccess: Carta rimossa con successo.
+    removeBlocked: La carta non può essere rimossa mentre è in mano o bloccata.
+    pdfDependenciesMissing: Le dipendenze dell'esportazione QR-PDF non sono disponibili
+      sul server.
+    pdfLogoInvalid: Il logo del Centro deve essere un file immagine.
+    pdfLogoTooLarge: Il logo centrale è troppo grande. La dimensione massima è 2 MB.
+  scan:
+    failed: La scansione della carta non è riuscita.
+    cardNotFound: Mappa non trovata per questo gioco.
+    cardInHand: La carta è già in mano alla squadra.
+    cardLocked: La mappa è attualmente bloccata.
+    cardAdded: Carta aggiunta alla mano.
+    cardNoEffect: La carta non ha alcun effetto.
+    felixGain: La carta Felix ha dato una vita aggiuntiva.
+    felixAlreadyUsed: La carta Felix è già stata utilizzata da questa squadra.
+    explodingDefused: Il gattino che esplode è stato disinnescato.
+    explodingHit: Il gattino che esplode ha colpito la squadra.
+    attackTargeted: L'attacco è mirato e attende di essere affrontato.
+  state:
+    fetched: Stato della squadra recuperato.
+    resolveFailed: Impossibile gestire lo stato.
+    none: Nessuno stato in sospeso da gestire.
+    skipPending: Skip è in coda per questa squadra.
+    skipResolved: Stato di salto gestito.
+    peekPending: Vedi, il futuro è in coda per questa squadra.
+    peekNeedsConfirm: Vedere il futuro richiede la conferma per essere completato.
+    peekResolved: Visualizza lo stato futuro completato.
+    attackNeedsTarget: L'attacco richiede una squadra bersaglio e una mappa scansionata.
+    attackInvalidTarget: La squadra bersaglio dell'attacco non è valida.
+  action:
+    invalid: L'azione non è valida.
+    notAllowed: L'azione non può essere gestita da questa squadra.
+    nopeMissing: Per annullare questa promozione non è necessaria alcuna carta.
+    nopeUsed: Promozione annullata con No.
+    favorNoCards: La Squadra Obiettivo non ha carte per il Favore.
+    favorTaken: Il favore viene risolto e viene presa una carta.
+    resolveFailed: Impossibile completare l'azione.
+  combo:
+    failed: Impossibile utilizzare la combinazione.
+    invalid: Selezione combinata non valida.
+    cardNotInHand: Una o più carte selezionate non sono nella mano.
+    needsTarget: La combo richiede una squadra target.
+    targetSelf: La squadra non può prendere di mira se stessa per questa combo.
+    targetInvalid: La squadra target per la combo non è valida.
+    twoReady: Combo 2-of-a-kind in coda.
+    twoNoCards: La squadra bersaglio non ha carte per la combo 2-of-a-kind.
+    twoTaken: La combo 2-of-a-kind è stata risolta e una carta è stata presa.
+    threeNeedsType: La combinazione tris richiede il tipo di carta desiderato.
+    threeInvalidType: Il tipo di carta desiderato non è valido per la combinazione
+      tris.
+    threeReady: Combo tris in coda.
+    threeTaken: Combo tris risolto e carta desiderata presa.
+    threeNoMatch: Tipo di carta desiderato non trovato nella mano della squadra target.
+    fiveNeedsType: La combinazione di 5 diverse richiede il tipo di carta desiderato.
+    fiveTaken: 5 diverse combo risolte e carta presa dal mazzo.
+    fiveNone: Risolta una combinazione di 5 diverse combinazioni, ma il tipo di carta
+      desiderato non è disponibile nel mazzo.
+geohunter:
+  gameTypeRequired: Questo endpoint è disponibile solo per i giochi Geohunter.
+  validation:
+    missingPoiId: L'ID del punto di interesse è obbligatorio.
+  answer:
+    recorded: Risposta inviata con successo.
+    alreadySubmitted: A questo punto è già stata data risposta dal tuo team.
+blindhike:
+  gameTypeRequired: Questo endpoint è disponibile solo per i giochi Blindhike.
+  validation:
+    missingMarkerId: L'ID marcatore è obbligatorio.
+  marker:
+    added: Indicatore aggiunto correttamente.
+    alreadyAdded: Il marcatore è già stato aggiunto dalla tua squadra.
+    finished: La tua squadra ha già finito e non può posizionare segnalini aggiuntivi.
+resource_run:
+  gameTypeRequired: Questo endpoint è disponibile solo per i giochi Resource Run.
+  validation:
+    missingNodeId: L'ID del nodo della risorsa è obbligatorio.
+  claim:
+    recorded: Risorsa rivendicata con successo.
+    alreadyCollected: La risorsa è già stata raccolta dal tuo team.
+territory_control:
+  gameTypeRequired: Questo endpoint è disponibile solo per i giochi di controllo del
+    territorio.
+  validation:
+    missingZoneId: L'ID zona è obbligatorio.
+  claim:
+    recorded: Zona rivendicata con successo.
+    alreadyOwned: La zona è già stata rivendicata dalla tua squadra.
+market_crash:
+  gameTypeRequired: Questo endpoint è disponibile solo per i giochi Market Crash.
+  validation:
+    missingTradeId: L'ID commerciale è obbligatorio.
+  resource:
+    invalidName: Il nome della risorsa non è valido.
+    exists: La risorsa esiste già.
+    createFailed: La creazione della risorsa non è riuscita.
+    notFound: Risorsa non trovata.
+    updateFailed: Aggiornamento delle risorse non riuscito.
+    deleteFailed: Eliminazione della risorsa non riuscita.
+  point:
+    createFailed: La creazione del punto non è riuscita.
+    notFound: Punto non trovato.
+    updateFailed: Aggiornamento del punto non riuscito.
+    deleteFailed: Eliminazione punto non riuscita.
+    invalidTitle: Il titolo del punto non è valido.
+    invalidColor: Il colore dell'indicatore del punto non è valido.
+    invalidResource: Il punto contiene un riferimento alla risorsa non valido.
+    resourcesRequired: Per un punto è necessaria almeno un'impostazione della risorsa.
+    invalid: Le coordinate del punto non sono valide.
+  location:
+    required: La posizione è richiesta prima di poter commerciare.
+    invalid: Le coordinate della posizione non sono valide.
+    updated: Posizione aggiornata.
+  trade:
+    executed: Commercio eseguito con successo.
+    invalidSide: La direzione commerciale non è valida.
+    invalidResource: La risorsa non è commerciabile a questo punto.
+    outOfRange: Sei fuori dal raggio d'azione di questo punto di scambio.
+    invalidPrice: Il prezzo commerciale non è valido.
+    insufficientCash: Contanti insufficienti per questo scambio.
+    insufficientInventory: Scorte insufficienti per questa operazione.
+crazy88:
+  gameTypeRequired: Questo endpoint è disponibile solo per i giochi Crazy 88.
+  validation:
+    missingTaskId: L'ID attività è obbligatorio.
+    missingSubmissionId: L'ID di invio è obbligatorio.
+  task:
+    submitted: Lavoro inviato con successo.
+  review:
+    judged: Invio giudicato positivo.
+    alreadyJudged: La presentazione è già stata valutata.
+courier_rush:
+  gameTypeRequired: Questo endpoint è disponibile solo per i giochi Courier Rush.
+  validation:
+    missingPickupId: È richiesto l'ID del ritiro.
+    missingDropoffId: L'ID di riconsegna è obbligatorio.
+  pickup:
+    confirmed: Ritiro confermato con successo.
+    alreadyConfirmed: Ritiro già confermato.
+  dropoff:
+    confirmed: Consegna confermata con successo.
+echo_hunt:
+  gameTypeRequired: Questo endpoint è disponibile solo per i giochi Echo Hunt.
+  validation:
+    missingBeaconId: L'ID del faro è obbligatorio.
+  beacon:
+    claimed: Faro rivendicato con successo.
+    alreadyClaimed: Il faro è già stato rivendicato dalla tua squadra.
+checkpoint_heist:
+  gameTypeRequired: Questo endpoint è disponibile solo per i giochi Checkpoint Heist.
+  validation:
+    missingCheckpointId: L'ID del checkpoint è obbligatorio.
+  capture:
+    recorded: Checkpoint catturato con successo.
+    alreadyCaptured: Il checkpoint è già stato catturato dalla tua squadra.
+pandemic_response:
+  gameTypeRequired: Questo endpoint è disponibile solo per i giochi di risposta alla
+    pandemia.
+  validation:
+    missingPickupId: È richiesto l'ID del ritiro.
+    missingHotspotId: L'ID dell'hotspot è obbligatorio.
+  pickup:
+    collected: Ritiro effettuato con successo.
+    alreadyCollected: Il ritiro è già stato ritirato dalla tua squadra.
+  hotspot:
+    resolved: Hotspot risolto con successo.
+    alreadyResolved: L'hotspot è già stato risolto dal tuo team.
+birds_of_prey:
+  gameTypeRequired: Questo endpoint è disponibile solo per i giochi Birds of Prey.
+  config:
+    updateFailed: Salvataggio delle impostazioni di Birds of Prey non riuscito.
+  location:
+    required: La posizione è obbligatoria prima di poter eseguire questa azione.
+    invalid: Le coordinate della posizione non sono valide.
+    updated: Posizione aggiornata.
+  validation:
+    missingEggId: È richiesto l'ID dell'uovo.
+  egg:
+    dropped: Uovo posizionato con successo.
+    dropFailed: Impossibile salvare l'uovo.
+    alreadyDropped: L'uovo è già stato posizionato.
+    persistFailed: Il rilascio delle uova è stato accettato, ma non è stato possibile
+      caricarlo dallo stato di gioco persistente.
+    destroyed: Uovo distrutto con successo.
+    alreadyDestroyed: L'uovo è già stato distrutto.
+    notFound: Uovo non trovato.
+    cannotDestroyOwn: Non puoi distruggere il tuo stesso uovo.
+    notVisible: L'uovo non è visibile nel tuo raggio d'azione.
+    protected: L'uovo è protetto perché il proprietario è nelle vicinanze.
+code_conspiracy:
+  gameTypeRequired: Questo endpoint è disponibile solo per i giochi Code Conspiracy.
+  validation:
+    missingTargetTeamId: L'ID della squadra di destinazione è obbligatorio.
+    missingCode: Il codice è obbligatorio.
+  code:
+    submitted: Invio del codice ricevuto.
+auth:
+  locale:
+    unsupported: Lingua non supportata. I valori consentiti sono en e nl.
+  ws:
+    superAdminKeyRequired: È richiesta la chiave super amministratore WS.
+    superAdminKeyInvalid: La chiave super amministratore WS non è valida.
+    superAdminKeyNotConfigured: La chiave super amministratore WS non è configurata
+      sul back-end.
+  user:
+    invalidEmailOrPassword: Indirizzo e-mail o password non validi.
+    disallowedRole: Questo account non ha accesso a questo backend.
+    superAdminRequired: Per questa azione è richiesto l'accesso come super amministratore.
+  team:
+    invalidCodes: Codice di gioco o codice squadra non valido.
+  token:
+    missingBearerToken: Il gettone al portatore è obbligatorio.
+    invalidBearerHeaderFormat: Il formato dell'intestazione del token portatore non
+      è valido.
+    invalidOrExpired: Il token non è valido o è scaduto.
+    gameAccessRequired: Il token non può accedere al gioco richiesto.
+  register:
+    emailAlreadyUsed: Esiste già un account con questo indirizzo email.
+    usernameAlreadyUsed: Questo nome utente è già in uso.
+    verifyEmailSent: Conto creato. Controlla la tua email per confermare il tuo indirizzo.
+    emailSendFailed: Impossibile inviare l'e-mail di verifica.
+    mailerNotConfigured: Il servizio di posta elettronica non è configurato.
+    mailerUnsupportedScheme: Lo schema DSN del servizio di posta elettronica non è
+      supportato.
+    mailerFromMissing: L'indirizzo del mittente dell'e-mail non è configurato.
+  verify:
+    invalidToken: Questo token di autenticazione non è valido o è scaduto.
+    success: L'indirizzo email è stato confermato con successo.
+    pendingEmailConflict: Questo indirizzo email in sospeso non può più essere applicato
+      perché è già in uso.
+    tokenColumnMissing: L'archiviazione del token di autenticazione non è configurata
+      correttamente.
+  reset:
+    requestAccepted: Se un account esiste ed è stato confermato, è stata inviata un'e-mail
+      di ripristino.
+    tokenColumnsMissing: L'archiviazione del token di reimpostazione della password
+      non è configurata correttamente.
+    emailSendFailed: Non è stato possibile inviare l'e-mail di reimpostazione della
+      password.
+mailer:
+  verify:
+    subject: Conferma il tuo indirizzo email
+    title: Conferma il tuo indirizzo email
+    greeting: Ciao %username%,
+    intro: Conferma il tuo indirizzo email cliccando il pulsante qui sotto.
+    cta: Conferma l'indirizzo e-mail
+    outro: Se non hai creato un account, puoi ignorare questa email.
+  reset:
+    subject: Reimposta la password
+    title: Reimposta la password
+    greeting: Ciao %username%,
+    intro: È stata richiesta la reimpostazione della password per il tuo account.
+      Utilizza il pulsante qui sotto per scegliere una nuova password.
+    cta: Reimposta la password
+    outro: Se non lo hai richiesto, puoi ignorare questa email.

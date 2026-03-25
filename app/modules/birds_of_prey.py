@@ -13,28 +13,40 @@ from app.services.ws_client import WsEventPublisher
 
 
 class TeamBootstrapResponse(BaseModel):
+    """Response payload containing team bootstrap state."""
+
     state: Dict[str, Any]
 
 
 class AdminOverviewResponse(BaseModel):
+    """Response payload containing admin overview state."""
+
     overview: Dict[str, Any]
 
 
 class DropEggRequest(BaseModel):
+    """Request body for dropping an egg."""
+
     egg_id: str = Field(default="", max_length=64)
 
 
 class DestroyEggRequest(BaseModel):
+    """Request body for destroying an enemy egg."""
+
     egg_id: str = Field(min_length=1, max_length=64)
     points: int = Field(default=1, ge=0, le=1000)
 
 
 class TeamLocationUpdateRequest(BaseModel):
+    """Request body containing new team location coordinates."""
+
     latitude: float
     longitude: float
 
 
 class ActionResponse(BaseModel):
+    """Standardized action response for birds-of-prey actions."""
+
     success: bool
     message_key: str
     action_id: Optional[str] = None
@@ -43,6 +55,8 @@ class ActionResponse(BaseModel):
 
 
 class TeamLocationUpdateResponse(BaseModel):
+    """Response for location updates including visibility recalculation."""
+
     success: bool
     message_key: str
     location: Dict[str, Any]
@@ -50,25 +64,33 @@ class TeamLocationUpdateResponse(BaseModel):
 
 
 class BirdsOfPreyConfigResponse(BaseModel):
+    """Response wrapper around Birds of Prey configuration."""
+
     config: Dict[str, Any]
 
 
 class BirdsOfPreyConfigUpdateRequest(BaseModel):
+    """Request payload for updating Birds of Prey configuration."""
+
     visibility_radius_meters: int = Field(default=100, ge=10, le=500)
     protection_radius_meters: int = Field(default=50, ge=5, le=500)
     auto_drop_seconds: int = Field(default=300, ge=30, le=7200)
 
 
 class BirdsOfPreyModule(ApiModule, SharedModuleBase):
+    """FastAPI module for Birds of Prey gameplay and admin APIs."""
+
     name = "birds-of-prey"
 
     def __init__(self, ws_publisher: WsEventPublisher) -> None:
+        """Initialize module dependencies and shared settings."""
         SharedModuleBase.__init__(self, game_type="birds_of_prey", ws_publisher=ws_publisher)
         self._service = BirdsOfPreyService()
         self._repository = BirdsOfPreyRepository()
 
     @staticmethod
     def _build_egg_event_payload(game_id: str, egg: Dict[str, Any]) -> Dict[str, Any]:
+        """Normalize egg data into WS-safe event payload fields."""
         return {
             "game_id": game_id,
             "id": str(egg.get("id") or ""),
@@ -81,6 +103,7 @@ class BirdsOfPreyModule(ApiModule, SharedModuleBase):
         }
 
     def _publish_team_score_event(self, *, game_id: str, team_id: str, score: int) -> None:
+        """Publish score updates to shared, admin, and team-specific channels."""
         payload = {
             "game_id": game_id,
             "team_id": team_id,
@@ -103,6 +126,7 @@ class BirdsOfPreyModule(ApiModule, SharedModuleBase):
         )
 
     def _publish_enemy_visibility_snapshot(self, *, game_id: str, team_id: str, visible_enemy_eggs: list[Dict[str, Any]]) -> None:
+        """Publish current enemy egg visibility snapshot for one team."""
         self._ws_publisher.publish(
             "team.birds_of_prey.enemy_eggs.visible",
             {
@@ -114,10 +138,12 @@ class BirdsOfPreyModule(ApiModule, SharedModuleBase):
         )
 
     def build_router(self) -> APIRouter:
+        """Build and return Birds of Prey API routes."""
         router = APIRouter(prefix="/birds-of-prey", tags=["birds-of-prey"])
 
         @router.get("/{game_id}/teams/{team_id}/bootstrap", response_model=TeamBootstrapResponse, summary=f"{ACCESS_BOTH_LABEL} Team bootstrap")
         def team_bootstrap(game_id: str, team_id: str, principal: CurrentPrincipal, db: DbSession) -> TeamBootstrapResponse:
+            """Return bootstrap data for a team in Birds of Prey."""
             self._require_game(db, game_id)
             self._require_team_self_or_manage_access(db, game_id, team_id, principal)
             state = self._service.get_team_bootstrap(db, game_id, team_id)
@@ -126,6 +152,7 @@ class BirdsOfPreyModule(ApiModule, SharedModuleBase):
 
         @router.get("/{game_id}/overview", response_model=AdminOverviewResponse, summary=f"{ACCESS_ADMIN_LABEL} Admin overview")
         def overview(game_id: str, principal: CurrentPrincipal, db: DbSession) -> AdminOverviewResponse:
+            """Return admin overview data for Birds of Prey."""
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
             return AdminOverviewResponse(overview=self._service.get_admin_overview(db, game_id))
@@ -136,6 +163,7 @@ class BirdsOfPreyModule(ApiModule, SharedModuleBase):
             summary=f"{ACCESS_ADMIN_LABEL} Get birds of prey config",
         )
         def get_config(game_id: str, principal: CurrentPrincipal, db: DbSession) -> BirdsOfPreyConfigResponse:
+            """Return persisted Birds of Prey configuration."""
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
             return BirdsOfPreyConfigResponse(config=self._repository.get_configuration(db, game_id))
@@ -151,6 +179,7 @@ class BirdsOfPreyModule(ApiModule, SharedModuleBase):
             principal: CurrentPrincipal,
             db: DbSession,
         ) -> BirdsOfPreyConfigResponse:
+            """Validate and persist Birds of Prey configuration updates."""
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
 
@@ -171,6 +200,7 @@ class BirdsOfPreyModule(ApiModule, SharedModuleBase):
 
         @router.post("/{game_id}/teams/{team_id}/egg/drop", response_model=ActionResponse, summary=f"{ACCESS_BOTH_LABEL} Drop egg")
         def drop_egg(game_id: str, team_id: str, body: DropEggRequest, principal: CurrentPrincipal, db: DbSession, locale: CurrentLocale) -> ActionResponse:
+            """Drop an egg at the current team position and fan out WS updates."""
             self._require_game(db, game_id)
             self._require_team_self_or_manage_access(db, game_id, team_id, principal)
             egg_id = str(body.egg_id or "").strip() or str(uuid4())
@@ -222,6 +252,7 @@ class BirdsOfPreyModule(ApiModule, SharedModuleBase):
 
         @router.post("/{game_id}/teams/{team_id}/egg/destroy", response_model=ActionResponse, summary=f"{ACCESS_BOTH_LABEL} Destroy egg")
         def destroy_egg(game_id: str, team_id: str, body: DestroyEggRequest, principal: CurrentPrincipal, db: DbSession, locale: CurrentLocale) -> ActionResponse:
+            """Destroy an eligible enemy egg and publish resulting state updates."""
             self._require_game(db, game_id)
             self._require_team_self_or_manage_access(db, game_id, team_id, principal)
             if not body.egg_id.strip():
@@ -306,6 +337,7 @@ class BirdsOfPreyModule(ApiModule, SharedModuleBase):
             db: DbSession,
             locale: CurrentLocale,
         ) -> TeamLocationUpdateResponse:
+            """Update team location and publish throttled location/visibility events."""
             self._require_game(db, game_id)
             self._require_team_self_or_manage_access(db, game_id, team_id, principal)
 

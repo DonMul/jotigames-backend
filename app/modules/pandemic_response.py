@@ -59,15 +59,18 @@ class PandemicResponseModule(ApiModule, SharedModuleBase):
     name = "pandemic-response"
 
     def __init__(self, ws_publisher: WsEventPublisher) -> None:
+        """Initialize Pandemic Response module dependencies."""
         SharedModuleBase.__init__(self, game_type="pandemic_response", ws_publisher=ws_publisher)
         self._service = PandemicResponseService()
         self._repository = PandemicResponseRepository()
 
     def build_router(self) -> APIRouter:
+        """Build Pandemic Response routes for bootstrap, config, and actions."""
         router = APIRouter(prefix="/pandemic-response", tags=["pandemic-response"])
 
         @router.get("/{game_id}/teams/{team_id}/bootstrap", response_model=TeamBootstrapResponse, summary=f"{ACCESS_BOTH_LABEL} Team bootstrap")
         def team_bootstrap(game_id: str, team_id: str, principal: CurrentPrincipal, db: DbSession) -> TeamBootstrapResponse:
+            """Return team bootstrap data including hotspots and pickups."""
             self._require_game(db, game_id)
             self._require_team_self_or_manage_access(db, game_id, team_id, principal)
             state = self._service.get_team_bootstrap(db, game_id, team_id)
@@ -77,6 +80,7 @@ class PandemicResponseModule(ApiModule, SharedModuleBase):
 
         @router.get("/{game_id}/overview", response_model=AdminOverviewResponse, summary=f"{ACCESS_ADMIN_LABEL} Admin overview")
         def overview(game_id: str, principal: CurrentPrincipal, db: DbSession) -> AdminOverviewResponse:
+            """Return admin overview data for Pandemic Response."""
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
             return AdminOverviewResponse(overview=self._service.get_admin_overview(db, game_id))
@@ -87,6 +91,7 @@ class PandemicResponseModule(ApiModule, SharedModuleBase):
             summary=f"{ACCESS_ADMIN_LABEL} Get pandemic response config",
         )
         def get_config(game_id: str, principal: CurrentPrincipal, db: DbSession) -> PandemicResponseConfigResponse:
+            """Return persisted Pandemic Response configuration values."""
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
             return PandemicResponseConfigResponse(config=self._repository.get_configuration(db, game_id))
@@ -102,6 +107,7 @@ class PandemicResponseModule(ApiModule, SharedModuleBase):
             principal: CurrentPrincipal,
             db: DbSession,
         ) -> PandemicResponseConfigResponse:
+            """Validate and persist Pandemic Response configuration updates."""
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
 
@@ -134,6 +140,7 @@ class PandemicResponseModule(ApiModule, SharedModuleBase):
             summary=f"{ACCESS_ADMIN_LABEL} Current pandemic admin state",
         )
         def get_admin_state(game_id: str, principal: CurrentPrincipal, db: DbSession) -> PandemicResponseStateResponse:
+            """Return current admin map state of hotspots and pickups."""
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
             hotspots = [self._serialize_hotspot(record) for record in self._repository.fetch_hotspots_by_game_id(db, game_id)]
@@ -142,6 +149,7 @@ class PandemicResponseModule(ApiModule, SharedModuleBase):
 
         @router.post("/{game_id}/teams/{team_id}/pickup/collect", response_model=ActionResponse, summary=f"{ACCESS_BOTH_LABEL} Collect pickup")
         def collect_pickup(game_id: str, team_id: str, body: CollectPickupRequest, principal: CurrentPrincipal, db: DbSession, locale: CurrentLocale) -> ActionResponse:
+            """Record a pickup collection action for the requesting team."""
             self._require_game(db, game_id)
             self._require_team_self_or_manage_access(db, game_id, team_id, principal)
             if not body.pickup_id.strip():
@@ -159,6 +167,7 @@ class PandemicResponseModule(ApiModule, SharedModuleBase):
 
         @router.post("/{game_id}/teams/{team_id}/hotspot/resolve", response_model=ActionResponse, summary=f"{ACCESS_BOTH_LABEL} Resolve hotspot")
         def resolve_hotspot(game_id: str, team_id: str, body: ResolveHotspotRequest, principal: CurrentPrincipal, db: DbSession, locale: CurrentLocale) -> ActionResponse:
+            """Record a hotspot resolution action and award points."""
             self._require_game(db, game_id)
             self._require_team_self_or_manage_access(db, game_id, team_id, principal)
             if not body.hotspot_id.strip():
@@ -184,6 +193,7 @@ class PandemicResponseModule(ApiModule, SharedModuleBase):
 
     @staticmethod
     def _serialize_hotspot(record: Dict[str, Any]) -> Dict[str, Any]:
+        """Serialize hotspot row to API-safe response payload."""
         return {
             "id": str(record.get("id") or ""),
             "title": str(record.get("title") or ""),
@@ -198,6 +208,7 @@ class PandemicResponseModule(ApiModule, SharedModuleBase):
 
     @staticmethod
     def _serialize_pickup(record: Dict[str, Any]) -> Dict[str, Any]:
+        """Serialize pickup row to API-safe response payload."""
         return {
             "id": str(record.get("id") or ""),
             "title": str(record.get("title") or ""),
@@ -211,6 +222,7 @@ class PandemicResponseModule(ApiModule, SharedModuleBase):
 
     @staticmethod
     def _normalize_polygon_geojson(raw: str) -> str | None:
+        """Validate/normalize polygon GeoJSON input for spawn area configuration."""
         import json
 
         text = str(raw or "").strip()

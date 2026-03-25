@@ -7,6 +7,8 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
+    """Centralized environment-backed runtime settings for backend services."""
+
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 
     app_name: str = Field(default="JotiGames Backend", alias="APP_NAME")
@@ -83,6 +85,7 @@ class Settings(BaseSettings):
     @field_validator("ws_port", mode="before")
     @classmethod
     def _normalize_ws_port(cls, value: object) -> object:
+        """Treat empty-string WS port inputs as unset (`None`)."""
         if value is None:
             return None
         if isinstance(value, str) and value.strip() == "":
@@ -91,6 +94,11 @@ class Settings(BaseSettings):
 
     @property
     def ws_socket_endpoint(self) -> Optional[str]:
+        """Build websocket endpoint URL used for backend -> WS socket publishing.
+
+        Accepts direct URL overrides and host/protocol fragments, normalizes
+        schemes (`http` -> `ws`, `https` -> `wss`) and ensures usable paths.
+        """
         direct_url = str(self.ws_events_url or "").strip()
         if direct_url:
             try:
@@ -148,6 +156,7 @@ class Settings(BaseSettings):
 
     @property
     def ws_events_endpoint(self) -> Optional[str]:
+        """Build HTTP endpoint URL used for WS event API compatibility paths."""
         direct_url = str(self.ws_events_url or "").strip()
         if direct_url:
             try:
@@ -200,19 +209,23 @@ class Settings(BaseSettings):
 
     @property
     def auth_verify_url(self) -> str:
+        """Return absolute URL for email verification links."""
         return f"{self.app_public_base_url.rstrip('/')}/{self.auth_verify_path.lstrip('/')}"
 
     @property
     def auth_password_reset_url(self) -> str:
+        """Return absolute URL for password reset links."""
         return f"{self.app_public_base_url.rstrip('/')}/{self.auth_password_reset_path.lstrip('/')}"
 
 
 @lru_cache(maxsize=1)
 def get_settings() -> Settings:
+    """Return cached settings instance to avoid repeated env parsing."""
     return Settings()
 
 
 def normalize_database_url(database_url: str) -> str:
+    """Normalize DB URLs to SQLAlchemy driver-specific form when needed."""
     if database_url.startswith("mysql://"):
         return database_url.replace("mysql://", "mysql+pymysql://", 1)
     return database_url

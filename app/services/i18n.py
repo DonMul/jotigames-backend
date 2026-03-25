@@ -9,6 +9,7 @@ from app.config import get_settings
 
 @lru_cache(maxsize=1)
 def _load_translations() -> dict[str, Any]:
+    """Load locale YAML files into cached in-memory translation tree."""
     settings = get_settings()
     locales: dict[str, Any] = {}
 
@@ -29,6 +30,7 @@ def _load_translations() -> dict[str, Any]:
 
 
 def _normalize_locale(locale: Optional[str]) -> str:
+    """Normalize locale input to primary language token with fallback default."""
     settings = get_settings()
     if not locale:
         return settings.default_locale
@@ -39,6 +41,13 @@ def _normalize_locale(locale: Optional[str]) -> str:
 
 
 def translate_value(key: str, locale: Optional[str] = None, params: Optional[Dict[str, str]] = None) -> str:
+    """Resolve translation key for locale with fallback and token replacement.
+
+    Lookup order:
+    1. requested locale
+    2. configured default locale
+    3. raw key (when missing)
+    """
     translations = _load_translations()
     localized = _normalize_locale(locale)
     fallback_locale = get_settings().default_locale

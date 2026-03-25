@@ -182,8 +182,35 @@ market_crash:
   gameTypeRequired: "This endpoint is only available for Market Crash games."
   validation:
     missingTradeId: "Trade id is required."
+  resource:
+    invalidName: "Resource name is invalid."
+    exists: "Resource already exists."
+    createFailed: "Could not create resource."
+    notFound: "Resource was not found."
+    updateFailed: "Could not update resource."
+    deleteFailed: "Could not delete resource."
+  point:
+    createFailed: "Could not create point."
+    notFound: "Point was not found."
+    updateFailed: "Could not update point."
+    deleteFailed: "Could not delete point."
+    invalidTitle: "Point title is invalid."
+    invalidColor: "Point marker color is invalid."
+    invalidResource: "Point has an invalid resource reference."
+    resourcesRequired: "At least one resource setting is required for a point."
+    invalid: "Point coordinates are invalid."
+  location:
+    required: "Location is required before you can trade."
+    invalid: "Location coordinates are invalid."
+    updated: "Location updated."
   trade:
     executed: "Trade executed successfully."
+    invalidSide: "Trade side is invalid."
+    invalidResource: "Resource is not tradable at this point."
+    outOfRange: "You are out of range of this trade point."
+    invalidPrice: "Trade price is invalid."
+    insufficientCash: "Insufficient cash for this trade."
+    insufficientInventory: "Insufficient inventory for this trade."
 crazy88:
   gameTypeRequired: "This endpoint is only available for Crazy 88 games."
   validation:

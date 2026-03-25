@@ -13,19 +13,27 @@ from app.services.ws_client import WsEventPublisher
 
 
 class TeamBootstrapResponse(BaseModel):
+    """Response payload containing team bootstrap state."""
+
     state: Dict[str, Any]
 
 
 class AdminOverviewResponse(BaseModel):
+    """Response payload containing admin overview state."""
+
     overview: Dict[str, Any]
 
 
 class ClaimBeaconRequest(BaseModel):
+    """Request body for claiming a beacon."""
+
     beacon_id: str = Field(min_length=1, max_length=64)
     points: int = Field(default=1, ge=0, le=1000)
 
 
 class ActionResponse(BaseModel):
+    """Standardized action response for team claims."""
+
     success: bool
     message_key: str
     action_id: Optional[str] = None
@@ -34,6 +42,8 @@ class ActionResponse(BaseModel):
 
 
 class EchoHuntBeaconCreateRequest(BaseModel):
+    """Request body for creating a beacon."""
+
     title: str = Field(min_length=1, max_length=120)
     hint: Optional[str] = Field(default=None, max_length=255)
     latitude: float
@@ -46,6 +56,8 @@ class EchoHuntBeaconCreateRequest(BaseModel):
 
 
 class EchoHuntBeaconUpdateRequest(BaseModel):
+    """Request body for patching an existing beacon."""
+
     title: Optional[str] = Field(default=None, min_length=1, max_length=120)
     hint: Optional[str] = Field(default=None, max_length=255)
     latitude: Optional[float] = None
@@ -58,27 +70,37 @@ class EchoHuntBeaconUpdateRequest(BaseModel):
 
 
 class EchoHuntBeaconRecordResponse(BaseModel):
+    """Response wrapper containing one beacon record."""
+
     beacon: Dict[str, Any]
 
 
 class EchoHuntBeaconListResponse(BaseModel):
+    """Response wrapper containing all beacon records."""
+
     beacons: list[Dict[str, Any]]
 
 
 class MessageResponse(BaseModel):
+    """Response wrapper for localized message keys."""
+
     message_key: str
 
 
 class EchoHuntModule(ApiModule, SharedModuleBase):
+    """FastAPI module for Echo Hunt admin and team routes."""
+
     name = "echo-hunt"
 
     def __init__(self, ws_publisher: WsEventPublisher) -> None:
+        """Initialize Echo Hunt module dependencies."""
         SharedModuleBase.__init__(self, game_type="echo_hunt", ws_publisher=ws_publisher)
         self._service = EchoHuntService()
         self._repository = EchoHuntRepository()
 
     @staticmethod
     def _serialize_beacon(beacon: Dict[str, Any]) -> Dict[str, Any]:
+        """Serialize beacon row to API response format."""
         return {
             "id": str(beacon.get("id") or ""),
             "game_id": str(beacon.get("game_id") or ""),
@@ -95,22 +117,26 @@ class EchoHuntModule(ApiModule, SharedModuleBase):
 
     @staticmethod
     def _validate_beacon_payload(*, latitude: float, longitude: float, marker_color: str) -> None:
+        """Validate beacon coordinates and marker color format."""
         if latitude < -90 or latitude > 90 or longitude < -180 or longitude > 180:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="echo_hunt.beacon.invalidCoordinates")
         if len(marker_color) != 7 or not marker_color.startswith("#"):
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="echo_hunt.beacon.invalidColor")
 
     def build_router(self) -> APIRouter:
+        """Build Echo Hunt routes for beacon admin and team claiming."""
         router = APIRouter(prefix="/echo-hunt", tags=["echo-hunt"])
 
         @router.get("/{game_id}/teams/{team_id}/bootstrap", response_model=TeamBootstrapResponse, summary=f"{ACCESS_BOTH_LABEL} Team bootstrap")
         def team_bootstrap(game_id: str, team_id: str, principal: CurrentPrincipal, db: DbSession) -> TeamBootstrapResponse:
+            """Return team-specific Echo Hunt bootstrap state."""
             self._require_game(db, game_id)
             self._require_team_self_or_manage_access(db, game_id, team_id, principal)
             return TeamBootstrapResponse(state=self._service.get_team_bootstrap(db, game_id, team_id))
 
         @router.get("/{game_id}/overview", response_model=AdminOverviewResponse, summary=f"{ACCESS_ADMIN_LABEL} Admin overview")
         def overview(game_id: str, principal: CurrentPrincipal, db: DbSession) -> AdminOverviewResponse:
+            """Return admin overview data for Echo Hunt."""
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
             return AdminOverviewResponse(overview=self._service.get_admin_overview(db, game_id))
@@ -121,6 +147,7 @@ class EchoHuntModule(ApiModule, SharedModuleBase):
             summary=f"{ACCESS_ADMIN_LABEL} List beacons",
         )
         def list_beacons(game_id: str, principal: CurrentPrincipal, db: DbSession) -> EchoHuntBeaconListResponse:
+            """List all configured beacons for a game."""
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
             beacons = self._repository.fetch_beacons_by_game_id(db, game_id)
@@ -132,6 +159,7 @@ class EchoHuntModule(ApiModule, SharedModuleBase):
             summary=f"{ACCESS_ADMIN_LABEL} Get beacon",
         )
         def get_beacon(game_id: str, beacon_id: str, principal: CurrentPrincipal, db: DbSession) -> EchoHuntBeaconRecordResponse:
+            """Fetch one beacon record by id."""
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
             beacon = self._repository.get_beacon_by_game_id_and_beacon_id(db, game_id, beacon_id)
@@ -150,6 +178,7 @@ class EchoHuntModule(ApiModule, SharedModuleBase):
             principal: CurrentPrincipal,
             db: DbSession,
         ) -> EchoHuntBeaconRecordResponse:
+            """Create a beacon after payload validation."""
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
             self._validate_beacon_payload(latitude=body.latitude, longitude=body.longitude, marker_color=body.marker_color)
@@ -193,6 +222,7 @@ class EchoHuntModule(ApiModule, SharedModuleBase):
             principal: CurrentPrincipal,
             db: DbSession,
         ) -> EchoHuntBeaconRecordResponse:
+            """Update a beacon after merged-state validation."""
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
 
@@ -243,6 +273,7 @@ class EchoHuntModule(ApiModule, SharedModuleBase):
             summary=f"{ACCESS_ADMIN_LABEL} Delete beacon",
         )
         def delete_beacon(game_id: str, beacon_id: str, principal: CurrentPrincipal, db: DbSession) -> MessageResponse:
+            """Delete a beacon and return localized confirmation key."""
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
 
@@ -261,6 +292,7 @@ class EchoHuntModule(ApiModule, SharedModuleBase):
 
         @router.post("/{game_id}/teams/{team_id}/beacon/claim", response_model=ActionResponse, summary=f"{ACCESS_BOTH_LABEL} Claim beacon")
         def claim_beacon(game_id: str, team_id: str, body: ClaimBeaconRequest, principal: CurrentPrincipal, db: DbSession, locale: CurrentLocale) -> ActionResponse:
+            """Record beacon claim action for the requesting team."""
             self._require_game(db, game_id)
             self._require_team_self_or_manage_access(db, game_id, team_id, principal)
             if not body.beacon_id.strip():

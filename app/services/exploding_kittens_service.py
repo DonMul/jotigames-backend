@@ -63,10 +63,12 @@ class ExplodingKittensResult:
 
 class ExplodingKittensService:
     def __init__(self) -> None:
+        """Initialize Exploding Kittens service with repository and image picker."""
         self._repository = ExplodingKittensRepository()
         self._imagePicker = ExplodingKittensImagePicker()
 
     def addCardsByType(self, db: DbSession, *, game_id: str, card_type: str, quantity: int) -> int:
+        """Bulk-create deck cards of a specific type for a game."""
         if card_type not in _VALID_CARD_TYPES:
             raise ValueError("explodingKittens.cards.invalidType")
 
@@ -93,6 +95,7 @@ class ExplodingKittensService:
         return amount
 
     def createCard(self, db: DbSession, *, game_id: str, card_type: str, title: Optional[str], image_path: Optional[str]) -> Dict[str, Any]:
+        """Create a single deck card and return persisted record."""
         if card_type not in _VALID_CARD_TYPES:
             raise ValueError("explodingKittens.cards.invalidType")
 
@@ -130,6 +133,7 @@ class ExplodingKittensService:
         image_path: Optional[str],
         holder_team_id: Optional[str],
     ) -> Dict[str, Any]:
+        """Update mutable card fields and optionally move card holder."""
         current = self._repository.getCardByGameIdAndCardId(db, game_id, card_id)
         if current is None:
             raise ValueError("explodingKittens.cards.notFound")
@@ -159,6 +163,7 @@ class ExplodingKittensService:
         return updated
 
     def deleteCard(self, db: DbSession, *, game_id: str, card_id: str) -> None:
+        """Delete an unheld and unlocked card from the game deck."""
         card = self._repository.getCardByGameIdAndCardId(db, game_id, card_id)
         if card is None:
             raise ValueError("explodingKittens.cards.notFound")
@@ -169,6 +174,7 @@ class ExplodingKittensService:
         self._repository.commitChanges(db)
 
     def getTeamState(self, db: DbSession, *, game_id: str, team_id: str) -> Dict[str, Any]:
+        """Build team runtime state including lives, hand, and pending actions."""
         team = self._repository.getTeamByGameIdAndTeamId(db, game_id, team_id)
         if team is None:
             raise ValueError("team.notFound")
@@ -191,6 +197,7 @@ class ExplodingKittensService:
         }
 
     def _enrichPendingActionForClient(self, db: DbSession, *, game_id: str, action: Dict[str, Any]) -> Dict[str, Any]:
+        """Normalize pending action context for frontend-friendly payload fields."""
         action_data = dict(action or {})
         context_raw = action_data.get("context")
         requested_card_type = ""
@@ -215,6 +222,7 @@ class ExplodingKittensService:
         return action_data
 
     def adjustTeamLives(self, db: DbSession, *, game_id: str, team_id: str, delta: int) -> ExplodingKittensResult:
+        """Adjust a team's lives by delta and return refreshed state."""
         if delta == 0:
             raise ValueError("explodingKittens.lives.invalidDelta")
 
@@ -249,6 +257,7 @@ class ExplodingKittensService:
         card_id: str,
         target_team_id: Optional[str],
     ) -> ExplodingKittensResult:
+        """Play a hand card and apply card-type specific state transitions."""
         team = self._repository.getTeamByGameIdAndTeamId(db, game_id, team_id)
         if team is None:
             raise ValueError("team.notFound")
@@ -399,6 +408,7 @@ class ExplodingKittensService:
         team_id: str,
         card_type: str,
     ) -> Dict[str, Any]:
+        """Remove a random unlocked card of the requested type from team hand."""
         if card_type not in _VALID_CARD_TYPES:
             raise ValueError("explodingKittens.cards.invalidType")
 
@@ -435,6 +445,7 @@ class ExplodingKittensService:
         team_id: str,
         card_type: str,
     ) -> Dict[str, Any]:
+        """Give team a random available deck card of the requested type."""
         if card_type not in _VALID_CARD_TYPES:
             raise ValueError("explodingKittens.cards.invalidType")
 
@@ -472,6 +483,7 @@ class ExplodingKittensService:
         qr_token: str,
         target_team_id: Optional[str],
     ) -> ExplodingKittensResult:
+        """Resolve a scanned QR card against pending states and card effects."""
         team = self._repository.getTeamByGameIdAndTeamId(db, game_id, team_id)
         if team is None:
             raise ValueError("team.notFound")
@@ -596,6 +608,7 @@ class ExplodingKittensService:
         qr_token: Optional[str],
         target_team_id: Optional[str],
     ) -> ExplodingKittensResult:
+        """Resolve pending skip/peek/attack states before normal scanning."""
         team = self._repository.getTeamByGameIdAndTeamId(db, game_id, team_id)
         if team is None:
             raise ValueError("team.notFound")
@@ -686,6 +699,7 @@ class ExplodingKittensService:
         target_team_id: Optional[str],
         requested_card_type: Optional[str],
     ) -> ExplodingKittensResult:
+        """Consume combo cards and queue/execute combo behavior by card count."""
         if len(card_ids) < 2:
             raise ValueError("explodingKittens.combo.invalid")
 
@@ -784,6 +798,7 @@ class ExplodingKittensService:
         action_id: str,
         use_nope: bool,
     ) -> ExplodingKittensResult:
+        """Resolve a pending targeted action, optionally canceling via Nope."""
         action = self._repository.getPendingActionByIdForTeam(
             db,
             action_id=action_id,
@@ -851,6 +866,7 @@ class ExplodingKittensService:
         )
 
     def _resolveFavorWithoutCommit(self, db: DbSession, action: Dict[str, Any]) -> tuple[str, Dict[str, Any]]:
+        """Resolve favor action by transferring a random target hand card."""
         source_team_id = str(action.get("source_team_id") or "")
         target_team_id = str(action.get("target_team_id") or "")
         if not source_team_id or not target_team_id:
@@ -870,6 +886,7 @@ class ExplodingKittensService:
         return "explodingKittens.action.favorTaken", {"card_type": str(card.get("type") or "")}
 
     def _resolveAttackWithoutCommit(self, db: DbSession, game_id: str, action: Dict[str, Any]) -> tuple[str, Dict[str, Any]]:
+        """Resolve attack action by applying scanned-card effect to target team."""
         card_id = str(action.get("card_id") or "")
         target_team_id = str(action.get("target_team_id") or "")
         if not card_id or not target_team_id:
@@ -882,6 +899,7 @@ class ExplodingKittensService:
         return message, {}
 
     def _resolveComboTwoSameWithoutCommit(self, db: DbSession, action: Dict[str, Any]) -> tuple[str, Dict[str, Any]]:
+        """Resolve two-of-a-kind combo by stealing random card from target."""
         source_team_id = str(action.get("source_team_id") or "")
         target_team_id = str(action.get("target_team_id") or "")
         if not source_team_id or not target_team_id:
@@ -901,6 +919,7 @@ class ExplodingKittensService:
         return "explodingKittens.combo.twoTaken", {"card_type": str(card.get("type") or "")}
 
     def _resolveComboThreeSameWithoutCommit(self, db: DbSession, action: Dict[str, Any]) -> tuple[str, Dict[str, Any]]:
+        """Resolve three-of-a-kind combo by taking requested card type if present."""
         source_team_id = str(action.get("source_team_id") or "")
         target_team_id = str(action.get("target_team_id") or "")
         if not source_team_id or not target_team_id:
@@ -936,6 +955,7 @@ class ExplodingKittensService:
         return "explodingKittens.combo.threeNoMatch", {}
 
     def _queueComboTwoSame(self, db: DbSession, *, game_id: str, team_id: str, target_team_id: Optional[str]) -> str:
+        """Create pending action for two-of-a-kind combo."""
         if not target_team_id:
             raise ValueError("explodingKittens.combo.needsTarget")
         if target_team_id == team_id:
@@ -971,6 +991,7 @@ class ExplodingKittensService:
         target_team_id: Optional[str],
         requested_card_type: str,
     ) -> str:
+        """Create pending action for three-of-a-kind combo with requested type."""
         if not target_team_id:
             raise ValueError("explodingKittens.combo.needsTarget")
         if target_team_id == team_id:
@@ -1000,6 +1021,7 @@ class ExplodingKittensService:
         return action_id
 
     def _applyCardEffectWithoutCommit(self, db: DbSession, *, game_id: str, team_id: str, card: Dict[str, Any]) -> str:
+        """Apply immediate card effect and return translation key describing result."""
         card_type = str(card.get("type") or "")
         card_id = str(card.get("id"))
 

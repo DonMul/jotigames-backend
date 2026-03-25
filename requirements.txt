@@ -13,5 +13,7 @@ pymysql==1.1.1
 psycopg[binary]==3.2.10
 qrcode[pil]==7.4.2
 reportlab==4.2.5
+chardet<6
 python-multipart==0.0.20
 websocket-client==1.8.0
+pytest==8.4.1

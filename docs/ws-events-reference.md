@@ -1,5 +1,8 @@
 # WS Events & Payload Reference (Backend)
 
+> Contributor note: centralized project documentation lives under `docs/` at repository root.
+> Cross-system WS catalog: `docs/ws/events-reference.md`.
+
 This document is the backend-side source of truth for JotiGames realtime event names and payloads.
 
 - Scope: events published by backend business logic via `WsEventPublisher`.
@@ -64,6 +67,46 @@ Rules:
   "game_id": "<game_id>",
   "team_id": "<team_id>",
   "score": 12
+}
+```
+
+#### Market Crash
+
+##### `game.market_crash.team.score`
+
+- Purpose: Broadcast Market Crash team score/cash changes for game-wide team leaderboard updates.
+- Payload:
+
+```json
+{
+  "game_id": "<game_id>",
+  "team_id": "<team_id>",
+  "score": 1200,
+  "cash": 1200
+}
+```
+
+##### `game.market_crash.prices.updated`
+
+- Purpose: Broadcast point resource price deltas after fluctuation cycles.
+- Payload:
+
+```json
+{
+  "game_id": "<game_id>",
+  "updated_at": "<ISO-8601>",
+  "points": {
+    "<point_id>": {
+      "<resource_id>": {
+        "resource_id": "<resource_id>",
+        "resource_name": "<resource_name>",
+        "buy_price": 24,
+        "sell_price": 19,
+        "tick_seconds": 5,
+        "fluctuation_percent": 10.0
+      }
+    }
+  }
 }
 ```
 
@@ -232,6 +275,89 @@ Rules:
 }
 ```
 
+#### Market Crash
+
+##### `admin.market_crash.team.location.updated`
+
+- Purpose: Notify admin live overview that a Market Crash team location moved (max once per 10 seconds per team).
+- Payload:
+
+```json
+{
+  "game_id": "<game_id>",
+  "team_id": "<team_id>",
+  "lat": 52.1234567,
+  "lon": 5.1234567,
+  "updated_at": "<ISO-8601>"
+}
+```
+
+##### `admin.market_crash.team.score`
+
+- Purpose: Update admin Market Crash live views when a team cash/score changes.
+- Payload:
+
+```json
+{
+  "game_id": "<game_id>",
+  "team_id": "<team_id>",
+  "score": 1200,
+  "cash": 1200
+}
+```
+
+##### `admin.market_crash.trade.executed`
+
+- Purpose: Notify admin views that a Market Crash trade executed for a team.
+- Payload:
+
+```json
+{
+  "game_id": "<game_id>",
+  "team_id": "<team_id>",
+  "trade_id": "<trade_id>",
+  "trade": {
+    "point_id": "<point_id>",
+    "point_title": "<point_title>",
+    "resource_id": "<resource_id>",
+    "resource_name": "<resource_name>",
+    "side": "buy|sell",
+    "quantity": 2,
+    "unit_price": 20,
+    "total_amount": 40
+  },
+  "cash": 1160,
+  "score": 1160,
+  "inventory": {
+    "wood": 3
+  }
+}
+```
+
+##### `admin.market_crash.prices.updated`
+
+- Purpose: Push Market Crash point resource price delta updates to admin live overview.
+- Payload:
+
+```json
+{
+  "game_id": "<game_id>",
+  "updated_at": "<ISO-8601>",
+  "points": {
+    "<point_id>": {
+      "<resource_id>": {
+        "resource_id": "<resource_id>",
+        "resource_name": "<resource_name>",
+        "buy_price": 24,
+        "sell_price": 19,
+        "tick_seconds": 5,
+        "fluctuation_percent": 10.0
+      }
+    }
+  }
+}
+```
+
 ### Team
 
 #### Blind Hike
@@ -328,6 +454,90 @@ Rules:
   "egg_id": "<egg_id>",
   "owner_team_id": "<owner_team_id>",
   "destroyed_by_team_id": "<team_id>"
+}
+```
+
+#### Market Crash
+
+##### `team.market_crash.self.updated`
+
+- Purpose: Notify a Market Crash team about own state deltas after trade execution.
+- Payload:
+
+```json
+{
+  "game_id": "<game_id>",
+  "team_id": "<team_id>",
+  "score": 1160,
+  "cash": 1160,
+  "inventory": {
+    "wood": 3
+  },
+  "trade": {
+    "point_id": "<point_id>",
+    "resource_id": "<resource_id>",
+    "side": "buy|sell",
+    "quantity": 2,
+    "unit_price": 20,
+    "total_amount": 40
+  }
+}
+```
+
+##### `team.market_crash.nearby_points.updated`
+
+- Purpose: Push current in-range Market Crash points and resource prices to a team channel.
+- Payload:
+
+```json
+{
+  "game_id": "<game_id>",
+  "team_id": "<team_id>",
+  "nearby_point_ids": ["<point_id>"],
+  "nearby_points": [
+    {
+      "id": "<point_id>",
+      "title": "<point_title>",
+      "latitude": 52.1234,
+      "longitude": 5.1234,
+      "radius_meters": 25,
+      "resource_settings": [
+        {
+          "resource_id": "<resource_id>",
+          "resource_name": "<resource_name>",
+          "buy_price": 24,
+          "sell_price": 19,
+          "tick_seconds": 5,
+          "fluctuation_percent": 10.0
+        }
+      ]
+    }
+  ]
+}
+```
+
+##### `team.market_crash.prices.updated`
+
+- Purpose: Push nearby point price deltas to a specific team when fluctuation updates occur.
+- Payload:
+
+```json
+{
+  "game_id": "<game_id>",
+  "team_id": "<team_id>",
+  "updated_at": "<ISO-8601>",
+  "points": {
+    "<point_id>": {
+      "<resource_id>": {
+        "resource_id": "<resource_id>",
+        "resource_name": "<resource_name>",
+        "buy_price": 24,
+        "sell_price": 19,
+        "tick_seconds": 5,
+        "fluctuation_percent": 10.0
+      }
+    }
+  }
 }
 ```
 

@@ -182,8 +182,35 @@ market_crash:
   gameTypeRequired: "Dit endpoint is alleen beschikbaar voor Market Crash-games."
   validation:
     missingTradeId: "Trade-id is verplicht."
+  resource:
+    invalidName: "Resourcenaam is ongeldig."
+    exists: "Resource bestaat al."
+    createFailed: "Resource aanmaken mislukt."
+    notFound: "Resource is niet gevonden."
+    updateFailed: "Resource bijwerken mislukt."
+    deleteFailed: "Resource verwijderen mislukt."
+  point:
+    createFailed: "Punt aanmaken mislukt."
+    notFound: "Punt is niet gevonden."
+    updateFailed: "Punt bijwerken mislukt."
+    deleteFailed: "Punt verwijderen mislukt."
+    invalidTitle: "Punttitel is ongeldig."
+    invalidColor: "Punt-markerkleur is ongeldig."
+    invalidResource: "Punt bevat een ongeldige resourceverwijzing."
+    resourcesRequired: "Minimaal één resource-instelling is verplicht voor een punt."
+    invalid: "Puntcoördinaten zijn ongeldig."
+  location:
+    required: "Locatie is verplicht voordat je kunt handelen."
+    invalid: "Locatiecoördinaten zijn ongeldig."
+    updated: "Locatie bijgewerkt."
   trade:
     executed: "Trade succesvol uitgevoerd."
+    invalidSide: "Trade-richting is ongeldig."
+    invalidResource: "Resource is niet verhandelbaar op dit punt."
+    outOfRange: "Je bent buiten bereik van dit handelspunt."
+    invalidPrice: "Trade-prijs is ongeldig."
+    insufficientCash: "Onvoldoende cash voor deze trade."
+    insufficientInventory: "Onvoldoende voorraad voor deze trade."
 crazy88:
   gameTypeRequired: "Dit endpoint is alleen beschikbaar voor Crazy 88-games."
   validation:

@@ -5,7 +5,10 @@ _ALLOWED_EXTENSIONS = {".png", ".jpg", ".jpeg", ".webp", ".gif", ".avif"}
 
 
 class TeamLogoCatalogService:
+    """Discovers and formats selectable team logo assets from upload folders."""
+
     def __init__(self) -> None:
+        """Resolve workspace-relative paths for logo library discovery."""
         self._workspace_root = Path(__file__).resolve().parents[3]
         self._uploads_root = self._workspace_root / "frontend" / "public" / "uploads"
         self._team_library_root = self._uploads_root / "team_logo_library"
@@ -13,13 +16,16 @@ class TeamLogoCatalogService:
 
     @staticmethod
     def _to_human_label(value: str) -> str:
+        """Convert machine-oriented names to title-cased display labels."""
         return value.replace("_", " ").replace("-", " ").strip().title()
 
     @staticmethod
     def _logo_label(filename: str) -> str:
+        """Build a user-facing label from a logo filename."""
         return TeamLogoCatalogService._to_human_label(Path(filename).stem)
 
     def _list_files(self, directory: Path) -> List[Path]:
+        """Return supported image files from a directory in stable order."""
         if not directory.exists() or not directory.is_dir():
             return []
 
@@ -33,6 +39,11 @@ class TeamLogoCatalogService:
         return files
 
     def listCatalog(self) -> Tuple[List[Tuple[str, str]], List[Dict[str, str]]]:
+        """Return categorized team-logo options for admin and team forms.
+
+        The first return value is a list of category tuples `(key, label)`;
+        the second is a flat list of option objects referencing public paths.
+        """
         categories: List[Tuple[str, str]] = []
         options: List[Dict[str, str]] = []
 

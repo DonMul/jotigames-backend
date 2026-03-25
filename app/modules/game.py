@@ -169,6 +169,7 @@ class GameModule(ApiModule, SharedModuleBase):
     _DEFAULT_TEAM_LIVES = 9
 
     def __init__(self, ws_publisher: WsEventPublisher) -> None:
+        """Initialize game domain module dependencies and realtime publisher."""
         SharedModuleBase.__init__(self, game_type="game", ws_publisher=ws_publisher, game_type_detail_key="game")
         self._ws_publisher = ws_publisher
         self._gameRepository = GameRepository()
@@ -186,6 +187,7 @@ class GameModule(ApiModule, SharedModuleBase):
         settings: Dict[str, Any],
         immutable_columns: set[str],
     ) -> None:
+        """Merge arbitrary settings fields into values while protecting immutable columns."""
         for key, value in settings.items():
             if key in immutable_columns:
                 continue
@@ -193,6 +195,7 @@ class GameModule(ApiModule, SharedModuleBase):
 
     @staticmethod
     def _validate_required_values(values: Dict[str, Any]) -> None:
+        """Validate required game fields and chronological time ordering."""
         for required in ["name", "code", "start_at", "end_at", "game_type"]:
             if required not in values or values[required] is None:
                 raise HTTPException(
@@ -207,12 +210,14 @@ class GameModule(ApiModule, SharedModuleBase):
             )
 
     def _require_existing_game(self, db: DbSession, game_id: str) -> Dict[str, Any]:
+        """Load a game by id or raise standardized not-found HTTP error."""
         game = self._gameRepository.getGameById(db, game_id)
         if game is None:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="game.notFound")
         return game
 
     def _generate_unique_game_code(self, db: DbSession) -> str:
+        """Generate a collision-free six-digit game code with bounded retries."""
         attempts = 100
         for _ in range(attempts):
             code = f"{randint(0, 999999):06d}"
@@ -225,6 +230,7 @@ class GameModule(ApiModule, SharedModuleBase):
         )
 
     def _require_can_manage_game(self, db: DbSession, game_id: str, principal: CurrentPrincipal) -> Dict[str, Any]:
+        """Authorize owner/admin management access for a game and return the game."""
         game = self._require_existing_game(db, game_id)
         is_owner = self._gameRepository.isGameOwnerByGameIdAndUserId(db, game_id, principal.principal_id)
         is_admin = self._gameRepository.hasGameManagerByGameIdAndUserId(db, game_id, principal.principal_id)
@@ -237,6 +243,7 @@ class GameModule(ApiModule, SharedModuleBase):
         )
 
     def _require_can_view_game(self, db: DbSession, game_id: str, principal: CurrentPrincipal) -> Dict[str, Any]:
+        """Authorize owner/admin/game-master view access and return the game."""
         game = self._require_existing_game(db, game_id)
         is_owner = self._gameRepository.isGameOwnerByGameIdAndUserId(db, game_id, principal.principal_id)
         is_admin = self._gameRepository.hasGameManagerByGameIdAndUserId(db, game_id, principal.principal_id)
@@ -250,12 +257,14 @@ class GameModule(ApiModule, SharedModuleBase):
         )
 
     def _require_team_in_game(self, db: DbSession, game_id: str, team_id: str) -> Dict[str, Any]:
+        """Load team in game scope or raise not-found HTTP error."""
         team = self._teamRepository.getTeamByGameIdAndTeamId(db, game_id, team_id)
         if team is None:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="team.notFound")
         return team
 
     def _require_can_view_team(self, db: DbSession, game_id: str, team_id: str, principal: CurrentPrincipal) -> Dict[str, Any]:
+        """Authorize team self-view or user game-view access for team records."""
         team = self._require_team_in_game(db, game_id, team_id)
         if principal.principal_type == "team":
             if principal.principal_id != team_id:
@@ -267,6 +276,7 @@ class GameModule(ApiModule, SharedModuleBase):
         return team
 
     def _require_can_update_team(self, db: DbSession, game_id: str, team_id: str, principal: CurrentPrincipal) -> Dict[str, Any]:
+        """Authorize team self-update or admin manage access for team updates."""
         team = self._require_team_in_game(db, game_id, team_id)
         if principal.principal_type == "team":
             if principal.principal_id != team_id:
@@ -278,6 +288,7 @@ class GameModule(ApiModule, SharedModuleBase):
         return team
 
     def _require_can_access_game_chat(self, db: DbSession, game_id: str, principal: CurrentPrincipal) -> None:
+        """Authorize chat access for teams in-game and users with manage rights."""
         if principal.principal_type == "team":
             team = self._teamRepository.getTeamByGameIdAndTeamId(db, game_id, principal.principal_id)
             if team is None:
@@ -289,6 +300,7 @@ class GameModule(ApiModule, SharedModuleBase):
 
     @staticmethod
     def _team_realtime_payload(team: Optional[Dict[str, Any]]) -> Dict[str, Any]:
+        """Normalize team record to minimal realtime payload contract."""
         team_data = team if isinstance(team, dict) else {}
         return {
             "team_id": str(team_data.get("id") or ""),
@@ -298,6 +310,7 @@ class GameModule(ApiModule, SharedModuleBase):
         }
 
     def _publish_team_updated_events(self, *, game_id: str, team: Dict[str, Any]) -> None:
+        """Publish team update deltas to admin, game-wide, and team-private channels."""
         payload = self._team_realtime_payload(team)
         team_id = str(payload.get("team_id") or "").strip()
         if not team_id:
@@ -320,6 +333,7 @@ class GameModule(ApiModule, SharedModuleBase):
         )
 
     def _publish_team_added_events(self, *, game_id: str, team: Dict[str, Any]) -> None:
+        """Publish team-added events to admin and game-wide channels."""
         payload = self._team_realtime_payload(team)
         team_id = str(payload.get("team_id") or "").strip()
         if not team_id:
@@ -337,6 +351,7 @@ class GameModule(ApiModule, SharedModuleBase):
         )
 
     def _publish_team_removed_events(self, *, game_id: str, team: Dict[str, Any]) -> None:
+        """Publish team-removed events to admin and game-wide channels."""
         payload = self._team_realtime_payload(team)
         team_id = str(payload.get("team_id") or "").strip()
         if not team_id:
@@ -354,10 +369,12 @@ class GameModule(ApiModule, SharedModuleBase):
         )
 
     def build_router(self) -> APIRouter:
+        """Build all game-domain routes for admin/team management and chat."""
         router = APIRouter(prefix="/game", tags=["game"])
 
         @router.get("/game-types", response_model=GameTypesResponse, summary="List available game types")
         def get_game_types(db: DbSession) -> GameTypesResponse:
+            """Return globally enabled game types for game creation UX."""
             enabled_types = self._gameRepository.fetchGameTypesByEnabled(db, True)
             return GameTypesResponse(game_types=enabled_types)
 
@@ -367,6 +384,7 @@ class GameModule(ApiModule, SharedModuleBase):
             summary=f"{ACCESS_ADMIN_LABEL} Super admin game type availability",
         )
         def get_game_type_availability(principal: CurrentPrincipal, db: DbSession) -> GameTypeAvailabilityResponse:
+            """Return full game-type availability matrix for super-admin controls."""
             self._ensure_user_principal(principal)
             if not principal.is_super_admin:
                 raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="auth.user.superAdminRequired")
@@ -393,6 +411,7 @@ class GameModule(ApiModule, SharedModuleBase):
             principal: CurrentPrincipal,
             db: DbSession,
         ) -> GameTypeAvailabilityResponse:
+            """Replace global game-type availability states from normalized request list."""
             self._ensure_user_principal(principal)
             if not principal.is_super_admin:
                 raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="auth.user.superAdminRequired")
@@ -430,6 +449,7 @@ class GameModule(ApiModule, SharedModuleBase):
 
         @router.get("", response_model=GamesListResponse, summary=f"{ACCESS_ADMIN_LABEL} List games")
         def list_games(principal: CurrentPrincipal, db: DbSession) -> GamesListResponse:
+            """List unique games accessible to current user across owner/admin/master roles."""
             self._ensure_user_principal(principal)
 
             rows = self._gameRepository.fetchGameSummariesByOwnerId(db, principal.principal_id)
@@ -455,6 +475,7 @@ class GameModule(ApiModule, SharedModuleBase):
 
         @router.get("/team-logos", response_model=TeamLogoCatalogResponse, summary=f"{ACCESS_BOTH_LABEL} List team logo options")
         def list_team_logo_options(principal: CurrentPrincipal) -> TeamLogoCatalogResponse:
+            """Return catalog of allowed team logos for both team and admin clients."""
             if principal.principal_type not in {"team", "user"}:
                 raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="team.auth.selfRequired")
 
@@ -474,6 +495,7 @@ class GameModule(ApiModule, SharedModuleBase):
 
         @router.get("/{game_id}", response_model=GameRecordResponse, summary=f"{ACCESS_ADMIN_LABEL} Get game")
         def get_game(game_id: str, principal: CurrentPrincipal, db: DbSession) -> GameRecordResponse:
+            """Return serialized game record when caller has game view permissions."""
             self._ensure_user_principal(principal)
 
             row = self._require_can_view_game(db, game_id, principal)
@@ -481,6 +503,7 @@ class GameModule(ApiModule, SharedModuleBase):
 
         @router.get("/{game_id}/members", response_model=GameMembersResponse, summary=f"{ACCESS_ADMIN_LABEL} List game members")
         def get_game_members(game_id: str, principal: CurrentPrincipal, db: DbSession) -> GameMembersResponse:
+            """Return deduplicated list of owner/admin/game-master members for a game."""
             self._ensure_user_principal(principal)
             game = self._require_can_view_game(db, game_id, principal)
 
@@ -506,6 +529,7 @@ class GameModule(ApiModule, SharedModuleBase):
 
         @router.post("", response_model=GameRecordResponse, summary=f"{ACCESS_ADMIN_LABEL} Create game")
         def create_game(body: GameCreateRequest, principal: CurrentPrincipal, db: DbSession) -> GameRecordResponse:
+            """Create game, initialize type-specific state, and return created record."""
             self._ensure_user_principal(principal)
 
             values: Dict[str, Any] = {
@@ -560,6 +584,7 @@ class GameModule(ApiModule, SharedModuleBase):
             principal: CurrentPrincipal,
             db: DbSession,
         ) -> GameRecordResponse:
+            """Update mutable game fields/settings after manage-access validation."""
             self._ensure_user_principal(principal)
 
             current = self._require_can_manage_game(db, game_id, principal)
@@ -610,6 +635,7 @@ class GameModule(ApiModule, SharedModuleBase):
 
         @router.delete("/{game_id}", response_model=MessageKeyResponse, summary=f"{ACCESS_ADMIN_LABEL} Delete game")
         def delete_game(game_id: str, principal: CurrentPrincipal, db: DbSession, locale: CurrentLocale) -> MessageKeyResponse:
+            """Delete a game and dependent domain state, returning localized success key."""
             self._ensure_user_principal(principal)
 
             self._require_can_manage_game(db, game_id, principal)
@@ -627,6 +653,7 @@ class GameModule(ApiModule, SharedModuleBase):
 
         @router.post("/{game_id}/reset", response_model=MessageKeyResponse, summary=f"{ACCESS_ADMIN_LABEL} Reset game")
         def reset_game(game_id: str, principal: CurrentPrincipal, db: DbSession, locale: CurrentLocale) -> MessageKeyResponse:
+            """Reset game runtime state using game-type specific reset service."""
             self._ensure_user_principal(principal)
             game = self._require_can_manage_game(db, game_id, principal)
 
@@ -644,6 +671,7 @@ class GameModule(ApiModule, SharedModuleBase):
 
         @router.get("/{game_id}/teams", response_model=TeamsListResponse, summary=f"{ACCESS_ADMIN_LABEL} List teams")
         def list_teams(game_id: str, principal: CurrentPrincipal, db: DbSession) -> TeamsListResponse:
+            """List all teams in a game for authorized user principals."""
             self._ensure_user_principal(principal)
             self._require_can_view_game(db, game_id, principal)
 
@@ -652,6 +680,7 @@ class GameModule(ApiModule, SharedModuleBase):
 
         @router.get("/team/dashboard", response_model=TeamDashboardBootstrapResponse, summary="Team dashboard bootstrap")
         def get_team_dashboard(principal: CurrentPrincipal, db: DbSession) -> TeamDashboardBootstrapResponse:
+            """Bootstrap team dashboard with game/team metadata and peer team list."""
             if principal.principal_type != "team":
                 raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="team.auth.selfRequired")
 
@@ -681,6 +710,7 @@ class GameModule(ApiModule, SharedModuleBase):
 
         @router.get("/{game_id}/teams/{team_id}", response_model=TeamRecordResponse, summary=f"{ACCESS_BOTH_LABEL} Get team")
         def get_team(game_id: str, team_id: str, principal: CurrentPrincipal, db: DbSession) -> TeamRecordResponse:
+            """Return a single team record with cross-role access validation."""
             team = self._require_can_view_team(db, game_id, team_id, principal)
             return TeamRecordResponse(team=self._serialize_row(team))
 
@@ -691,6 +721,7 @@ class GameModule(ApiModule, SharedModuleBase):
             principal: CurrentPrincipal,
             db: DbSession,
         ) -> TeamRecordResponse:
+            """Create a new team in the game and publish realtime team-added events."""
             self._ensure_user_principal(principal)
             self._require_can_manage_game(db, game_id, principal)
 
@@ -732,6 +763,7 @@ class GameModule(ApiModule, SharedModuleBase):
             principal: CurrentPrincipal,
             db: DbSession,
         ) -> TeamRecordResponse:
+            """Update team profile fields and publish realtime team-updated events."""
             self._require_can_update_team(db, game_id, team_id, principal)
 
             values: Dict[str, Any] = {}
@@ -761,6 +793,7 @@ class GameModule(ApiModule, SharedModuleBase):
 
         @router.delete("/{game_id}/teams/{team_id}", response_model=MessageKeyResponse, summary=f"{ACCESS_ADMIN_LABEL} Delete team")
         def delete_team(game_id: str, team_id: str, principal: CurrentPrincipal, db: DbSession, locale: CurrentLocale) -> MessageKeyResponse:
+            """Delete team from a game and emit realtime team-removed notifications."""
             self._ensure_user_principal(principal)
             self._require_can_manage_game(db, game_id, principal)
             team = self._require_team_in_game(db, game_id, team_id)
@@ -784,6 +817,7 @@ class GameModule(ApiModule, SharedModuleBase):
             db: DbSession,
             locale: CurrentLocale,
         ) -> TeamMessageResponse:
+            """Persist admin-to-team message and publish targeted team WS event."""
             self._ensure_user_principal(principal)
             self._require_can_manage_game(db, game_id, principal)
             self._require_team_in_game(db, game_id, team_id)
@@ -840,6 +874,7 @@ class GameModule(ApiModule, SharedModuleBase):
             db: DbSession,
             limit: int = 50,
         ) -> GameChatHistoryResponse:
+            """Return bounded game chat history for authorized principals."""
             self._require_can_access_game_chat(db, game_id, principal)
 
             safe_limit = max(1, min(limit, 256))
@@ -870,6 +905,7 @@ class GameModule(ApiModule, SharedModuleBase):
             principal: CurrentPrincipal,
             db: DbSession,
         ) -> GameChatSendResponse:
+            """Create chat message record, fan out realtime event, and return payload."""
             self._require_can_access_game_chat(db, game_id, principal)
 
             message_text = body.message.strip()
@@ -959,6 +995,7 @@ class GameModule(ApiModule, SharedModuleBase):
             db: DbSession,
             locale: CurrentLocale,
         ) -> MessageKeyResponse:
+            """Assign admin role to a game member, removing game-master role if needed."""
             self._ensure_user_principal(principal)
             self._require_can_manage_game(db, game_id, principal)
 
@@ -1007,6 +1044,7 @@ class GameModule(ApiModule, SharedModuleBase):
             db: DbSession,
             locale: CurrentLocale,
         ) -> MessageKeyResponse:
+            """Remove admin role with safeguards for owner and self-removal."""
             self._ensure_user_principal(principal)
             game = self._require_can_manage_game(db, game_id, principal)
 
@@ -1042,6 +1080,7 @@ class GameModule(ApiModule, SharedModuleBase):
             db: DbSession,
             locale: CurrentLocale,
         ) -> MessageKeyResponse:
+            """Assign game-master role, replacing admin role when both conflict."""
             self._ensure_user_principal(principal)
             self._require_can_manage_game(db, game_id, principal)
 
@@ -1090,6 +1129,7 @@ class GameModule(ApiModule, SharedModuleBase):
             db: DbSession,
             locale: CurrentLocale,
         ) -> MessageKeyResponse:
+            """Remove game-master role assignment from a game member."""
             self._ensure_user_principal(principal)
             self._require_can_manage_game(db, game_id, principal)
 

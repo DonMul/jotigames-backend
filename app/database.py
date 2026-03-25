@@ -7,6 +7,8 @@ from app.config import get_settings, normalize_database_url
 
 
 class Base(DeclarativeBase):
+    """SQLAlchemy declarative base for ORM model definitions."""
+
     pass
 
 
@@ -16,6 +18,7 @@ SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False, expi
 
 
 def get_db_session() -> Generator[Session, None, None]:
+    """Yield a request-scoped database session and always close afterwards."""
     db = SessionLocal()
     try:
         yield db

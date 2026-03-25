@@ -19,17 +19,37 @@ class AdminOverviewResponse(BaseModel):
     overview: Dict[str, Any]
 
 
-class ExecuteTradeRequest(BaseModel):
-    trade_id: str = Field(min_length=1, max_length=64)
-    points: int = Field(default=0, ge=-1000, le=1000)
+class TeamLocationUpdateRequest(BaseModel):
+    latitude: float
+    longitude: float
 
 
-class ActionResponse(BaseModel):
+class TeamLocationUpdateResponse(BaseModel):
     success: bool
     message_key: str
-    action_id: Optional[str] = None
-    points_awarded: int
+    location: Dict[str, Any]
+    nearby_points: list[Dict[str, Any]]
+    nearby_point_ids: list[str]
+
+
+class ExecuteTradeRequest(BaseModel):
+    point_id: str = Field(min_length=1, max_length=64)
+    resource_id: str = Field(min_length=1, max_length=64)
+    side: str = Field(min_length=3, max_length=4)
+    quantity: int = Field(default=1, ge=1, le=100000)
+
+
+class TradeResponse(BaseModel):
+    success: bool
+    message_key: str
+    trade_id: str
     state_version: int
+    cash: int
+    score: int
+    inventory: Dict[str, int]
+    nearby_points: list[Dict[str, Any]]
+    nearby_point_ids: list[str]
+    trade: Dict[str, Any]
 
 
 class MarketCrashResourcePayload(BaseModel):
@@ -46,7 +66,7 @@ class PointResourceSettingPayload(BaseModel):
     buy_price: int = Field(ge=1, le=100000)
     sell_price: int = Field(ge=1, le=100000)
     tick_seconds: int = Field(default=5, ge=1, le=86400)
-    fluctuation_percent: float = Field(default=10.0, ge=0.1, le=100.0)
+    fluctuation_percent: float = Field(default=10.0, ge=0.1, le=10.0)
 
 
 class MarketCrashPointPayload(BaseModel):
@@ -67,25 +87,33 @@ class MarketCrashModule(ApiModule, SharedModuleBase):
     name = "market-crash"
 
     def __init__(self, ws_publisher: WsEventPublisher) -> None:
+        """Initialize Market Crash module with domain service and repository."""
         SharedModuleBase.__init__(self, game_type="market_crash", ws_publisher=ws_publisher)
         self._service = MarketCrashService()
         self._repository = MarketCrashRepository()
 
     def build_router(self) -> APIRouter:
+        """Build Market Crash routes for bootstrap, admin config, and team actions."""
         router = APIRouter(prefix="/market-crash", tags=["market-crash"])
 
-        @router.get("/{game_id}/teams/{team_id}/bootstrap", response_model=TeamBootstrapResponse, summary=f"{ACCESS_BOTH_LABEL} Team bootstrap")
+        @router.get(
+            "/{game_id}/teams/{team_id}/bootstrap",
+            response_model=TeamBootstrapResponse,
+            summary=f"{ACCESS_BOTH_LABEL} Team bootstrap",
+        )
         def team_bootstrap(game_id: str, team_id: str, principal: CurrentPrincipal, db: DbSession) -> TeamBootstrapResponse:
+            """Return team runtime bootstrap state for Market Crash gameplay."""
             self._require_game(db, game_id)
             self._require_team_self_or_manage_access(db, game_id, team_id, principal)
-            state = self._service.get_team_bootstrap(db, game_id, team_id)
-            resources, points = self._load_admin_data(db, game_id)
-            state["resources"] = resources
-            state["points"] = points
-            return TeamBootstrapResponse(state=state)
+            return TeamBootstrapResponse(state=self._service.get_team_bootstrap(db, game_id, team_id))
 
-        @router.get("/{game_id}/overview", response_model=AdminOverviewResponse, summary=f"{ACCESS_ADMIN_LABEL} Admin overview")
+        @router.get(
+            "/{game_id}/overview",
+            response_model=AdminOverviewResponse,
+            summary=f"{ACCESS_ADMIN_LABEL} Admin overview",
+        )
         def overview(game_id: str, principal: CurrentPrincipal, db: DbSession) -> AdminOverviewResponse:
+            """Return Market Crash admin overview (teams, points, recent actions)."""
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
             return AdminOverviewResponse(overview=self._service.get_admin_overview(db, game_id))
@@ -96,6 +124,7 @@ class MarketCrashModule(ApiModule, SharedModuleBase):
             summary=f"{ACCESS_ADMIN_LABEL} Market crash admin data",
         )
         def get_admin_data(game_id: str, principal: CurrentPrincipal, db: DbSession) -> MarketCrashAdminDataResponse:
+            """Return admin configuration dataset (resources + points)."""
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
             resources, points = self._load_admin_data(db, game_id)
@@ -107,12 +136,8 @@ class MarketCrashModule(ApiModule, SharedModuleBase):
             status_code=status.HTTP_201_CREATED,
             summary=f"{ACCESS_ADMIN_LABEL} Create market crash resource",
         )
-        def create_resource(
-            game_id: str,
-            body: MarketCrashResourcePayload,
-            principal: CurrentPrincipal,
-            db: DbSession,
-        ) -> MarketCrashAdminDataResponse:
+        def create_resource(game_id: str, body: MarketCrashResourcePayload, principal: CurrentPrincipal, db: DbSession) -> MarketCrashAdminDataResponse:
+            """Create market resource and return refreshed admin configuration snapshot."""
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
 
@@ -149,6 +174,7 @@ class MarketCrashModule(ApiModule, SharedModuleBase):
             principal: CurrentPrincipal,
             db: DbSession,
         ) -> MarketCrashAdminDataResponse:
+            """Update resource default pricing and return refreshed admin dataset."""
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
 
@@ -172,6 +198,7 @@ class MarketCrashModule(ApiModule, SharedModuleBase):
             summary=f"{ACCESS_ADMIN_LABEL} Delete market crash resource",
         )
         def delete_resource(game_id: str, resource_id: str, principal: CurrentPrincipal, db: DbSession) -> MarketCrashAdminDataResponse:
+            """Delete resource and return refreshed resources/points configuration."""
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
 
@@ -195,12 +222,8 @@ class MarketCrashModule(ApiModule, SharedModuleBase):
             status_code=status.HTTP_201_CREATED,
             summary=f"{ACCESS_ADMIN_LABEL} Create market crash point",
         )
-        def create_point(
-            game_id: str,
-            body: MarketCrashPointPayload,
-            principal: CurrentPrincipal,
-            db: DbSession,
-        ) -> MarketCrashAdminDataResponse:
+        def create_point(game_id: str, body: MarketCrashPointPayload, principal: CurrentPrincipal, db: DbSession) -> MarketCrashAdminDataResponse:
+            """Create market point with resource settings and return refreshed admin data."""
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
 
@@ -230,6 +253,7 @@ class MarketCrashModule(ApiModule, SharedModuleBase):
             principal: CurrentPrincipal,
             db: DbSession,
         ) -> MarketCrashAdminDataResponse:
+            """Update market point and attached pricing settings."""
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
 
@@ -256,6 +280,7 @@ class MarketCrashModule(ApiModule, SharedModuleBase):
             summary=f"{ACCESS_ADMIN_LABEL} Delete market crash point",
         )
         def delete_point(game_id: str, point_id: str, principal: CurrentPrincipal, db: DbSession) -> MarketCrashAdminDataResponse:
+            """Delete market point and return refreshed admin configuration."""
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
 
@@ -273,32 +298,162 @@ class MarketCrashModule(ApiModule, SharedModuleBase):
             resources, points = self._load_admin_data(db, game_id)
             return MarketCrashAdminDataResponse(resources=resources, points=points)
 
-        @router.post("/{game_id}/teams/{team_id}/trade/execute", response_model=ActionResponse, summary=f"{ACCESS_BOTH_LABEL} Execute trade")
-        def execute_trade(game_id: str, team_id: str, body: ExecuteTradeRequest, principal: CurrentPrincipal, db: DbSession, locale: CurrentLocale) -> ActionResponse:
+        @router.post(
+            "/{game_id}/teams/{team_id}/location/update",
+            response_model=TeamLocationUpdateResponse,
+            summary=f"{ACCESS_BOTH_LABEL} Update team location",
+        )
+        def update_location(
+            game_id: str,
+            team_id: str,
+            body: TeamLocationUpdateRequest,
+            principal: CurrentPrincipal,
+            db: DbSession,
+            locale: CurrentLocale,
+        ) -> TeamLocationUpdateResponse:
+            """Update team location and publish throttled nearby-point/location events."""
             self._require_game(db, game_id)
             self._require_team_self_or_manage_access(db, game_id, team_id, principal)
-            if not body.trade_id.strip():
-                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="market_crash.validation.missingTradeId")
 
-            result = self._service.execute_trade(
-                db,
-                game_id=game_id,
-                team_id=team_id,
-                trade_id=body.trade_id.strip(),
-                points=body.points,
+            try:
+                location = self._service.update_team_location(
+                    db,
+                    game_id=game_id,
+                    team_id=team_id,
+                    latitude=float(body.latitude),
+                    longitude=float(body.longitude),
+                )
+            except ValueError as error:
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(error)) from error
+
+            nearby_points = self._service.get_nearby_points_for_team(db, game_id, team_id)
+            nearby_point_ids = [str(point.get("id") or "") for point in nearby_points]
+            should_publish = self._service.should_publish_location_event(db, game_id=game_id, team_id=team_id, min_interval_seconds=10)
+
+            if should_publish:
+                self._ws_publisher.publish(
+                    "admin.market_crash.team.location.updated",
+                    {
+                        "game_id": game_id,
+                        "team_id": team_id,
+                        "lat": location.get("lat"),
+                        "lon": location.get("lon"),
+                        "updated_at": location.get("updated_at"),
+                    },
+                    channels=[f"channel:{game_id}:admin"],
+                )
+                self._ws_publisher.publish(
+                    "team.market_crash.nearby_points.updated",
+                    {
+                        "game_id": game_id,
+                        "team_id": team_id,
+                        "nearby_point_ids": nearby_point_ids,
+                        "nearby_points": nearby_points,
+                    },
+                    channels=[f"channel:{game_id}:{team_id}"],
+                )
+
+            return TeamLocationUpdateResponse(
+                success=True,
+                message_key=self._localize_message_key("market_crash.location.updated", locale),
+                location=location,
+                nearby_points=nearby_points,
+                nearby_point_ids=nearby_point_ids,
             )
-            
-            return ActionResponse(
-                success=result.success,
-                message_key=self._localize_message_key(result.message_key, locale),
-                action_id=result.action_id or None,
-                points_awarded=result.points_awarded,
-                state_version=result.state_version,
+
+        @router.post(
+            "/{game_id}/teams/{team_id}/trade/execute",
+            response_model=TradeResponse,
+            summary=f"{ACCESS_BOTH_LABEL} Execute trade",
+        )
+        def execute_trade(
+            game_id: str,
+            team_id: str,
+            body: ExecuteTradeRequest,
+            principal: CurrentPrincipal,
+            db: DbSession,
+            locale: CurrentLocale,
+        ) -> TradeResponse:
+            """Execute buy/sell trade and emit realtime score/inventory/trade updates."""
+            self._require_game(db, game_id)
+            self._require_team_self_or_manage_access(db, game_id, team_id, principal)
+
+            try:
+                result = self._service.execute_trade(
+                    db,
+                    game_id=game_id,
+                    team_id=team_id,
+                    point_id=str(body.point_id or "").strip(),
+                    resource_id=str(body.resource_id or "").strip(),
+                    side=str(body.side or "").strip(),
+                    quantity=int(body.quantity),
+                )
+            except ValueError as error:
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(error)) from error
+
+            self._ws_publisher.publish(
+                "team.market_crash.self.updated",
+                {
+                    "game_id": game_id,
+                    "team_id": team_id,
+                    "score": int(result.get("score") or 0),
+                    "cash": int(result.get("cash") or 0),
+                    "inventory": result.get("inventory") or {},
+                    "trade": result.get("trade") or {},
+                },
+                channels=[f"channel:{game_id}:{team_id}"],
+            )
+            self._ws_publisher.publish(
+                "team.market_crash.nearby_points.updated",
+                {
+                    "game_id": game_id,
+                    "team_id": team_id,
+                    "nearby_point_ids": result.get("nearby_point_ids") or [],
+                    "nearby_points": result.get("nearby_points") or [],
+                },
+                channels=[f"channel:{game_id}:{team_id}"],
+            )
+
+            score_payload = {
+                "game_id": game_id,
+                "team_id": team_id,
+                "score": int(result.get("score") or 0),
+                "cash": int(result.get("cash") or 0),
+            }
+            self._ws_publisher.publish("game.market_crash.team.score", score_payload, channels=[f"channel:{game_id}"])
+            self._ws_publisher.publish("admin.market_crash.team.score", score_payload, channels=[f"channel:{game_id}:admin"])
+
+            self._ws_publisher.publish(
+                "admin.market_crash.trade.executed",
+                {
+                    "game_id": game_id,
+                    "team_id": team_id,
+                    "trade_id": str(result.get("trade_id") or ""),
+                    "trade": result.get("trade") or {},
+                    "cash": int(result.get("cash") or 0),
+                    "score": int(result.get("score") or 0),
+                    "inventory": result.get("inventory") or {},
+                },
+                channels=[f"channel:{game_id}:admin"],
+            )
+
+            return TradeResponse(
+                success=True,
+                message_key=self._localize_message_key(str(result.get("message_key") or "market_crash.trade.executed"), locale),
+                trade_id=str(result.get("trade_id") or ""),
+                state_version=int(result.get("state_version") or 0),
+                cash=int(result.get("cash") or 0),
+                score=int(result.get("score") or 0),
+                inventory={str(k): int(v) for k, v in dict(result.get("inventory") or {}).items()},
+                nearby_points=list(result.get("nearby_points") or []),
+                nearby_point_ids=[str(value) for value in list(result.get("nearby_point_ids") or [])],
+                trade=dict(result.get("trade") or {}),
             )
 
         return router
 
     def _load_admin_data(self, db: DbSession, game_id: str) -> tuple[list[Dict[str, Any]], list[Dict[str, Any]]]:
+        """Load normalized resources and point configurations for admin screens."""
         resources_raw = self._repository.fetch_resources_by_game_id(db, game_id)
         resources = [
             {
@@ -349,6 +504,7 @@ class MarketCrashModule(ApiModule, SharedModuleBase):
         game_id: str,
         body: MarketCrashPointPayload,
     ) -> tuple[Dict[str, Any], list[Dict[str, Any]]]:
+        """Validate point payload and map resource settings to repository rows."""
         title = str(body.title or "").strip()
         marker_color = str(body.marker_color or "#2563eb").strip().lower()
         if not title:
@@ -373,7 +529,7 @@ class MarketCrashModule(ApiModule, SharedModuleBase):
                     "buy_price": int(setting.buy_price),
                     "sell_price": int(setting.sell_price),
                     "tick_seconds": int(setting.tick_seconds),
-                    "fluctuation_percent": float(setting.fluctuation_percent),
+                    "fluctuation_percent": min(10.0, float(setting.fluctuation_percent)),
                 }
             )
 

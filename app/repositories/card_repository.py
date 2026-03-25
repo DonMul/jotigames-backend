@@ -8,12 +8,15 @@ from app.dependencies import DbSession
 
 class CardRepository:
     def __init__(self) -> None:
+        """Initialize metadata container for reflected card table access."""
         self._metadata = MetaData()
 
     def getCardTable(self, db: DbSession) -> Table:
+        """Return reflected `card` table."""
         return Table("card", self._metadata, autoload_with=db.get_bind())
 
     def createCardsByValuesWithoutCommit(self, db: DbSession, values_list: List[Dict[str, Any]]) -> None:
+        """Bulk insert cards without committing current transaction."""
         if not values_list:
             return
 
@@ -30,6 +33,7 @@ class CardRepository:
         created_at: datetime,
         title: str,
     ) -> Dict[str, Any]:
+        """Build normalized card insert payload used by initializers."""
         return {
             "id": card_id,
             "game_id": game_id,

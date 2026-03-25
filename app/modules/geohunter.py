@@ -85,12 +85,14 @@ class GeoHunterModule(ApiModule, SharedModuleBase):
     name = "geohunter"
 
     def __init__(self, ws_publisher: WsEventPublisher) -> None:
+        """Initialize GeoHunter module with shared access guards and services."""
         SharedModuleBase.__init__(self, game_type="geohunter", ws_publisher=ws_publisher)
         self._service = GeoHunterService()
         self._repository = GeoHunterRepository()
 
     @staticmethod
     def _type_label_key(value: str) -> str:
+        """Map POI type identifiers to translation keys for frontend labels."""
         mapping = {
             "text": "geohunter.poi.type.text",
             "multiple_choice": "geohunter.poi.type.multiple_choice",
@@ -100,6 +102,7 @@ class GeoHunterModule(ApiModule, SharedModuleBase):
 
     @staticmethod
     def _normalize_expected_answers(values: Optional[list[str]]) -> Optional[list[str]]:
+        """Trim expected-answer strings and collapse empty values to `None`."""
         if values is None:
             return None
         normalized = [entry.strip() for entry in values if str(entry or "").strip()]
@@ -107,6 +110,7 @@ class GeoHunterModule(ApiModule, SharedModuleBase):
 
     @staticmethod
     def _normalize_choices(values: Optional[list[GeoChoiceInput]]) -> list[Dict[str, Any]]:
+        """Normalize choice inputs to repository-ready dict payloads."""
         if not values:
             return []
         normalized: list[Dict[str, Any]] = []
@@ -122,6 +126,7 @@ class GeoHunterModule(ApiModule, SharedModuleBase):
 
     @staticmethod
     def _extract_retry_settings(game: Dict[str, Any]) -> tuple[bool, int]:
+        """Read retry settings from snake_case/camelCase schema variants."""
         raw_enabled = game.get("geo_hunter_retry_enabled")
         if raw_enabled is None:
             raw_enabled = game.get("geoHunterRetryEnabled")
@@ -135,6 +140,7 @@ class GeoHunterModule(ApiModule, SharedModuleBase):
         return enabled, timeout_seconds
 
     def _serialize_poi(self, poi: Dict[str, Any], choices: list[Dict[str, Any]]) -> Dict[str, Any]:
+        """Serialize POI and its choices to stable API response shape."""
         poi_type = str(poi.get("type") or "text")
         return {
             "id": str(poi.get("id") or ""),
@@ -167,6 +173,7 @@ class GeoHunterModule(ApiModule, SharedModuleBase):
         expected_answers: Optional[list[str]],
         choices: list[Dict[str, Any]],
     ) -> None:
+        """Validate POI type-specific constraints and coordinate boundaries."""
         if poi_type not in {"text", "multiple_choice", "open_answer"}:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="geohunter.poi.invalidType")
 
@@ -183,6 +190,7 @@ class GeoHunterModule(ApiModule, SharedModuleBase):
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="geohunter.poi.correctChoiceRequired")
 
     def build_router(self) -> APIRouter:
+        """Build GeoHunter admin/team routes for bootstrap, POIs, and answers."""
         router = APIRouter(prefix="/geohunter", tags=["geohunter"])
 
         @router.get(
@@ -191,6 +199,7 @@ class GeoHunterModule(ApiModule, SharedModuleBase):
             summary=f"{ACCESS_BOTH_LABEL} Team bootstrap",
         )
         def team_bootstrap(game_id: str, team_id: str, principal: CurrentPrincipal, db: DbSession) -> TeamBootstrapResponse:
+            """Return team bootstrap state for GeoHunter runtime."""
             self._require_game(db, game_id)
             self._require_team_self_or_manage_access(db, game_id, team_id, principal)
             return TeamBootstrapResponse(state=self._service.get_team_bootstrap(db, game_id, team_id))
@@ -201,6 +210,7 @@ class GeoHunterModule(ApiModule, SharedModuleBase):
             summary=f"{ACCESS_ADMIN_LABEL} Admin overview",
         )
         def overview(game_id: str, principal: CurrentPrincipal, db: DbSession) -> AdminOverviewResponse:
+            """Return admin overview state for GeoHunter game."""
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
             return AdminOverviewResponse(overview=self._service.get_admin_overview(db, game_id))
@@ -211,6 +221,7 @@ class GeoHunterModule(ApiModule, SharedModuleBase):
             summary=f"{ACCESS_ADMIN_LABEL} List POIs",
         )
         def list_pois(game_id: str, principal: CurrentPrincipal, db: DbSession) -> GeoHunterPoiListResponse:
+            """List all POIs and retry settings for admin configuration UI."""
             game = self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
 
@@ -233,6 +244,7 @@ class GeoHunterModule(ApiModule, SharedModuleBase):
             summary=f"{ACCESS_ADMIN_LABEL} Get POI",
         )
         def get_poi(game_id: str, poi_id: str, principal: CurrentPrincipal, db: DbSession) -> GeoHunterPoiRecordResponse:
+            """Fetch one POI with choices for admin edit forms."""
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
 
@@ -256,6 +268,7 @@ class GeoHunterModule(ApiModule, SharedModuleBase):
             principal: CurrentPrincipal,
             db: DbSession,
         ) -> GeoHunterPoiRecordResponse:
+            """Create POI and optional choices after payload normalization/validation."""
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
 
@@ -330,6 +343,7 @@ class GeoHunterModule(ApiModule, SharedModuleBase):
             principal: CurrentPrincipal,
             db: DbSession,
         ) -> GeoHunterPoiRecordResponse:
+            """Update POI fields and rebuild choices when required."""
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
 
@@ -427,6 +441,7 @@ class GeoHunterModule(ApiModule, SharedModuleBase):
             summary=f"{ACCESS_ADMIN_LABEL} Delete POI",
         )
         def delete_poi(game_id: str, poi_id: str, principal: CurrentPrincipal, db: DbSession) -> MessageResponse:
+            """Delete a POI from the game configuration."""
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
 
@@ -454,6 +469,7 @@ class GeoHunterModule(ApiModule, SharedModuleBase):
             principal: CurrentPrincipal,
             db: DbSession,
         ) -> GeoHunterPoiListResponse:
+            """Update retry policy settings and return refreshed POI list payload."""
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
 
@@ -500,6 +516,7 @@ class GeoHunterModule(ApiModule, SharedModuleBase):
             db: DbSession,
             locale: CurrentLocale,
         ) -> ActionResponse:
+            """Record team question answer event and return localized action result."""
             self._require_game(db, game_id)
             self._require_team_self_or_manage_access(db, game_id, team_id, principal)
             if not body.poi_id.strip():

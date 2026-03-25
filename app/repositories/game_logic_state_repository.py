@@ -11,28 +11,36 @@ from app.dependencies import DbSession
 
 
 class GameLogicStateRepository:
+    """Common repository helpers for game-state JSON and team score updates."""
+
     _SETTINGS_COLUMN_CANDIDATES = ["settings", "game_settings", "settings_json", "gameSettings"]
 
     def __init__(self) -> None:
+        """Initialize reflection metadata used for dynamic table access."""
         self._metadata = MetaData()
 
     def _get_table(self, db: DbSession, table_name: str) -> Table:
+        """Reflect and return a table by name using the active DB connection."""
         return Table(table_name, self._metadata, autoload_with=db.get_bind())
 
     def get_game_table(self, db: DbSession) -> Table:
+        """Return reflected metadata for the `game` table."""
         return self._get_table(db, "game")
 
     @staticmethod
     def _pick_column(table: Table, candidates: list[str]) -> Optional[str]:
+        """Resolve the first existing column name from candidate aliases."""
         for name in candidates:
             if name in table.c:
                 return name
         return None
 
     def get_team_table(self, db: DbSession) -> Table:
+        """Return reflected metadata for the `team` table."""
         return self._get_table(db, "team")
 
     def get_game_by_id(self, db: DbSession, game_id: str) -> Optional[Dict[str, Any]]:
+        """Fetch a game row by id as a plain dictionary."""
         table = self.get_game_table(db)
         row = db.execute(select(table).where(table.c["id"] == game_id).limit(1)).mappings().first()
         if row is None:
@@ -40,6 +48,7 @@ class GameLogicStateRepository:
         return dict(row)
 
     def get_team_by_game_and_id(self, db: DbSession, game_id: str, team_id: str) -> Optional[Dict[str, Any]]:
+        """Fetch one team row scoped to a game id and team id."""
         table = self.get_team_table(db)
         row = (
             db.execute(
@@ -56,12 +65,14 @@ class GameLogicStateRepository:
         return dict(row)
 
     def fetch_teams_by_game_id(self, db: DbSession, game_id: str) -> list[Dict[str, Any]]:
+        """Fetch all team rows for a specific game."""
         table = self.get_team_table(db)
         rows = db.execute(select(table).where(table.c["game_id"] == game_id)).mappings().all()
         return [dict(row) for row in rows]
 
     @staticmethod
     def _deserialize_json_value(value: Any) -> Dict[str, Any]:
+        """Decode settings-like JSON values into dictionaries safely."""
         if isinstance(value, dict):
             return dict(value)
         if isinstance(value, (bytes, bytearray)):
@@ -88,6 +99,7 @@ class GameLogicStateRepository:
         return {}
 
     def get_game_settings(self, db: DbSession, game_id: str) -> Dict[str, Any]:
+        """Return decoded game settings from whichever settings column is populated."""
         game = self.get_game_by_id(db, game_id)
         if game is None:
             return {}
@@ -112,6 +124,7 @@ class GameLogicStateRepository:
         return self._deserialize_json_value(raw_settings)
 
     def update_game_settings_without_commit(self, db: DbSession, game_id: str, settings_value: Dict[str, Any]) -> None:
+        """Write normalized game settings and updated timestamp without commit."""
         table = self.get_game_table(db)
         settings_column = self._pick_column(table, self._SETTINGS_COLUMN_CANDIDATES)
         if settings_column is None:
@@ -150,6 +163,7 @@ class GameLogicStateRepository:
         )
 
     def increment_team_geo_score_without_commit(self, db: DbSession, team_id: str, points: int) -> int:
+        """Increment and persist one team's geo score without committing."""
         team_table = self.get_team_table(db)
         team = db.execute(select(team_table).where(team_table.c["id"] == team_id).limit(1)).mappings().first()
         if team is None:
@@ -166,9 +180,11 @@ class GameLogicStateRepository:
 
     @staticmethod
     def commit_changes(db: DbSession) -> None:
+        """Commit the active transaction on the provided DB session."""
         db.commit()
 
     @staticmethod
     def rollback_on_error(db: DbSession, error: Exception) -> None:
+        """Rollback only for SQLAlchemy-originated errors."""
         if isinstance(error, SQLAlchemyError):
             db.rollback()

@@ -19,6 +19,7 @@ ACCESS_SUPER_ADMIN_LABEL = "[SUPER_ADMIN]"
 
 class SharedModuleBase:
     def __init__(self, game_type: str, ws_publisher: WsEventPublisher, game_type_detail_key: str | None = None) -> None:
+        """Initialize shared game-module utilities for auth, serialization, and WS."""
         self._game_type = game_type
         self._game_type_detail_key = game_type_detail_key or game_type
         self._ws_publisher = ws_publisher
@@ -26,6 +27,7 @@ class SharedModuleBase:
         self._state_repository = GameLogicStateRepository()
 
     def _require_game(self, db: DbSession, game_id: str) -> Dict[str, Any]:
+        """Load game and enforce module-specific game type compatibility."""
         game = self._state_repository.get_game_by_id(db, game_id)
         if game is None:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="game.notFound")
@@ -34,6 +36,7 @@ class SharedModuleBase:
         return game
 
     def _require_user_manage_access(self, db: DbSession, game_id: str, principal: CurrentPrincipal) -> None:
+        """Require user principal with owner/admin permissions for a game."""
         if principal.principal_type != "user":
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="game.auth.userRequired")
 
@@ -51,6 +54,7 @@ class SharedModuleBase:
         team_id: str,
         principal: CurrentPrincipal,
     ) -> None:
+        """Allow team self-access or user manage-access for team-scoped actions."""
         team = self._state_repository.get_team_by_game_and_id(db, game_id, team_id)
         if team is None:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="team.notFound")
@@ -63,10 +67,12 @@ class SharedModuleBase:
         self._require_user_manage_access(db, game_id, principal)
 
     def _publish_event(self, event_name: str, payload: Dict[str, Any], principal: CurrentPrincipal) -> None:
+        """Publish realtime event through shared WS publisher abstraction."""
         self._ws_publisher.publish(event=event_name, payload=payload)
 
     @staticmethod
     def _ensure_user_principal(principal: CurrentPrincipal, detail_key: str = "game.auth.userRequired") -> None:
+        """Assert caller is a user principal; reject team principals."""
         if principal.principal_type != "user":
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
@@ -75,12 +81,14 @@ class SharedModuleBase:
 
     @staticmethod
     def _to_db_datetime(value: datetime) -> datetime:
+        """Normalize datetimes to UTC-naive representation used in DB writes."""
         if value.tzinfo is not None:
             return value.astimezone(UTC).replace(tzinfo=None)
         return value
 
     @staticmethod
     def _serialize_value(value: Any) -> Any:
+        """Serialize non-JSON-native values (datetime/Decimal) for API output."""
         if isinstance(value, datetime):
             return value.isoformat()
         if isinstance(value, Decimal):
@@ -88,8 +96,10 @@ class SharedModuleBase:
         return value
 
     def _serialize_row(self, row: Dict[str, Any]) -> Dict[str, Any]:
+        """Serialize every field of a row dict using `_serialize_value`."""
         return {key: self._serialize_value(value) for key, value in row.items()}
 
     @staticmethod
     def _localize_message_key(message_key: str, locale: str) -> str:
+        """Resolve translation key to localized message string."""
         return translate_value(message_key, locale=locale)

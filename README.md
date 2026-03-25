@@ -2,6 +2,12 @@
 
 This directory contains the Python backend for JotiGames.
 
+## Documentation Note
+
+Cross-system architecture, WS contracts, game flows, and coding decisions are centrally documented in `docs/` at repository root.
+
+Start at: `docs/README.md`
+
 ## Features
 
 - FastAPI service with central module registration

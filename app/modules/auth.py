@@ -86,14 +86,21 @@ class AuthModule(ApiModule):
     name = "auth"
 
     def __init__(self, ws_publisher: WsEventPublisher) -> None:
+        """Initialize auth module dependencies for access checks and WS integration."""
         self._ws_publisher = ws_publisher
         self._gameRepository = GameRepository()
         self._teamRepository = TeamRepository()
 
     def build_router(self) -> APIRouter:
+        """Build authentication, registration, and token-access verification routes."""
         router = APIRouter(prefix="/auth", tags=["auth"])
 
         def resolve_mail_locale(locale: Optional[str]) -> str:
+            """Normalize user-provided locale to supported mail language codes.
+
+            Supports `en` and `nl`; rejects unsupported values with a
+            translation-key HTTP error to keep client localization consistent.
+            """
             if locale is None or locale.strip() == "":
                 return "en"
             normalized = locale.strip().lower().replace("_", "-").split("-")[0]
@@ -105,6 +112,12 @@ class AuthModule(ApiModule):
             return normalized
 
         def require_ws_super_admin_key(request: Request) -> None:
+            """Validate shared secret used by WS service for privileged auth checks.
+
+            The endpoint accepts key material from dedicated headers or bearer
+            auth, then performs constant-time comparison against configured
+            backend secret.
+            """
             configured_key = get_settings().ws_to_backend_api_key
             if not configured_key:
                 raise HTTPException(
@@ -132,6 +145,7 @@ class AuthModule(ApiModule):
 
         @router.post("/user", response_model=LoginResponse)
         def login(body: LoginRequest, db: DbSession) -> LoginResponse:
+            """Authenticate a platform user and issue a temporary bearer token."""
             user = authenticate_user(db, body.email, body.password)
             if user is None:
                 raise HTTPException(
@@ -160,6 +174,7 @@ class AuthModule(ApiModule):
 
         @router.post("/team", response_model=LoginResponse)
         def team_login(body: TeamLoginRequest, db: DbSession) -> LoginResponse:
+            """Authenticate a team using game/team code pair and issue token."""
             team = authenticate_team(db, body.game_code, body.team_code)
             if team is None:
                 raise HTTPException(
@@ -181,6 +196,11 @@ class AuthModule(ApiModule):
 
         @router.post("/register", response_model=MessageKeyResponse)
         def register(body: RegisterRequest, db: DbSession, locale_header: CurrentLocale) -> MessageKeyResponse:
+            """Register a user account and send verification email.
+
+            On success this route always returns an i18n message key response;
+            verification is completed asynchronously via email follow-up.
+            """
             settings = get_settings()
             locale = resolve_mail_locale(body.locale or locale_header)
             try:
@@ -218,6 +238,11 @@ class AuthModule(ApiModule):
 
         @router.post("/password/forgot", response_model=MessageKeyResponse)
         def password_forgot(body: PasswordForgotRequest, db: DbSession, locale_header: CurrentLocale) -> MessageKeyResponse:
+            """Request password reset without revealing account existence status.
+
+            The endpoint responds with a generic acceptance key regardless of
+            whether a reset token was issued, preventing account enumeration.
+            """
             settings = get_settings()
             locale = resolve_mail_locale(body.locale or locale_header)
 
@@ -253,6 +278,7 @@ class AuthModule(ApiModule):
 
         @router.post("/verify", response_model=MessageKeyResponse)
         def verify(body: VerifyRequest, db: DbSession, locale_header: CurrentLocale) -> MessageKeyResponse:
+            """Verify email ownership by consuming one-time verification token."""
             try:
                 success = verify_user_email_token(db, token=body.token)
             except RegistrationError as error:
@@ -278,6 +304,12 @@ class AuthModule(ApiModule):
             request: Request,
             db: DbSession,
         ) -> VerifyAuthTokenResponse:
+            """Validate token access to a specific game and derive WS channels.
+
+            This route is intended for WS-side authorization handshakes. It
+            checks principal validity, confirms game membership/role access, and
+            returns canonical channel targets for subscription scoping.
+            """
             require_ws_super_admin_key(request)
 
             game = self._gameRepository.getGameById(db, body.game_id)

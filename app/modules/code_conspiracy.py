@@ -12,20 +12,28 @@ from app.services.ws_client import WsEventPublisher
 
 
 class TeamBootstrapResponse(BaseModel):
+    """Response payload containing team bootstrap state for Code Conspiracy."""
+
     state: Dict[str, Any]
 
 
 class AdminOverviewResponse(BaseModel):
+    """Response payload containing admin overview state."""
+
     overview: Dict[str, Any]
 
 
 class SubmitCodeRequest(BaseModel):
+    """Request body for submitting a guess against another team."""
+
     target_team_id: str = Field(min_length=1, max_length=64)
     code: str = Field(min_length=1, max_length=64)
     points_delta: int = Field(default=0, ge=-1000, le=1000)
 
 
 class ActionResponse(BaseModel):
+    """Standardized action response with version and awarded points."""
+
     success: bool
     message_key: str
     action_id: Optional[str] = None
@@ -34,14 +42,20 @@ class ActionResponse(BaseModel):
 
 
 class CodeConspiracyConfigResponse(BaseModel):
+    """Response wrapper around Code Conspiracy configuration."""
+
     config: Dict[str, Any]
 
 
 class CodeConspiracyEndGameResponse(BaseModel):
+    """Response returned after forcing game end."""
+
     success: bool
 
 
 class CodeConspiracyConfigUpdateRequest(BaseModel):
+    """Request body for updating Code Conspiracy tuning options."""
+
     code_length: int = Field(default=6, ge=4, le=10)
     character_set: str = Field(default="alphanumeric", min_length=3, max_length=24)
     submission_cooldown_seconds: int = Field(default=0, ge=0, le=300)
@@ -54,18 +68,23 @@ class CodeConspiracyConfigUpdateRequest(BaseModel):
 
 
 class CodeConspiracyModule(ApiModule, SharedModuleBase):
+    """FastAPI routes for Code Conspiracy gameplay and admin workflows."""
+
     name = "code-conspiracy"
 
     def __init__(self, ws_publisher: WsEventPublisher) -> None:
+        """Initialize module services and repository dependencies."""
         SharedModuleBase.__init__(self, game_type="code_conspiracy", ws_publisher=ws_publisher)
         self._service = CodeConspiracyService()
         self._repository = CodeConspiracyRepository()
 
     def build_router(self) -> APIRouter:
+        """Build and return the Code Conspiracy API router."""
         router = APIRouter(prefix="/code-conspiracy", tags=["code-conspiracy"])
 
         @router.get("/{game_id}/teams/{team_id}/bootstrap", response_model=TeamBootstrapResponse, summary=f"{ACCESS_BOTH_LABEL} Team bootstrap")
         def team_bootstrap(game_id: str, team_id: str, principal: CurrentPrincipal, db: DbSession) -> TeamBootstrapResponse:
+            """Return team bootstrap data plus potential target teams."""
             self._require_game(db, game_id)
             self._require_team_self_or_manage_access(db, game_id, team_id, principal)
             state = self._service.get_team_bootstrap(db, game_id, team_id)
@@ -82,6 +101,7 @@ class CodeConspiracyModule(ApiModule, SharedModuleBase):
 
         @router.get("/{game_id}/overview", response_model=AdminOverviewResponse, summary=f"{ACCESS_ADMIN_LABEL} Admin overview")
         def overview(game_id: str, principal: CurrentPrincipal, db: DbSession) -> AdminOverviewResponse:
+            """Return admin overview information for a game session."""
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
             return AdminOverviewResponse(overview=self._service.get_admin_overview(db, game_id))
@@ -92,6 +112,7 @@ class CodeConspiracyModule(ApiModule, SharedModuleBase):
             summary=f"{ACCESS_ADMIN_LABEL} Get code conspiracy config",
         )
         def get_config(game_id: str, principal: CurrentPrincipal, db: DbSession) -> CodeConspiracyConfigResponse:
+            """Return persisted Code Conspiracy configuration values."""
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
             return CodeConspiracyConfigResponse(config=self._repository.get_configuration(db, game_id))
@@ -107,6 +128,7 @@ class CodeConspiracyModule(ApiModule, SharedModuleBase):
             principal: CurrentPrincipal,
             db: DbSession,
         ) -> CodeConspiracyConfigResponse:
+            """Validate and persist Code Conspiracy configuration updates."""
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
 
@@ -141,6 +163,7 @@ class CodeConspiracyModule(ApiModule, SharedModuleBase):
 
         @router.post("/{game_id}/teams/{team_id}/code/submit", response_model=ActionResponse, summary=f"{ACCESS_BOTH_LABEL} Submit code")
         def submit_code(game_id: str, team_id: str, body: SubmitCodeRequest, principal: CurrentPrincipal, db: DbSession, locale: CurrentLocale) -> ActionResponse:
+            """Record a team-submitted code guess and return action metadata."""
             self._require_game(db, game_id)
             self._require_team_self_or_manage_access(db, game_id, team_id, principal)
             if not body.target_team_id.strip():
@@ -171,6 +194,7 @@ class CodeConspiracyModule(ApiModule, SharedModuleBase):
             summary=f"{ACCESS_ADMIN_LABEL} End code conspiracy game",
         )
         def end_game(game_id: str, principal: CurrentPrincipal, db: DbSession) -> CodeConspiracyEndGameResponse:
+            """Force end the game and persist the winning team snapshot."""
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
 

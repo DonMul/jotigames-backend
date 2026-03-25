@@ -19,14 +19,16 @@ class SystemModule(ApiModule):
     name = "system"
 
     def __init__(self, ws_publisher: WsEventPublisher) -> None:
+        """Initialize system module dependencies."""
         self._ws_publisher = ws_publisher
 
     def build_router(self) -> APIRouter:
+        """Build system utility routes used for authenticated diagnostics."""
         router = APIRouter(prefix="/system", tags=["system"])
 
         @router.get("/ping", response_model=PingResponse)
         def ping(principal: CurrentPrincipal) -> PingResponse:
-            
+            """Return authenticated ping response with principal echo and server time."""
             return PingResponse(
                 status="ok",
                 principal_type=principal.principal_type,

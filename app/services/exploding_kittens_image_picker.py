@@ -7,10 +7,12 @@ _ALLOWED_EXTENSIONS = {".png", ".jpg", ".jpeg", ".webp", ".gif", ".avif"}
 
 class ExplodingKittensImagePicker:
     def __init__(self) -> None:
+        """Initialize filesystem paths for card-type image asset lookup."""
         self._workspace_root = Path(__file__).resolve().parents[3]
         self._cards_root = self._workspace_root / "frontend" / "public" / "uploads" / "cards"
 
     def listForType(self, card_type: str) -> list[str]:
+        """List relative upload paths for a given card type image folder."""
         type_dir = self._cards_root / card_type
         if not type_dir.exists() or not type_dir.is_dir():
             return []
@@ -25,6 +27,7 @@ class ExplodingKittensImagePicker:
         return files
 
     def pickRandomForType(self, card_type: str) -> Optional[str]:
+        """Return random image path for card type, or `None` if unavailable."""
         images = self.listForType(card_type)
         if not images:
             return None

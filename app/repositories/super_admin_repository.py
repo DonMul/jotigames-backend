@@ -11,24 +11,30 @@ from app.repositories.game_logic_state_repository import GameLogicStateRepositor
 class SuperAdminRepository(GameLogicStateRepository):
     @staticmethod
     def _pick_column(table: Table, candidates: list[str]) -> Optional[str]:
+        """Return first existing column name among candidate aliases."""
         for candidate in candidates:
             if candidate in table.c:
                 return candidate
         return None
 
     def get_token_bundle_table(self, db: DbSession) -> Table:
+        """Return reflected token bundle table."""
         return self._get_table(db, "token_bundle")
 
     def get_token_coupon_table(self, db: DbSession) -> Table:
+        """Return reflected token coupon table."""
         return self._get_table(db, "token_coupon")
 
     def get_token_usage_rule_table(self, db: DbSession) -> Table:
+        """Return reflected token usage rule table."""
         return self._get_table(db, "token_usage_rule")
 
     def get_user_table(self, db: DbSession, *, table_name: str) -> Table:
+        """Return reflected user table for configured auth schema."""
         return self._get_table(db, table_name)
 
     def list_users(self, db: DbSession, *, table_name: str) -> list[Dict[str, Any]]:
+        """List all users from configured auth table."""
         table = self._get_table(db, table_name)
         rows = db.execute(select(table)).mappings().all()
         return [dict(row) for row in rows]
@@ -41,6 +47,7 @@ class SuperAdminRepository(GameLogicStateRepository):
         id_column: str,
         user_id: str,
     ) -> Dict[str, Any] | None:
+        """Fetch single user by configured id column."""
         table = self._get_table(db, table_name)
         row = (
             db.execute(
@@ -54,6 +61,7 @@ class SuperAdminRepository(GameLogicStateRepository):
         return dict(row) if row else None
 
     def create_user_without_commit(self, db: DbSession, *, table_name: str, values: Dict[str, Any]) -> None:
+        """Insert a user row without committing transaction."""
         table = self._get_table(db, table_name)
         db.execute(insert(table).values(**values))
 
@@ -66,6 +74,7 @@ class SuperAdminRepository(GameLogicStateRepository):
         user_id: str,
         values: Dict[str, Any],
     ) -> None:
+        """Update a user row without committing; no-op when values are empty."""
         if not values:
             return
         table = self._get_table(db, table_name)
@@ -79,10 +88,12 @@ class SuperAdminRepository(GameLogicStateRepository):
         id_column: str,
         user_id: str,
     ) -> None:
+        """Delete a user row without committing transaction."""
         table = self._get_table(db, table_name)
         db.execute(table.delete().where(table.c[id_column] == user_id))
 
     def has_token_tables(self, db: DbSession) -> bool:
+        """Check whether token monetization tables exist in current schema."""
         try:
             self.get_token_bundle_table(db)
             self.get_token_coupon_table(db)
@@ -92,17 +103,20 @@ class SuperAdminRepository(GameLogicStateRepository):
             return False
 
     def list_bundles(self, db: DbSession) -> list[Dict[str, Any]]:
+        """List token bundles with stable sorting by available order column."""
         table = self.get_token_bundle_table(db)
         sort_column = self._pick_column(table, ["sort_order", "sortOrder", "token_amount", "tokenAmount", "name", "id"]) or "id"
         rows = db.execute(select(table).order_by(table.c[sort_column])).mappings().all()
         return [dict(row) for row in rows]
 
     def get_bundle_by_id(self, db: DbSession, bundle_id: str) -> Dict[str, Any] | None:
+        """Fetch token bundle by identifier."""
         table = self.get_token_bundle_table(db)
         row = db.execute(select(table).where(table.c["id"] == bundle_id).limit(1)).mappings().first()
         return dict(row) if row else None
 
     def create_bundle_without_commit(self, db: DbSession, payload: Dict[str, Any]) -> str:
+        """Create token bundle from payload and return generated bundle id."""
         table = self.get_token_bundle_table(db)
         values: Dict[str, Any] = {"id": str(uuid4())}
 
@@ -125,6 +139,7 @@ class SuperAdminRepository(GameLogicStateRepository):
         return str(values["id"])
 
     def update_bundle_without_commit(self, db: DbSession, bundle_id: str, payload: Dict[str, Any]) -> None:
+        """Update token bundle mutable fields without committing transaction."""
         table = self.get_token_bundle_table(db)
         values: Dict[str, Any] = {}
 
@@ -148,12 +163,14 @@ class SuperAdminRepository(GameLogicStateRepository):
         db.execute(update(table).where(table.c["id"] == bundle_id).values(**values))
 
     def list_coupons(self, db: DbSession) -> list[Dict[str, Any]]:
+        """List token coupons newest-first using best available timestamp column."""
         table = self.get_token_coupon_table(db)
         created_column = self._pick_column(table, ["created_at", "createdAt", "id"]) or "id"
         rows = db.execute(select(table).order_by(table.c[created_column].desc())).mappings().all()
         return [dict(row) for row in rows]
 
     def create_coupons_without_commit(self, db: DbSession, payload: Dict[str, Any], amount: int, creator_user_id: Optional[str]) -> list[str]:
+        """Create one or more coupon rows and return created coupon ids."""
         table = self.get_token_coupon_table(db)
         created_ids: list[str] = []
 
@@ -193,17 +210,20 @@ class SuperAdminRepository(GameLogicStateRepository):
         return created_ids
 
     def list_rules(self, db: DbSession) -> list[Dict[str, Any]]:
+        """List token usage rules with stable object-key ordering."""
         table = self.get_token_usage_rule_table(db)
         object_key_column = self._pick_column(table, ["object_key", "objectKey", "id"]) or "id"
         rows = db.execute(select(table).order_by(table.c[object_key_column])).mappings().all()
         return [dict(row) for row in rows]
 
     def get_rule_by_id(self, db: DbSession, rule_id: str) -> Dict[str, Any] | None:
+        """Fetch token usage rule by identifier."""
         table = self.get_token_usage_rule_table(db)
         row = db.execute(select(table).where(table.c["id"] == rule_id).limit(1)).mappings().first()
         return dict(row) if row else None
 
     def create_rule_without_commit(self, db: DbSession, payload: Dict[str, Any]) -> str:
+        """Create token usage rule and return generated rule id."""
         table = self.get_token_usage_rule_table(db)
         values: Dict[str, Any] = {
             "id": str(uuid4()),
@@ -218,6 +238,7 @@ class SuperAdminRepository(GameLogicStateRepository):
         return str(values["id"])
 
     def update_rule_without_commit(self, db: DbSession, rule_id: str, payload: Dict[str, Any]) -> None:
+        """Update token usage rule fields without committing transaction."""
         table = self.get_token_usage_rule_table(db)
         values: Dict[str, Any] = {}
 

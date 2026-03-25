@@ -19,6 +19,7 @@ _template_env = Environment(loader=FileSystemLoader(str(_templates_root)), autoe
 
 
 def _render_email_template(template_name: str, *, locale: Optional[str], username: str, action_url: str) -> str:
+    """Render localized transactional email template with standard context keys."""
     title_key = "mailer.verify.title" if "verify" in template_name else "mailer.reset.title"
     greeting_key = "mailer.verify.greeting" if "verify" in template_name else "mailer.reset.greeting"
     intro_key = "mailer.verify.intro" if "verify" in template_name else "mailer.reset.intro"
@@ -39,6 +40,11 @@ def _render_email_template(template_name: str, *, locale: Optional[str], usernam
 
 
 def _smtp_client_from_dsn():
+    """Create configured SMTP client from DSN with TLS/SSL negotiation.
+
+    Raises:
+        MailerConfigurationError: When DSN is missing, invalid, or unsupported.
+    """
     settings = get_settings()
     if not settings.mailer_dsn:
         raise MailerConfigurationError("auth.register.mailerNotConfigured")
@@ -68,6 +74,7 @@ def _smtp_client_from_dsn():
 
 
 def send_verification_email(*, to_email: str, username: str, verify_url: str, locale: Optional[str] = None) -> None:
+    """Compose and send account verification email in text and HTML variants."""
     settings = get_settings()
     if not settings.mailer_from:
         raise MailerConfigurationError("auth.register.mailerFromMissing")
@@ -99,6 +106,7 @@ def send_verification_email(*, to_email: str, username: str, verify_url: str, lo
 
 
 def send_password_reset_email(*, to_email: str, username: str, reset_url: str, locale: Optional[str] = None) -> None:
+    """Compose and send password reset email in text and HTML variants."""
     settings = get_settings()
     if not settings.mailer_from:
         raise MailerConfigurationError("auth.register.mailerFromMissing")

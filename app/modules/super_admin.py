@@ -111,16 +111,23 @@ class SuperAdminModule(ApiModule):
     _password_hasher = PasswordHasher()
 
     def __init__(self) -> None:
+        """Initialize repository dependencies for super-admin control-plane APIs."""
         self._repository = SuperAdminRepository()
         self._game_repository = GameRepository()
 
     @staticmethod
     def _ensure_super_admin(principal: CurrentPrincipal) -> None:
+        """Guard helper that enforces super-admin-only access."""
         if principal.principal_type != "user" or not principal.is_super_admin:
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="auth.user.superAdminRequired")
 
     @staticmethod
     def _serialize_row(row: Dict[str, Any]) -> Dict[str, Any]:
+        """Serialize repository row values into JSON-friendly output payloads.
+
+        Datetime values are converted to ISO strings while other values are
+        passed through unchanged.
+        """
         serialized: Dict[str, Any] = {}
         for key, value in row.items():
             if isinstance(value, datetime):
@@ -131,6 +138,7 @@ class SuperAdminModule(ApiModule):
 
     @staticmethod
     def _first_available_value(row: Dict[str, Any], candidates: list[str]) -> Any:
+        """Return first available value for schema-compatible key fallbacks."""
         for candidate in candidates:
             if candidate in row:
                 return row.get(candidate)
@@ -138,6 +146,7 @@ class SuperAdminModule(ApiModule):
 
     @staticmethod
     def _normalize_roles(value: Any) -> list[str]:
+        """Normalize role storage values from multiple DB serialization formats."""
         if value is None:
             return []
         if isinstance(value, list):
@@ -161,6 +170,11 @@ class SuperAdminModule(ApiModule):
 
     @staticmethod
     def _ensure_allowed_roles(roles: list[str]) -> list[str]:
+        """Validate and normalize assignable user roles for admin mutations.
+
+        Only `ROLE_USER` and `ROLE_SUPER_ADMIN` are accepted. `ROLE_USER` is
+        always enforced as base capability.
+        """
         allowed = {"ROLE_USER", "ROLE_SUPER_ADMIN"}
         normalized = [str(role).strip() for role in roles if str(role).strip()]
         for role in normalized:
@@ -178,6 +192,7 @@ class SuperAdminModule(ApiModule):
         return deduped
 
     def _serialize_user_record(self, row: Dict[str, Any], settings: Any) -> Dict[str, Any]:
+        """Map raw user table rows to stable API user response shape."""
         serialized = self._serialize_row(row)
         roles_raw = self._first_available_value(serialized, [settings.auth_user_roles_column, "roles"])
         return {
@@ -198,21 +213,25 @@ class SuperAdminModule(ApiModule):
         }
 
     def build_router(self) -> APIRouter:
+        """Build super-admin router with token economy and user governance APIs."""
         router = APIRouter(prefix="/super-admin", tags=["super-admin"])
 
         @router.get("/tokens", response_model=SuperAdminTokenStatusResponse, summary="Super admin token dashboard status")
         def token_status(principal: CurrentPrincipal, db: DbSession) -> SuperAdminTokenStatusResponse:
+            """Return monetization readiness by checking token-table availability."""
             self._ensure_super_admin(principal)
             return SuperAdminTokenStatusResponse(monetization_enabled=self._repository.has_token_tables(db))
 
         @router.get("/tokens/bundles", response_model=TokenBundlesResponse, summary="Super admin list token bundles")
         def list_bundles(principal: CurrentPrincipal, db: DbSession) -> TokenBundlesResponse:
+            """List all configured token bundles for storefront configuration."""
             self._ensure_super_admin(principal)
             bundles = [self._serialize_row(row) for row in self._repository.list_bundles(db)]
             return TokenBundlesResponse(bundles=bundles)
 
         @router.post("/tokens/bundles", response_model=TokenBundleResponse, status_code=status.HTTP_201_CREATED, summary="Super admin create token bundle")
         def create_bundle(body: TokenBundleUpsertRequest, principal: CurrentPrincipal, db: DbSession) -> TokenBundleResponse:
+            """Create a new token bundle and return the persisted record."""
             self._ensure_super_admin(principal)
 
             try:
@@ -229,6 +248,7 @@ class SuperAdminModule(ApiModule):
 
         @router.put("/tokens/bundles/{bundle_id}", response_model=TokenBundleResponse, summary="Super admin update token bundle")
         def update_bundle(bundle_id: str, body: TokenBundleUpsertRequest, principal: CurrentPrincipal, db: DbSession) -> TokenBundleResponse:
+            """Update an existing token bundle by identifier."""
             self._ensure_super_admin(principal)
 
             existing = self._repository.get_bundle_by_id(db, bundle_id)
@@ -249,12 +269,14 @@ class SuperAdminModule(ApiModule):
 
         @router.get("/tokens/coupons", response_model=TokenCouponsResponse, summary="Super admin list token coupons")
         def list_coupons(principal: CurrentPrincipal, db: DbSession) -> TokenCouponsResponse:
+            """List issued token coupons including validity and redemption metadata."""
             self._ensure_super_admin(principal)
             coupons = [self._serialize_row(row) for row in self._repository.list_coupons(db)]
             return TokenCouponsResponse(coupons=coupons)
 
         @router.post("/tokens/coupons", response_model=TokenCouponCreateResponse, status_code=status.HTTP_201_CREATED, summary="Super admin create token coupons")
         def create_coupons(body: TokenCouponCreateRequest, principal: CurrentPrincipal, db: DbSession) -> TokenCouponCreateResponse:
+            """Create one or more coupon codes in a single bulk operation."""
             self._ensure_super_admin(principal)
 
             payload = body.model_dump()
@@ -279,12 +301,14 @@ class SuperAdminModule(ApiModule):
 
         @router.get("/tokens/rules", response_model=TokenRulesResponse, summary="Super admin list token rules")
         def list_rules(principal: CurrentPrincipal, db: DbSession) -> TokenRulesResponse:
+            """List token earning rules used by game/object-based reward logic."""
             self._ensure_super_admin(principal)
             rules = [self._serialize_row(row) for row in self._repository.list_rules(db)]
             return TokenRulesResponse(rules=rules)
 
         @router.post("/tokens/rules", response_model=TokenRuleResponse, status_code=status.HTTP_201_CREATED, summary="Super admin create token rule")
         def create_rule(body: TokenRuleCreateRequest, principal: CurrentPrincipal, db: DbSession) -> TokenRuleResponse:
+            """Create a token accrual rule for supported gameplay objects/types."""
             self._ensure_super_admin(principal)
 
             payload = body.model_dump()
@@ -304,6 +328,7 @@ class SuperAdminModule(ApiModule):
 
         @router.put("/tokens/rules/{rule_id}", response_model=TokenRuleResponse, summary="Super admin update token rule")
         def update_rule(rule_id: str, body: TokenRuleUpdateRequest, principal: CurrentPrincipal, db: DbSession) -> TokenRuleResponse:
+            """Update an existing token rule with new economics or targeting values."""
             self._ensure_super_admin(principal)
 
             existing = self._repository.get_rule_by_id(db, rule_id)
@@ -327,6 +352,7 @@ class SuperAdminModule(ApiModule):
 
         @router.get("/game-types", response_model=Dict[str, Any], summary="Super admin game type availability map")
         def super_admin_game_types(principal: CurrentPrincipal, db: DbSession) -> Dict[str, Any]:
+            """Return global game-type availability used by platform administration."""
             self._ensure_super_admin(principal)
             rows = self._game_repository.fetchGameTypeAvailability(db)
             return {
@@ -335,6 +361,7 @@ class SuperAdminModule(ApiModule):
 
         @router.get("/users", response_model=SuperAdminUsersResponse, summary="Super admin list users")
         def super_admin_users(principal: CurrentPrincipal, db: DbSession) -> SuperAdminUsersResponse:
+            """List platform user accounts in normalized and sorted response format."""
             self._ensure_super_admin(principal)
 
             settings = get_settings()
@@ -346,6 +373,7 @@ class SuperAdminModule(ApiModule):
 
         @router.get("/users/{user_id}", response_model=SuperAdminUserResponse, summary="Super admin get user")
         def super_admin_get_user(user_id: str, principal: CurrentPrincipal, db: DbSession) -> SuperAdminUserResponse:
+            """Fetch a single user record by id for detailed inspection/editing."""
             self._ensure_super_admin(principal)
             settings = get_settings()
             row = self._repository.get_user_by_id(
@@ -360,6 +388,7 @@ class SuperAdminModule(ApiModule):
 
         @router.post("/users", response_model=SuperAdminUserResponse, status_code=status.HTTP_201_CREATED, summary="Super admin create user")
         def super_admin_create_user(body: SuperAdminUserCreateRequest, principal: CurrentPrincipal, db: DbSession) -> SuperAdminUserResponse:
+            """Create a user account with validated uniqueness and allowed roles."""
             self._ensure_super_admin(principal)
             settings = get_settings()
 
@@ -409,6 +438,7 @@ class SuperAdminModule(ApiModule):
 
         @router.put("/users/{user_id}", response_model=SuperAdminUserResponse, summary="Super admin update user")
         def super_admin_update_user(user_id: str, body: SuperAdminUserUpdateRequest, principal: CurrentPrincipal, db: DbSession) -> SuperAdminUserResponse:
+            """Update mutable user fields including credentials, roles, and flags."""
             self._ensure_super_admin(principal)
             settings = get_settings()
 
@@ -462,6 +492,7 @@ class SuperAdminModule(ApiModule):
 
         @router.delete("/users/{user_id}", response_model=SuperAdminMessageResponse, summary="Super admin delete user")
         def super_admin_delete_user(user_id: str, principal: CurrentPrincipal, db: DbSession) -> SuperAdminMessageResponse:
+            """Delete a user account while preventing self-deletion by caller."""
             self._ensure_super_admin(principal)
             if str(principal.principal_id) == str(user_id):
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="auth.user.cannotDeleteSelf")

@@ -22,13 +22,25 @@ _argon2_hasher = PasswordHasher()
 
 
 class RegistrationError(Exception):
+    """Domain exception that carries i18n-friendly registration/auth message keys."""
+
     def __init__(self, message_key: str):
+        """Initialize exception with a localization-friendly message key."""
         super().__init__(message_key)
         self.message_key = message_key
 
 
 @dataclass(slots=True)
 class AuthenticatedPrincipal:
+    """Authenticated identity context used by API dependencies and route handlers.
+
+    Attributes:
+        principal_type: Either `user` or `team`.
+        principal_id: Stable identifier for the principal in persistent storage.
+        username: Display/login name of the principal.
+        roles: Role list (for users) used to derive authorization level.
+    """
+
     principal_type: Literal["user", "team"]
     principal_id: str
     username: str
@@ -36,10 +48,12 @@ class AuthenticatedPrincipal:
 
     @property
     def is_super_admin(self) -> bool:
+        """Return whether this principal has global super-admin privileges."""
         return "ROLE_SUPER_ADMIN" in self.roles
 
     @property
     def access_level(self) -> str:
+        """Map principal identity to a coarse-grained access level label."""
         if self.principal_type == "team":
             return "team"
         if self.is_super_admin:
@@ -48,20 +62,34 @@ class AuthenticatedPrincipal:
 
 
 def _safe_identifier(name: str) -> str:
+    """Validate a SQL identifier sourced from configuration before usage.
+
+    This protects dynamic table/column lookups from malformed or dangerous
+    values and prevents accidental SQL injection via identifier config.
+    """
     if not _IDENTIFIER_RE.fullmatch(name):
         raise ValueError(f"Invalid SQL identifier configured: {name}")
     return name
 
 
 def _hash_token(raw_token: str) -> str:
+    """Hash raw bearer tokens before persistence so plaintext tokens are not stored."""
     return hashlib.sha256(raw_token.encode("utf-8")).hexdigest()
 
 
 def _hash_user_password(plain_password: str) -> str:
+    """Hash a user password using Argon2 for secure at-rest credential storage."""
     return _argon2_hasher.hash(plain_password)
 
 
 def _verify_password(plain_password: str, stored_password: str) -> bool:
+    """Verify a plaintext password against Argon2, bcrypt, or legacy plaintext.
+
+    Supported formats are checked by prefix:
+    - Argon2 (`$argon2...`)
+    - bcrypt (`$2a$`, `$2b$`, `$2y$`)
+    - constant-time plaintext fallback for legacy records
+    """
     if not stored_password:
         return False
 
@@ -82,6 +110,7 @@ def _verify_password(plain_password: str, stored_password: str) -> bool:
 
 
 def _parse_roles(value: object) -> list[str]:
+    """Parse role values from list/tuple/JSON/comma-separated database formats."""
     if value is None:
         return []
 
@@ -110,6 +139,7 @@ def _parse_roles(value: object) -> list[str]:
 
 
 def _normalize_user_roles(roles: list[str]) -> list[str]:
+    """Normalize roles by enforcing ROLE_USER baseline and removing duplicates."""
     normalized = [role for role in roles if role]
     if "ROLE_USER" not in normalized:
         normalized.append("ROLE_USER")
@@ -117,6 +147,7 @@ def _normalize_user_roles(roles: list[str]) -> list[str]:
 
 
 def _first_available_column(table: Table, preferred: str, fallbacks: list[str]) -> Optional[str]:
+    """Find the first existing column among preferred and fallback candidates."""
     for candidate in [preferred, *fallbacks]:
         if candidate in table.c:
             return candidate
@@ -133,6 +164,11 @@ def _fetch_principal_row(
     roles_column_name: Optional[str],
     username: str,
 ) -> Optional[dict]:
+    """Load principal auth fields from a dynamic table definition.
+
+    The function centralizes database selection logic used by both user and
+    team authentication paths while keeping table/column names configurable.
+    """
     table = _safe_identifier(table_name)
     id_col = _safe_identifier(id_column_name)
     username_col = _safe_identifier(username_column_name)
@@ -169,6 +205,11 @@ def _authenticate_principal(
     username: str,
     password: str,
 ) -> Optional[AuthenticatedPrincipal]:
+    """Authenticate a principal against a configured credential source.
+
+    Returns an `AuthenticatedPrincipal` when username/password validation
+    succeeds, otherwise `None`.
+    """
     row = _fetch_principal_row(
         db,
         table_name=table_name,
@@ -193,6 +234,7 @@ def _authenticate_principal(
 
 
 def authenticate_user(db: Session, username: str, password: str) -> Optional[AuthenticatedPrincipal]:
+    """Authenticate a user account and normalize role claims for authorization."""
     settings = get_settings()
     principal = _authenticate_principal(
         db,
@@ -212,6 +254,15 @@ def authenticate_user(db: Session, username: str, password: str) -> Optional[Aut
 
 
 def register_user(db: Session, *, email: str, username: str, password: str) -> tuple[str, str]:
+    """Create a new user account and issue an email-verification token.
+
+    The function validates uniqueness for both email and username, writes the
+    hashed password, initializes default roles, and returns identifiers needed
+    by mail workflows.
+
+    Raises:
+        RegistrationError: For duplicate identities or missing schema columns.
+    """
     settings = get_settings()
     table_name = _safe_identifier(settings.auth_users_table)
     metadata = MetaData()
@@ -280,6 +331,11 @@ def register_user(db: Session, *, email: str, username: str, password: str) -> t
 
 
 def verify_user_email_token(db: Session, *, token: str) -> bool:
+    """Consume an email verification token and mark a user as verified.
+
+    Handles optional pending-email promotion and clears one-time verification
+    fields after successful confirmation.
+    """
     settings = get_settings()
     table_name = _safe_identifier(settings.auth_users_table)
     metadata = MetaData()
@@ -352,6 +408,11 @@ def verify_user_email_token(db: Session, *, token: str) -> bool:
 
 
 def create_password_reset_token_if_verified(db: Session, *, email: str) -> Optional[tuple[str, str]]:
+    """Create password reset token for verified users only.
+
+    Returns `(username, reset_token)` when issuance is allowed, otherwise
+    `None` for unknown/unverified accounts to avoid account enumeration.
+    """
     settings = get_settings()
     table_name = _safe_identifier(settings.auth_users_table)
     metadata = MetaData()
@@ -410,6 +471,7 @@ def create_password_reset_token_if_verified(db: Session, *, email: str) -> Optio
 
 
 def authenticate_team(db: Session, game_code: str, team_code: str) -> Optional[AuthenticatedPrincipal]:
+    """Authenticate a team principal using `(game_code, team_code)` pair."""
     settings = get_settings()
 
     team_table_name = _safe_identifier(settings.auth_teams_table)
@@ -454,6 +516,7 @@ def authenticate_team(db: Session, game_code: str, team_code: str) -> Optional[A
 
 
 def _get_user_principal_details_by_id(db: Session, principal_id: str) -> Optional[dict]:
+    """Fetch user principal details used when resolving stored auth tokens."""
     settings = get_settings()
     table = _safe_identifier(settings.auth_users_table)
     id_col = _safe_identifier(settings.auth_user_id_column)
@@ -478,6 +541,7 @@ def _get_user_principal_details_by_id(db: Session, principal_id: str) -> Optiona
 
 
 def _get_team_principal_details_by_id(db: Session, principal_id: str) -> Optional[dict]:
+    """Fetch team principal details used when resolving stored auth tokens."""
     settings = get_settings()
     table = _safe_identifier(settings.auth_teams_table)
     id_col = _safe_identifier(settings.auth_team_id_column)
@@ -500,6 +564,11 @@ def _get_team_principal_details_by_id(db: Session, principal_id: str) -> Optiona
 
 
 def create_temp_token(db: Session, principal_type: Literal["user", "team"], principal_id: str) -> tuple[str, datetime]:
+    """Issue and persist a temporary bearer token for an authenticated principal.
+
+    A secure random token is returned to the caller, while only its hash is
+    persisted in `api_auth_tokens` with TTL metadata.
+    """
     settings = get_settings()
 
     now = datetime.now(UTC).replace(tzinfo=None)
@@ -523,6 +592,7 @@ def create_temp_token(db: Session, principal_type: Literal["user", "team"], prin
 
 
 def resolve_token_principal(db: Session, raw_token: str) -> Optional[AuthenticatedPrincipal]:
+    """Resolve bearer token to principal context if token exists and is unexpired."""
     now = datetime.now(UTC).replace(tzinfo=None)
     token_hash = _hash_token(raw_token)
 
@@ -559,6 +629,7 @@ def resolve_token_principal(db: Session, raw_token: str) -> Optional[Authenticat
 
 
 def cleanup_expired_tokens(db: Session) -> int:
+    """Delete expired auth tokens and return number of removed records."""
     now = datetime.now(UTC).replace(tzinfo=None)
     deleted = db.query(ApiAuthToken).filter(ApiAuthToken.expires_at <= now).delete()
     db.commit()

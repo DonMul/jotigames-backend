@@ -9,22 +9,32 @@ from app.dependencies import DbSession
 
 class GameChatRepository:
     def __init__(self) -> None:
+        """Initialize metadata for reflected chat/message tables."""
         self._metadata = MetaData()
 
     def _getTable(self, db: DbSession, table_name: str) -> Table:
+        """Return reflected table object by name for current DB bind."""
         return Table(table_name, self._metadata, autoload_with=db.get_bind())
 
     def getGameChatMessageTable(self, db: DbSession) -> Table:
+        """Return reflected `game_chat_message` table."""
         return self._getTable(db, "game_chat_message")
 
     def getTeamMessageTable(self, db: DbSession) -> Table:
+        """Return reflected `team_message` table."""
         return self._getTable(db, "team_message")
 
     def createGameChatMessageWithoutCommit(self, db: DbSession, values: Dict[str, Any]) -> None:
+        """Insert game chat message row without committing transaction."""
         table = self.getGameChatMessageTable(db)
         db.execute(insert(table).values(**values))
 
     def fetchGameChatMessagesByGameId(self, db: DbSession, game_id: str, *, limit: int) -> list[Dict[str, Any]]:
+        """Fetch most recent game chat messages in chronological order.
+
+        Records are queried descending for efficiency and reversed before
+        returning so clients receive oldest-to-newest message order.
+        """
         table = self.getGameChatMessageTable(db)
         rows = (
             db.execute(
@@ -50,6 +60,7 @@ class GameChatRepository:
         created_by_id: Optional[str],
         message: str,
     ) -> None:
+        """Insert admin-to-team message row without committing transaction."""
         table = self.getTeamMessageTable(db)
         db.execute(
             insert(table).values(
@@ -64,9 +75,11 @@ class GameChatRepository:
 
     @staticmethod
     def commitChanges(db: DbSession) -> None:
+        """Commit current transaction."""
         db.commit()
 
     @staticmethod
     def rollbackOnError(db: DbSession, error: Exception) -> None:
+        """Rollback only on SQLAlchemy-level errors."""
         if isinstance(error, SQLAlchemyError):
             db.rollback()

@@ -13,18 +13,26 @@ from app.services.ws_client import WsEventPublisher
 
 
 class TeamBootstrapResponse(BaseModel):
+    """Response payload containing team bootstrap state."""
+
     state: Dict[str, Any]
 
 
 class AdminOverviewResponse(BaseModel):
+    """Response payload containing admin overview state."""
+
     overview: Dict[str, Any]
 
 
 class AddMarkerRequest(BaseModel):
+    """Request body for adding a Blind Hike marker."""
+
     marker_id: str = Field(min_length=1, max_length=64)
 
 
 class ActionResponse(BaseModel):
+    """Standardized action response with localization key and version."""
+
     success: bool
     message_key: str
     action_id: Optional[str] = None
@@ -33,10 +41,14 @@ class ActionResponse(BaseModel):
 
 
 class BlindHikeConfigResponse(BaseModel):
+    """Response wrapper around Blind Hike configuration."""
+
     config: Dict[str, Any]
 
 
 class BlindHikeConfigUpdateRequest(BaseModel):
+    """Request payload for updating Blind Hike configuration."""
+
     target_lat: Optional[float] = None
     target_lon: Optional[float] = None
     horizontal_flip: bool = False
@@ -49,24 +61,30 @@ class BlindHikeConfigUpdateRequest(BaseModel):
 
 
 class BlindHikeModule(ApiModule, SharedModuleBase):
+    """FastAPI routes for Blind Hike gameplay and configuration."""
+
     name = "blindhike"
 
     def __init__(self, ws_publisher: WsEventPublisher) -> None:
+        """Initialize Blind Hike module dependencies."""
         SharedModuleBase.__init__(self, game_type="blindhike", ws_publisher=ws_publisher)
         self._service = BlindHikeService()
         self._repository = BlindHikeRepository()
 
     def build_router(self) -> APIRouter:
+        """Build Blind Hike routes for config and marker progression."""
         router = APIRouter(prefix="/blindhike", tags=["blindhike"])
 
         @router.get("/{game_id}/teams/{team_id}/bootstrap", response_model=TeamBootstrapResponse, summary=f"{ACCESS_BOTH_LABEL} Team bootstrap")
         def team_bootstrap(game_id: str, team_id: str, principal: CurrentPrincipal, db: DbSession) -> TeamBootstrapResponse:
+            """Return team-specific Blind Hike bootstrap state."""
             self._require_game(db, game_id)
             self._require_team_self_or_manage_access(db, game_id, team_id, principal)
             return TeamBootstrapResponse(state=self._service.get_team_bootstrap(db, game_id, team_id))
 
         @router.get("/{game_id}/overview", response_model=AdminOverviewResponse, summary=f"{ACCESS_ADMIN_LABEL} Admin overview")
         def overview(game_id: str, principal: CurrentPrincipal, db: DbSession) -> AdminOverviewResponse:
+            """Return admin overview data for Blind Hike."""
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
             return AdminOverviewResponse(overview=self._service.get_admin_overview(db, game_id))
@@ -77,6 +95,7 @@ class BlindHikeModule(ApiModule, SharedModuleBase):
             summary=f"{ACCESS_ADMIN_LABEL} Get blindhike config",
         )
         def get_config(game_id: str, principal: CurrentPrincipal, db: DbSession) -> BlindHikeConfigResponse:
+            """Return persisted Blind Hike configuration values."""
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
             return BlindHikeConfigResponse(config=self._repository.get_configuration(db, game_id))
@@ -92,6 +111,7 @@ class BlindHikeModule(ApiModule, SharedModuleBase):
             principal: CurrentPrincipal,
             db: DbSession,
         ) -> BlindHikeConfigResponse:
+            """Validate and persist Blind Hike configuration updates."""
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
 
@@ -123,6 +143,7 @@ class BlindHikeModule(ApiModule, SharedModuleBase):
 
         @router.post("/{game_id}/teams/{team_id}/marker/add", response_model=ActionResponse, summary=f"{ACCESS_BOTH_LABEL} Add marker")
         def add_marker(game_id: str, team_id: str, body: AddMarkerRequest, principal: CurrentPrincipal, db: DbSession, locale: CurrentLocale) -> ActionResponse:
+            """Record marker placement and publish resulting team/admin events."""
             self._require_game(db, game_id)
             self._require_team_self_or_manage_access(db, game_id, team_id, principal)
             if not body.marker_id.strip():

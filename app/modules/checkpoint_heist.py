@@ -13,19 +13,27 @@ from app.services.ws_client import WsEventPublisher
 
 
 class TeamBootstrapResponse(BaseModel):
+    """Response payload containing team bootstrap state."""
+
     state: Dict[str, Any]
 
 
 class AdminOverviewResponse(BaseModel):
+    """Response payload containing admin overview state."""
+
     overview: Dict[str, Any]
 
 
 class CaptureCheckpointRequest(BaseModel):
+    """Request body for confirming a checkpoint capture."""
+
     checkpoint_id: str = Field(min_length=1, max_length=64)
     points: int = Field(default=1, ge=0, le=1000)
 
 
 class ActionResponse(BaseModel):
+    """Standardized action response for capture events."""
+
     success: bool
     message_key: str
     action_id: Optional[str] = None
@@ -34,6 +42,8 @@ class ActionResponse(BaseModel):
 
 
 class CheckpointCreateRequest(BaseModel):
+    """Request payload for creating a checkpoint."""
+
     title: str = Field(min_length=1, max_length=120)
     latitude: float
     longitude: float
@@ -44,6 +54,8 @@ class CheckpointCreateRequest(BaseModel):
 
 
 class CheckpointUpdateRequest(BaseModel):
+    """Request payload for patching an existing checkpoint."""
+
     title: Optional[str] = Field(default=None, min_length=1, max_length=120)
     latitude: Optional[float] = None
     longitude: Optional[float] = None
@@ -54,31 +66,43 @@ class CheckpointUpdateRequest(BaseModel):
 
 
 class CheckpointReorderRequest(BaseModel):
+    """Request payload defining new checkpoint order."""
+
     ordered_ids: list[str] = Field(default_factory=list)
 
 
 class CheckpointRecordResponse(BaseModel):
+    """Response wrapper containing one checkpoint record."""
+
     checkpoint: Dict[str, Any]
 
 
 class CheckpointListResponse(BaseModel):
+    """Response wrapper containing all checkpoint records."""
+
     checkpoints: list[Dict[str, Any]]
 
 
 class MessageResponse(BaseModel):
+    """Response wrapper for localized message keys."""
+
     message_key: str
 
 
 class CheckpointHeistModule(ApiModule, SharedModuleBase):
+    """FastAPI module for Checkpoint Heist configuration and captures."""
+
     name = "checkpoint-heist"
 
     def __init__(self, ws_publisher: WsEventPublisher) -> None:
+        """Initialize Checkpoint Heist module dependencies."""
         SharedModuleBase.__init__(self, game_type="checkpoint_heist", ws_publisher=ws_publisher)
         self._service = CheckpointHeistService()
         self._repository = CheckpointHeistRepository()
 
     @staticmethod
     def _serialize_checkpoint(checkpoint: Dict[str, Any]) -> Dict[str, Any]:
+        """Serialize checkpoint row to stable API response shape."""
         order_index = checkpoint.get("order_index")
         if order_index is None:
             order_index = checkpoint.get("sequence_order")
@@ -97,22 +121,26 @@ class CheckpointHeistModule(ApiModule, SharedModuleBase):
 
     @staticmethod
     def _validate_checkpoint_payload(*, latitude: float, longitude: float, marker_color: str) -> None:
+        """Validate checkpoint coordinates and marker color format."""
         if latitude < -90 or latitude > 90 or longitude < -180 or longitude > 180:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="checkpoint_heist.checkpoint.invalidCoordinates")
         if len(marker_color) != 7 or not marker_color.startswith("#"):
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="checkpoint_heist.checkpoint.invalidColor")
 
     def build_router(self) -> APIRouter:
+        """Build Checkpoint Heist routes for admin config and capture actions."""
         router = APIRouter(prefix="/checkpoint-heist", tags=["checkpoint-heist"])
 
         @router.get("/{game_id}/teams/{team_id}/bootstrap", response_model=TeamBootstrapResponse, summary=f"{ACCESS_BOTH_LABEL} Team bootstrap")
         def team_bootstrap(game_id: str, team_id: str, principal: CurrentPrincipal, db: DbSession) -> TeamBootstrapResponse:
+            """Return team-specific Checkpoint Heist bootstrap state."""
             self._require_game(db, game_id)
             self._require_team_self_or_manage_access(db, game_id, team_id, principal)
             return TeamBootstrapResponse(state=self._service.get_team_bootstrap(db, game_id, team_id))
 
         @router.get("/{game_id}/overview", response_model=AdminOverviewResponse, summary=f"{ACCESS_ADMIN_LABEL} Admin overview")
         def overview(game_id: str, principal: CurrentPrincipal, db: DbSession) -> AdminOverviewResponse:
+            """Return admin overview data for Checkpoint Heist."""
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
             return AdminOverviewResponse(overview=self._service.get_admin_overview(db, game_id))
@@ -123,6 +151,7 @@ class CheckpointHeistModule(ApiModule, SharedModuleBase):
             summary=f"{ACCESS_ADMIN_LABEL} List checkpoints",
         )
         def list_checkpoints(game_id: str, principal: CurrentPrincipal, db: DbSession) -> CheckpointListResponse:
+            """List all checkpoints configured for this game."""
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
             checkpoints = self._repository.fetch_checkpoints_by_game_id(db, game_id)
@@ -139,6 +168,7 @@ class CheckpointHeistModule(ApiModule, SharedModuleBase):
             principal: CurrentPrincipal,
             db: DbSession,
         ) -> CheckpointRecordResponse:
+            """Create a checkpoint and return the persisted record."""
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
             self._validate_checkpoint_payload(latitude=body.latitude, longitude=body.longitude, marker_color=body.marker_color)
@@ -182,6 +212,7 @@ class CheckpointHeistModule(ApiModule, SharedModuleBase):
             principal: CurrentPrincipal,
             db: DbSession,
         ) -> CheckpointRecordResponse:
+            """Update one checkpoint and return its latest persisted state."""
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
 
@@ -228,6 +259,7 @@ class CheckpointHeistModule(ApiModule, SharedModuleBase):
             summary=f"{ACCESS_ADMIN_LABEL} Delete checkpoint",
         )
         def delete_checkpoint(game_id: str, checkpoint_id: str, principal: CurrentPrincipal, db: DbSession) -> MessageResponse:
+            """Delete a checkpoint and return confirmation message key."""
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
 
@@ -255,6 +287,7 @@ class CheckpointHeistModule(ApiModule, SharedModuleBase):
             principal: CurrentPrincipal,
             db: DbSession,
         ) -> CheckpointListResponse:
+            """Reorder checkpoints based on ordered id list."""
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
 
@@ -270,6 +303,7 @@ class CheckpointHeistModule(ApiModule, SharedModuleBase):
 
         @router.post("/{game_id}/teams/{team_id}/capture/confirm", response_model=ActionResponse, summary=f"{ACCESS_BOTH_LABEL} Capture checkpoint")
         def capture_checkpoint(game_id: str, team_id: str, body: CaptureCheckpointRequest, principal: CurrentPrincipal, db: DbSession, locale: CurrentLocale) -> ActionResponse:
+            """Record checkpoint capture action for a team."""
             self._require_game(db, game_id)
             self._require_team_self_or_manage_access(db, game_id, team_id, principal)
             if not body.checkpoint_id.strip():

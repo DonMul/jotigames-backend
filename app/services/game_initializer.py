@@ -25,13 +25,20 @@ _EXPLODING_KITTENS_CARD_COUNTS = [
 
 class GameInitializerService:
     def __init__(self) -> None:
+        """Initialize game bootstrap service dependencies."""
         self._cardRepository = CardRepository()
 
     def initializeGameByIdAndType(self, db: DbSession, game_id: str, game_type: str) -> None:
+        """Run post-create bootstrap for game-type specific seed data.
+
+        This hook is called immediately after game creation and before commit so
+        game-specific initial entities can be inserted transactionally.
+        """
         if game_type == "exploding_kittens":
             self._initializeExplodingKittens(db, game_id)
 
     def _initializeExplodingKittens(self, db: DbSession, game_id: str) -> None:
+        """Seed Exploding Kittens cards with deterministic card-type distribution."""
         created_at = datetime.now(UTC).replace(tzinfo=None)
         cards = []
 

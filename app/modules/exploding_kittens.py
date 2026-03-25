@@ -154,12 +154,14 @@ class ExplodingKittensModule(ApiModule):
     }
 
     def __init__(self, ws_publisher: WsEventPublisher) -> None:
+        """Initialize Exploding Kittens module dependencies and WS publisher."""
         self._ws_publisher = ws_publisher
         self._gameRepository = GameRepository()
         self._repository = ExplodingKittensRepository()
         self._service = ExplodingKittensService()
 
     def _require_exploding_kittens_game(self, db: DbSession, game_id: str) -> Dict[str, Any]:
+        """Load game and ensure it is of `exploding_kittens` type."""
         game = self._repository.getGameById(db, game_id)
         if game is None:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="game.notFound")
@@ -168,6 +170,7 @@ class ExplodingKittensModule(ApiModule):
         return game
 
     def _require_user_manage_access(self, db: DbSession, game_id: str, principal: CurrentPrincipal) -> None:
+        """Require user principal with owner/admin management rights."""
         if principal.principal_type != "user":
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="game.auth.userRequired")
 
@@ -185,6 +188,7 @@ class ExplodingKittensModule(ApiModule):
         team_id: str,
         principal: CurrentPrincipal,
     ) -> None:
+        """Allow team self-access or user manage-access for team actions."""
         team = self._repository.getTeamByGameIdAndTeamId(db, game_id, team_id)
         if team is None:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="team.notFound")
@@ -197,6 +201,7 @@ class ExplodingKittensModule(ApiModule):
         self._require_user_manage_access(db, game_id, principal)
 
     def _count_team_hand_cards_by_type(self, db: DbSession, team_id: str, card_type: str) -> int:
+        """Count cards of one type in a team's current hand."""
         hand_cards = self._repository.fetchHandCardsByTeamId(db, team_id)
         return sum(1 for card in hand_cards if str(card.get("type") or "") == card_type)
 
@@ -208,6 +213,7 @@ class ExplodingKittensModule(ApiModule):
         card_type: str,
         amount: int,
     ) -> None:
+        """Publish admin-facing hand amount adjustment event for a card type."""
         self._ws_publisher.publish(
             event="admin.exploding_kittens.card.adjust_amount",
             payload={
@@ -232,6 +238,7 @@ class ExplodingKittensModule(ApiModule):
         title: str = "",
         title_key: str = "",
     ) -> None:
+        """Publish localized in-app message payload to a single team channel."""
         body = str(message or "").strip()
         normalized_message_key = str(message_key or "").strip()
         normalized_team_id = str(team_id or "").strip()
@@ -267,6 +274,7 @@ class ExplodingKittensModule(ApiModule):
         before_cards: list[Dict[str, Any]],
         after_cards: list[Dict[str, Any]],
     ) -> None:
+        """Publish add/remove and aggregate count events based on hand diffs."""
         before_by_id = {
             str(card.get("id") or ""): card
             for card in before_cards
@@ -336,6 +344,7 @@ class ExplodingKittensModule(ApiModule):
 
     @staticmethod
     def _action_payload(action: Dict[str, Any]) -> Dict[str, Any]:
+        """Normalize action row to realtime-friendly payload shape."""
         created_at = action.get("created_at")
         created_at_value = created_at.isoformat() if hasattr(created_at, "isoformat") else created_at
         context_value = action.get("context")
@@ -378,6 +387,7 @@ class ExplodingKittensModule(ApiModule):
 
     @staticmethod
     def _parse_action_context(action: Dict[str, Any]) -> Dict[str, Any]:
+        """Parse action context regardless of dict/json-string storage format."""
         raw = action.get("context")
         if isinstance(raw, dict):
             return raw
@@ -391,6 +401,7 @@ class ExplodingKittensModule(ApiModule):
         return {}
 
     def _describe_action_type(self, action: Dict[str, Any]) -> str:
+        """Build concise human-readable label for action type/context."""
         action_type = str(action.get("action_type") or "").strip()
         context = self._parse_action_context(action)
 
@@ -413,6 +424,7 @@ class ExplodingKittensModule(ApiModule):
         before_cards: list[Dict[str, Any]],
         after_cards: list[Dict[str, Any]],
     ) -> tuple[list[str], list[str]]:
+        """Return lists of added and removed card types between hand snapshots."""
         before_by_id = {
             str(card.get("id") or ""): card
             for card in before_cards
@@ -441,6 +453,7 @@ class ExplodingKittensModule(ApiModule):
 
     @staticmethod
     def _format_card_types(card_types: list[str]) -> str:
+        """Format card type list for human-readable message fragments."""
         if not card_types:
             return ""
         return ", ".join(card_types)
@@ -460,6 +473,7 @@ class ExplodingKittensModule(ApiModule):
         source_hand_before: list[Dict[str, Any]],
         source_hand_after: list[Dict[str, Any]],
     ) -> None:
+        """Publish source/target team message notifications after action resolves."""
         target_team_id = str(action.get("target_team_id") or "").strip()
         source_team_id = str(action.get("source_team_id") or "").strip()
 
@@ -536,6 +550,7 @@ class ExplodingKittensModule(ApiModule):
             )
 
     def _publish_action_added_events(self, *, db: DbSession, game_id: str, action: Dict[str, Any]) -> None:
+        """Publish admin/team action-added realtime events and popup messages."""
         payload = self._action_payload(action)
         target_team_id = str(payload.get("target_team_id") or "")
         if not target_team_id:
@@ -603,6 +618,7 @@ class ExplodingKittensModule(ApiModule):
         target_team_id: str,
         status_value: str,
     ) -> None:
+        """Publish admin/team action removal events after resolution/cancel."""
         normalized_action_id = str(action_id or "").strip()
         normalized_target_team_id = str(target_team_id or "").strip()
         if not normalized_action_id or not normalized_target_team_id:
@@ -626,6 +642,7 @@ class ExplodingKittensModule(ApiModule):
         )
 
     def _get_pending_state_flags(self, team: Optional[Dict[str, Any]]) -> Dict[str, bool]:
+        """Extract pending-state booleans from team row into state-key map."""
         team_data = team if isinstance(team, dict) else {}
         return {
             state: bool(team_data.get(flag_name))
@@ -640,6 +657,7 @@ class ExplodingKittensModule(ApiModule):
         state: str,
         active: bool,
     ) -> None:
+        """Publish activate/deactivate events for a pending gameplay state."""
         suffix = "activate" if active else "deactivate"
         self._ws_publisher.publish(
             event=f"admin.exploding_kittens.state.{suffix}",
@@ -665,6 +683,7 @@ class ExplodingKittensModule(ApiModule):
         before: Optional[Dict[str, Any]],
         after: Optional[Dict[str, Any]],
     ) -> None:
+        """Detect and publish pending-state transitions between team snapshots."""
         before_flags = self._get_pending_state_flags(before)
         after_flags = self._get_pending_state_flags(after)
         for state in self._STATE_FLAG_TO_KEY.values():
@@ -681,6 +700,7 @@ class ExplodingKittensModule(ApiModule):
 
     @staticmethod
     def _extract_team_lives(team: Optional[Dict[str, Any]]) -> Optional[int]:
+        """Safely extract integer lives value from optional team record."""
         if not isinstance(team, dict):
             return None
         try:
@@ -695,6 +715,7 @@ class ExplodingKittensModule(ApiModule):
         team_id: str,
         lives: int,
     ) -> None:
+        """Publish synchronized lives updates to game/admin/team channels."""
         safe_lives = max(0, int(lives))
         self._ws_publisher.publish(
             event="game.exploding_kittens.highscore.adjust",
@@ -728,6 +749,7 @@ class ExplodingKittensModule(ApiModule):
         before: Optional[Dict[str, Any]],
         after: Optional[Dict[str, Any]],
     ) -> None:
+        """Publish lives-updated event only when lives value actually changed."""
         before_lives = self._extract_team_lives(before)
         after_lives = self._extract_team_lives(after)
         if before_lives is None or after_lives is None or before_lives == after_lives:
@@ -739,6 +761,7 @@ class ExplodingKittensModule(ApiModule):
         )
 
     def build_router(self) -> APIRouter:
+        """Build Exploding Kittens admin/team routes for cards, state, and actions."""
         router = APIRouter(prefix="/exploding-kittens", tags=["exploding-kittens"])
 
         @router.get(
@@ -747,6 +770,7 @@ class ExplodingKittensModule(ApiModule):
             summary=f"{ACCESS_ADMIN_LABEL} List cards",
         )
         def list_cards(game_id: str, principal: CurrentPrincipal, db: DbSession) -> ExplodingKittensCardsResponse:
+            """List all cards configured for the game."""
             self._require_exploding_kittens_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
             cards = self._repository.fetchCardsByGameId(db, game_id)
@@ -758,6 +782,7 @@ class ExplodingKittensModule(ApiModule):
             summary=f"{ACCESS_ADMIN_LABEL} Get card",
         )
         def get_card(game_id: str, card_id: str, principal: CurrentPrincipal, db: DbSession) -> ExplodingKittensCardResponse:
+            """Return one card record by identifier."""
             self._require_exploding_kittens_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
             card = self._repository.getCardByGameIdAndCardId(db, game_id, card_id)
@@ -777,6 +802,7 @@ class ExplodingKittensModule(ApiModule):
             db: DbSession,
             locale: CurrentLocale,
         ) -> MessageKeyResponse:
+            """Bulk-create cards by type for admin setup flows."""
             self._require_exploding_kittens_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
             try:
@@ -807,6 +833,7 @@ class ExplodingKittensModule(ApiModule):
             principal: CurrentPrincipal,
             db: DbSession,
         ) -> ExplodingKittensCardResponse:
+            """Create one new Exploding Kittens card."""
             self._require_exploding_kittens_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
             try:
@@ -837,6 +864,7 @@ class ExplodingKittensModule(ApiModule):
             principal: CurrentPrincipal,
             db: DbSession,
         ) -> ExplodingKittensCardResponse:
+            """Update one existing card definition."""
             self._require_exploding_kittens_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
             try:
@@ -864,6 +892,7 @@ class ExplodingKittensModule(ApiModule):
             summary=f"{ACCESS_ADMIN_LABEL} Delete card",
         )
         def delete_card(game_id: str, card_id: str, principal: CurrentPrincipal, db: DbSession, locale: CurrentLocale) -> MessageKeyResponse:
+            """Delete one card by id and return localized confirmation key."""
             self._require_exploding_kittens_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
             try:
@@ -892,6 +921,7 @@ class ExplodingKittensModule(ApiModule):
             include_final_url: bool = Form(default=False),
             center_logo: UploadFile | None = File(default=None),
         ) -> Response:
+            """Generate and return a PDF export containing card QR codes."""
             game = self._require_exploding_kittens_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
 
@@ -1014,6 +1044,7 @@ class ExplodingKittensModule(ApiModule):
             summary=f"{ACCESS_BOTH_LABEL} Get team state",
         )
         def get_team_state(game_id: str, team_id: str, principal: CurrentPrincipal, db: DbSession) -> ExplodingKittensStateResponse:
+            """Return current state snapshot for a team."""
             self._require_exploding_kittens_game(db, game_id)
             self._require_team_self_or_manage_access(db, game_id, team_id, principal)
 
@@ -1032,6 +1063,7 @@ class ExplodingKittensModule(ApiModule):
             summary=f"{ACCESS_ADMIN_LABEL} List pending actions",
         )
         def list_pending_actions(game_id: str, principal: CurrentPrincipal, db: DbSession) -> PendingActionsResponse:
+            """List unresolved action cards awaiting target resolution."""
             self._require_exploding_kittens_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
 
@@ -1052,6 +1084,7 @@ class ExplodingKittensModule(ApiModule):
             db: DbSession,
             locale: CurrentLocale,
         ) -> PlayCardResponse:
+            """Play a hand card and publish resulting state transitions."""
             self._require_exploding_kittens_game(db, game_id)
             self._require_team_self_or_manage_access(db, game_id, team_id, principal)
             team_before = self._repository.getTeamByGameIdAndTeamId(db, game_id, team_id)
@@ -1123,6 +1156,7 @@ class ExplodingKittensModule(ApiModule):
             db: DbSession,
             locale: CurrentLocale,
         ) -> ScanResponse:
+            """Resolve a scanned QR card token and apply resulting effects."""
             self._require_exploding_kittens_game(db, game_id)
             self._require_team_self_or_manage_access(db, game_id, team_id, principal)
             team_before = self._repository.getTeamByGameIdAndTeamId(db, game_id, team_id)
@@ -1224,6 +1258,7 @@ class ExplodingKittensModule(ApiModule):
             db: DbSession,
             locale: CurrentLocale,
         ) -> ResolveStateResponse:
+            """Resolve team pending state prompts and apply side effects."""
             self._require_exploding_kittens_game(db, game_id)
             self._require_team_self_or_manage_access(db, game_id, team_id, principal)
             team_before = self._repository.getTeamByGameIdAndTeamId(db, game_id, team_id)
@@ -1328,6 +1363,7 @@ class ExplodingKittensModule(ApiModule):
             db: DbSession,
             locale: CurrentLocale,
         ) -> ResolveActionResponse:
+            """Resolve a pending action request for its target team."""
             self._require_exploding_kittens_game(db, game_id)
             self._require_team_self_or_manage_access(db, game_id, team_id, principal)
             pending_action = self._repository.getPendingActionByIdForTeam(
@@ -1436,6 +1472,7 @@ class ExplodingKittensModule(ApiModule):
             principal: CurrentPrincipal,
             db: DbSession,
         ) -> UseComboResponse:
+            """Consume combo cards and execute combo-specific behavior."""
             self._require_exploding_kittens_game(db, game_id)
             self._require_team_self_or_manage_access(db, game_id, team_id, principal)
             team_hand_before = self._repository.fetchHandCardsByTeamId(db, team_id)
@@ -1492,6 +1529,7 @@ class ExplodingKittensModule(ApiModule):
             principal: CurrentPrincipal,
             db: DbSession,
         ) -> AddRandomTeamHandCardResponse:
+            """Admin helper to add a random card of a type to team hand."""
             self._require_exploding_kittens_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
 
@@ -1553,6 +1591,7 @@ class ExplodingKittensModule(ApiModule):
             principal: CurrentPrincipal,
             db: DbSession,
         ) -> RemoveRandomTeamHandCardResponse:
+            """Admin helper to remove a random card of a type from team hand."""
             self._require_exploding_kittens_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
 
@@ -1610,6 +1649,7 @@ class ExplodingKittensModule(ApiModule):
             principal: CurrentPrincipal,
             db: DbSession,
         ) -> ExplodingKittensLivesResponse:
+            """Adjust team lives and publish resulting lives event."""
             self._require_exploding_kittens_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
 

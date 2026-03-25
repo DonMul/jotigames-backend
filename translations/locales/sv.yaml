@@ -1,0 +1,339 @@
+validation:
+  invalidRequest: Begärans innehåll är ogiltigt.
+game:
+  auth:
+    userRequired: En användarprincip krävs för slutpunkter för spelhantering.
+    viewAccessRequired: Du har inte läsbehörighet till detta spel.
+    manageAccessRequired: Du har inte skrivåtkomst till det här spelet.
+  teamMessage:
+    sent: Meddelandet har skickats till teamet.
+    sendFailed: Meddelandet kunde inte skickas till teamet.
+  chat:
+    emptyMessage: Chattmeddelandet får inte vara tomt.
+    sendFailed: Chattmeddelandet kunde inte skickas.
+  notFound: Spelet hittades inte.
+  member:
+    userNotFound: Användaren hittades inte.
+    emailNotFound: Ingen användare hittades med den e-postadressen.
+  schema:
+    columnMissing: Speltabellsschemat saknar en obligatorisk kolumn.
+  types:
+    columnMissing: Speltypstillgänglighetsschemat saknar en obligatorisk kolumn.
+  validation:
+    requiredFieldsMissing: Obligatoriska spelfält saknas.
+    startBeforeEndRequired: Starttiden för ett spel måste vara före sluttiden.
+    unknownSetting: En eller flera spelinställningar är okända.
+  create:
+    failed: Spelet kunde inte skapas.
+  update:
+    failed: Spelet kunde inte uppdateras.
+  delete:
+    failed: Spelet kunde inte raderas.
+    success: Spelet har raderats.
+  reset:
+    failed: Spelet kunde inte återställas.
+    success: Spelåterställningen lyckades.
+  admin:
+    add:
+      failed: Speladmin kunde inte läggas till.
+      success: Speladmin har lagts till.
+    remove:
+      failed: Speladministratören kunde inte tas bort.
+      success: Speladministratören har tagits bort.
+      ownerForbidden: Spelets ägare kan inte tas bort som administratör.
+      selfForbidden: Du kan inte ta bort dig själv från speladministratörer.
+  gameMaster:
+    add:
+      failed: Spelmaster kunde inte läggas till.
+      success: Spelmästaren har lagts till.
+    remove:
+      failed: Game master kunde inte tas bort.
+      success: Spelmästaren har tagits bort.
+team:
+  notFound: Laget hittades inte i det här spelet.
+  auth:
+    selfRequired: Team-tokens har bara tillgång till sitt eget team.
+  validation:
+    codeAlreadyUsed: Teamcode används redan för detta spel.
+  create:
+    failed: Teamet kunde inte skapas.
+    codeGenerationFailed: En unik lagkod kunde inte genereras.
+  update:
+    failed: Teamet kunde inte uppdateras.
+  delete:
+    failed: Teamet kunde inte raderas.
+    success: Teamet har tagits bort.
+explodingKittens:
+  gameTypeRequired: Denna slutpunkt är endast tillgänglig för Exploding Kittens-spel.
+  lives:
+    invalidDelta: Leven-delta måste vara icke-noll.
+    updated: Lagets liv har uppdaterats framgångsrikt.
+    updateFailed: Lagets liv kunde inte uppdateras.
+  play:
+    failed: Kort kunde inte spelas.
+    cardNotInHand: Kortet är inte i lagets hand.
+    cardNotPlayable: Detta kort kan inte spelas direkt.
+    needsTarget: Detta kort kräver ett mållag.
+    targetSelf: Ett lag kan inte rikta sig mot sig själv.
+    targetInvalid: Mållaget är ogiltigt för detta spel.
+    attackAlreadyPending: Det finns redan ett anfall för det här laget.
+    peekAlreadyPending: Se framtiden står redan i kön för det här laget.
+    skipAlreadyPending: Skip står redan i kön för det här laget.
+    attackReady: Attackkort spelas framgångsrikt.
+    favorTargeted: Favorkort spelat och målåtgärd skapad.
+    peekReady: Se det framtida kortet spelat framgångsrikt.
+    shuffleDone: Blanda kortet har spelats.
+    skipReady: Hoppa över kortet spelat framgångsrikt.
+  hand:
+    addFailed: Slumpmässigt handkort kunde inte läggas till.
+    removeFailed: Det slumpmässiga handkortet kunde inte tas bort.
+  cards:
+    invalidType: Korttypen är ogiltigt för exploderande kattungar.
+    notFound: Kartan hittades inte.
+    addFailed: Det gick inte att lägga till kort.
+    addSuccess: Kort har lagts till.
+    createFailed: Kartan kunde inte skapas.
+    updateFailed: Kartan kunde inte uppdateras.
+    deleteFailed: Kortet kunde inte tas bort.
+    deleteSuccess: Kortet har tagits bort.
+    removeBlocked: Kortet kan inte tas bort när det är i en hand eller låst.
+    pdfDependenciesMissing: QR-PDF-exportberoenden är inte tillgängliga på servern.
+    pdfLogoInvalid: Centerlogotypen måste vara en bildfil.
+    pdfLogoTooLarge: Mittlogotypen är för stor. Maximal storlek är 2 MB.
+  scan:
+    failed: Kortskanningen misslyckades.
+    cardNotFound: Kartan hittades inte för detta spel.
+    cardInHand: Kortet är redan i en laghand.
+    cardLocked: Kartan är för närvarande låst.
+    cardAdded: Kort lagt till handen.
+    cardNoEffect: Kortet har ingen effekt.
+    felixGain: Felix-kortet gav ytterligare ett liv.
+    felixAlreadyUsed: Felix-kortet har redan använts av detta team.
+    explodingDefused: Exploderande kattunge har desarmerats.
+    explodingHit: Exploderande kattunge träffade laget.
+    attackTargeted: Attacken är riktad och väntar på att behandlas.
+  state:
+    fetched: Lagstatus hämtad.
+    resolveFailed: Status kunde inte hanteras.
+    none: Ingen väntande status att hantera.
+    skipPending: Skip står i kö för det här laget.
+    skipResolved: Hoppa över status hanterad.
+    peekPending: Se att framtiden står i kö för detta lag.
+    peekNeedsConfirm: Se framtiden kräver bekräftelse för att slutföra.
+    peekResolved: Se den framtida statusen klar.
+    attackNeedsTarget: Attack kräver ett målgrupp och skannad karta.
+    attackInvalidTarget: Mållaget för attacken är ogiltigt.
+  action:
+    invalid: Åtgärden är ogiltig.
+    notAllowed: Åtgärder kan inte hanteras av detta team.
+    nopeMissing: Inget kort krävs för att avbryta denna kampanj.
+    nopeUsed: Kampanjen inställd med Nope.
+    favorNoCards: Target Team har inga kort för Favor.
+    favorTaken: Favör löst och ett kort tas.
+    resolveFailed: Åtgärden kunde inte slutföras.
+  combo:
+    failed: Combo kunde inte användas.
+    invalid: Ogiltigt kombinationsval.
+    cardNotInHand: Ett eller flera utvalda kort finns inte i handen.
+    needsTarget: Combo kräver ett målgrupp.
+    targetSelf: Teamet kan inte rikta in sig på den här kombinationen.
+    targetInvalid: Målgruppen för kombinationen är ogiltigt.
+    twoReady: 2-of-a-kind kombo i kö.
+    twoNoCards: Mållaget har inga kort för 2-of-a-kind combo.
+    twoTaken: 2-of-a-kind combo löst och ett kort tagit.
+    threeNeedsType: 3-of-a-kind combo kräver önskad korttyp.
+    threeInvalidType: Önskad korttyp är ogiltig för 3-of-a-kind-kombination.
+    threeReady: 3-of-a-kind kombo i kö.
+    threeTaken: 3-of-a-kind kombo löst och önskat kort tagit.
+    threeNoMatch: Önskad korttyp hittades inte i mållagets hand.
+    fiveNeedsType: 5-olika combo kräver önskad korttyp.
+    fiveTaken: 5 olika kombinationer lösta och kortet hämtat från kortleken.
+    fiveNone: 5-olika kombo löst men önskad korttyp finns inte i kortleken.
+geohunter:
+  gameTypeRequired: Denna slutpunkt är endast tillgänglig för Geohunter-spel.
+  validation:
+    missingPoiId: ID för intressepunkt krävs.
+  answer:
+    recorded: Svaret har skickats.
+    alreadySubmitted: Den här punkten har redan besvarats av ditt team.
+blindhike:
+  gameTypeRequired: Denna slutpunkt är endast tillgänglig för Blindhike-spel.
+  validation:
+    missingMarkerId: Markör-ID krävs.
+  marker:
+    added: Markören har lagts till.
+    alreadyAdded: Markör har redan lagts till av ditt team.
+    finished: Ditt lag har redan avslutat och kan inte placera ytterligare markörer.
+resource_run:
+  gameTypeRequired: Denna slutpunkt är endast tillgänglig för Resource Run-spel.
+  validation:
+    missingNodeId: Resursnod-ID krävs.
+  claim:
+    recorded: Resursen har gjorts anspråk på.
+    alreadyCollected: Resursen har redan samlats in av ditt team.
+territory_control:
+  gameTypeRequired: Denna slutpunkt är endast tillgänglig för Territory Control-spel.
+  validation:
+    missingZoneId: Zon-ID krävs.
+  claim:
+    recorded: Zon har gjorts anspråk på.
+    alreadyOwned: Zonen har redan gjorts anspråk på av ditt team.
+market_crash:
+  gameTypeRequired: Denna slutpunkt är endast tillgänglig för Market Crash-spel.
+  validation:
+    missingTradeId: Handels-ID krävs.
+  resource:
+    invalidName: Resursnamnet är ogiltigt.
+    exists: Resursen finns redan.
+    createFailed: Det gick inte att skapa resurser.
+    notFound: Resurs hittades inte.
+    updateFailed: Resursuppdatering misslyckades.
+    deleteFailed: Det gick inte att ta bort resurser.
+  point:
+    createFailed: Det gick inte att skapa poäng.
+    notFound: Punkten hittades inte.
+    updateFailed: Punktuppdatering misslyckades.
+    deleteFailed: Det gick inte att ta bort punkt.
+    invalidTitle: Punkttiteln är ogiltig.
+    invalidColor: Punktmarkörens färg är ogiltig.
+    invalidResource: Punkten innehåller en ogiltig resursreferens.
+    resourcesRequired: Minst en resursinställning krävs för en punkt.
+    invalid: Punktkoordinaterna är ogiltiga.
+  location:
+    required: Plats krävs innan du kan handla.
+    invalid: Platskoordinaterna är ogiltiga.
+    updated: Platsen uppdaterad.
+  trade:
+    executed: Handel genomförd framgångsrikt.
+    invalidSide: Handelsriktningen är ogiltig.
+    invalidResource: Resurs är inte omsättbar vid denna tidpunkt.
+    outOfRange: Du är utanför räckhåll för denna handelsplats.
+    invalidPrice: Handelspriset är ogiltigt.
+    insufficientCash: Otillräckliga kontanter för denna handel.
+    insufficientInventory: Otillräckligt lager för denna handel.
+crazy88:
+  gameTypeRequired: Denna slutpunkt är endast tillgänglig för Crazy 88-spel.
+  validation:
+    missingTaskId: Uppgifts-ID krävs.
+    missingSubmissionId: Inlämnings-ID krävs.
+  task:
+    submitted: Jobbet har skickats in.
+  review:
+    judged: Inlämningen bedömdes som framgångsrik.
+    alreadyJudged: Inlämningen har redan bedömts.
+courier_rush:
+  gameTypeRequired: Denna slutpunkt är endast tillgänglig för Courier Rush-spel.
+  validation:
+    missingPickupId: Upphämtnings-ID krävs.
+    missingDropoffId: Avlämnings-ID krävs.
+  pickup:
+    confirmed: Upphämtning har bekräftats.
+    alreadyConfirmed: Upphämtning har redan bekräftats.
+  dropoff:
+    confirmed: Avlämningen har bekräftats.
+echo_hunt:
+  gameTypeRequired: Denna slutpunkt är endast tillgänglig för Echo Hunt-spel.
+  validation:
+    missingBeaconId: Beacon ID krävs.
+  beacon:
+    claimed: Beacon har gjort anspråk.
+    alreadyClaimed: Beacon har redan gjort anspråk på av ditt team.
+checkpoint_heist:
+  gameTypeRequired: Denna slutpunkt är endast tillgänglig för Checkpoint Heist-spel.
+  validation:
+    missingCheckpointId: Kontrollpunkts-ID krävs.
+  capture:
+    recorded: Kontrollpunkten har lyckats fångas.
+    alreadyCaptured: Checkpoint har redan fångats av ditt team.
+pandemic_response:
+  gameTypeRequired: Denna slutpunkt är endast tillgänglig för Pandemic Response-spel.
+  validation:
+    missingPickupId: Upphämtnings-ID krävs.
+    missingHotspotId: Hotspot-ID krävs.
+  pickup:
+    collected: Upphämtningen har hämtats.
+    alreadyCollected: Upphämtning har redan hämtats av ditt team.
+  hotspot:
+    resolved: Hotspot har lösts.
+    alreadyResolved: Hotspot har redan lösts av ditt team.
+birds_of_prey:
+  gameTypeRequired: Denna slutpunkt är endast tillgänglig för Birds of Prey-spel.
+  config:
+    updateFailed: Spara av rovfåglar-inställningar misslyckades.
+  location:
+    required: Plats krävs innan du kan utföra den här åtgärden.
+    invalid: Platskoordinaterna är ogiltiga.
+    updated: Platsen uppdaterad.
+  validation:
+    missingEggId: Ägg-ID krävs.
+  egg:
+    dropped: Ägget har placerats framgångsrikt.
+    dropFailed: Ägg kunde inte räddas.
+    alreadyDropped: Ägget har redan placerats.
+    persistFailed: Egg drop accepterades, men kunde inte laddas från beständigt spelläge.
+    destroyed: Ägg förstördes framgångsrikt.
+    alreadyDestroyed: Ägget har redan förstörts.
+    notFound: Ägg inte hittat.
+    cannotDestroyOwn: Du kan inte förstöra ditt eget ägg.
+    notVisible: Ägg är inte synligt inom ditt räckvidd.
+    protected: Ägg är skyddat eftersom ägaren är i närheten.
+code_conspiracy:
+  gameTypeRequired: Denna slutpunkt är endast tillgänglig för Code Conspiracy-spel.
+  validation:
+    missingTargetTeamId: Mållags-ID krävs.
+    missingCode: Kod krävs.
+  code:
+    submitted: Mottaget kodinlämning.
+auth:
+  locale:
+    unsupported: Språk som inte stöds. Tillåtna värden är en och nl.
+  ws:
+    superAdminKeyRequired: WS super admin nyckel krävs.
+    superAdminKeyInvalid: WS superadminnyckel är ogiltig.
+    superAdminKeyNotConfigured: WS super admin-nyckel är inte konfigurerad på backend.
+  user:
+    invalidEmailOrPassword: Ogiltig e-postadress eller lösenord.
+    disallowedRole: Detta konto har inte åtkomst till denna backend.
+    superAdminRequired: Superadmin-åtkomst krävs för den här åtgärden.
+  team:
+    invalidCodes: Ogiltig spelkod eller lagkod.
+  token:
+    missingBearerToken: Bärartoken krävs.
+    invalidBearerHeaderFormat: Bärartokens huvudformat är ogiltigt.
+    invalidOrExpired: Token är ogiltig eller har löpt ut.
+    gameAccessRequired: Token kan inte komma åt det begärda spelet.
+  register:
+    emailAlreadyUsed: Det finns redan ett konto med den här e-postadressen.
+    usernameAlreadyUsed: Detta användarnamn används redan.
+    verifyEmailSent: Konto skapat. Kontrollera din e-post för att bekräfta din adress.
+    emailSendFailed: Det gick inte att skicka verifieringse-post.
+    mailerNotConfigured: E-posttjänsten är inte konfigurerad.
+    mailerUnsupportedScheme: E-posttjänstens DSN-schema stöds inte.
+    mailerFromMissing: E-postavsändaradressen är inte konfigurerad.
+  verify:
+    invalidToken: Denna autentiseringstoken är ogiltig eller har löpt ut.
+    success: E-postadressen har bekräftats.
+    pendingEmailConflict: Denna väntande e-postadress kan inte användas längre eftersom
+      den redan används.
+    tokenColumnMissing: Lagring av autentiseringstoken är inte korrekt konfigurerad.
+  reset:
+    requestAccepted: Om ett konto finns och har bekräftats har ett återställningsmeddelande
+      skickats.
+    tokenColumnsMissing: Lösenordsåterställningstokenlagring är inte korrekt konfigurerad.
+    emailSendFailed: E-postmeddelande om lösenordsåterställning kunde inte skickas.
+mailer:
+  verify:
+    subject: Bekräfta din e-postadress
+    title: Bekräfta din e-postadress
+    greeting: Hej %username%!
+    intro: Bekräfta din e-postadress genom att klicka på knappen nedan.
+    cta: Bekräfta e-postadress
+    outro: Om du inte har skapat ett konto kan du ignorera detta e-postmeddelande.
+  reset:
+    subject: Återställ lösenord
+    title: Återställ lösenord
+    greeting: Hej %username%!
+    intro: En lösenordsåterställning har begärts för ditt konto. Använd knappen nedan
+      för att välja ett nytt lösenord.
+    cta: Återställ lösenord
+    outro: Om du inte har begärt detta kan du ignorera detta e-postmeddelande.

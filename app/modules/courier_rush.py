@@ -12,23 +12,33 @@ from app.services.ws_client import WsEventPublisher
 
 
 class TeamBootstrapResponse(BaseModel):
+    """Response payload for team bootstrap state."""
+
     state: Dict[str, Any]
 
 
 class AdminOverviewResponse(BaseModel):
+    """Response payload for admin overview data."""
+
     overview: Dict[str, Any]
 
 
 class PickupRequest(BaseModel):
+    """Request payload for confirming a pickup."""
+
     pickup_id: str = Field(min_length=1, max_length=64)
 
 
 class DropoffRequest(BaseModel):
+    """Request payload for confirming a dropoff."""
+
     dropoff_id: str = Field(min_length=1, max_length=64)
     points: int = Field(default=1, ge=0, le=1000)
 
 
 class ActionResponse(BaseModel):
+    """Standardized action result response."""
+
     success: bool
     message_key: str
     action_id: Optional[str] = None
@@ -37,10 +47,14 @@ class ActionResponse(BaseModel):
 
 
 class CourierRushConfigResponse(BaseModel):
+    """Response payload wrapping Courier Rush configuration."""
+
     config: Dict[str, Any]
 
 
 class CourierRushConfigUpdateRequest(BaseModel):
+    """Request body for updating Courier Rush game configuration."""
+
     pickup_mode: str = Field(default="predefined", min_length=4, max_length=16)
     dropoff_mode: str = Field(default="random", min_length=4, max_length=16)
     max_active_pickups: int = Field(default=3, ge=1, le=25)
@@ -48,6 +62,8 @@ class CourierRushConfigUpdateRequest(BaseModel):
 
 
 class PickupPayload(BaseModel):
+    """Payload for creating or updating a pickup point."""
+
     title: str = Field(min_length=1, max_length=120)
     latitude: float
     longitude: float
@@ -58,14 +74,20 @@ class PickupPayload(BaseModel):
 
 
 class PickupResponse(BaseModel):
+    """Response wrapper containing one pickup record."""
+
     pickup: Dict[str, Any]
 
 
 class PickupListResponse(BaseModel):
+    """Response wrapper containing pickup records."""
+
     pickups: list[Dict[str, Any]]
 
 
 class DropoffPayload(BaseModel):
+    """Payload for creating or updating a dropoff point."""
+
     title: str = Field(min_length=1, max_length=120)
     latitude: float
     longitude: float
@@ -75,26 +97,35 @@ class DropoffPayload(BaseModel):
 
 
 class DropoffResponse(BaseModel):
+    """Response wrapper containing one dropoff record."""
+
     dropoff: Dict[str, Any]
 
 
 class DropoffListResponse(BaseModel):
+    """Response wrapper containing dropoff records."""
+
     dropoffs: list[Dict[str, Any]]
 
 
 class CourierRushModule(ApiModule, SharedModuleBase):
+    """API module for Courier Rush admin configuration and team actions."""
+
     name = "courier-rush"
 
     def __init__(self, ws_publisher: WsEventPublisher) -> None:
+        """Initialize service and repository dependencies for the module."""
         SharedModuleBase.__init__(self, game_type="courier_rush", ws_publisher=ws_publisher)
         self._service = CourierRushService()
         self._repository = CourierRushRepository()
 
     def build_router(self) -> APIRouter:
+        """Build the Courier Rush API router."""
         router = APIRouter(prefix="/courier-rush", tags=["courier-rush"])
 
         @router.get("/{game_id}/teams/{team_id}/bootstrap", response_model=TeamBootstrapResponse, summary=f"{ACCESS_BOTH_LABEL} Team bootstrap")
         def team_bootstrap(game_id: str, team_id: str, principal: CurrentPrincipal, db: DbSession) -> TeamBootstrapResponse:
+            """Return bootstrap state for a team including points and nodes."""
             self._require_game(db, game_id)
             self._require_team_self_or_manage_access(db, game_id, team_id, principal)
             state = self._service.get_team_bootstrap(db, game_id, team_id)
@@ -104,6 +135,7 @@ class CourierRushModule(ApiModule, SharedModuleBase):
 
         @router.get("/{game_id}/overview", response_model=AdminOverviewResponse, summary=f"{ACCESS_ADMIN_LABEL} Admin overview")
         def overview(game_id: str, principal: CurrentPrincipal, db: DbSession) -> AdminOverviewResponse:
+            """Return admin overview information for Courier Rush."""
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
             return AdminOverviewResponse(overview=self._service.get_admin_overview(db, game_id))
@@ -114,6 +146,7 @@ class CourierRushModule(ApiModule, SharedModuleBase):
             summary=f"{ACCESS_ADMIN_LABEL} Get courier rush config",
         )
         def get_config(game_id: str, principal: CurrentPrincipal, db: DbSession) -> CourierRushConfigResponse:
+            """Return current Courier Rush configuration for admins."""
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
             return CourierRushConfigResponse(config=self._repository.get_configuration(db, game_id))
@@ -129,6 +162,7 @@ class CourierRushModule(ApiModule, SharedModuleBase):
             principal: CurrentPrincipal,
             db: DbSession,
         ) -> CourierRushConfigResponse:
+            """Validate and update Courier Rush configuration values."""
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
 
@@ -167,6 +201,7 @@ class CourierRushModule(ApiModule, SharedModuleBase):
             summary=f"{ACCESS_ADMIN_LABEL} List courier rush pickups",
         )
         def list_pickups(game_id: str, principal: CurrentPrincipal, db: DbSession) -> PickupListResponse:
+            """List configured pickup points for a game."""
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
             pickups = [self._serialize_pickup(pickup) for pickup in self._repository.fetch_pickups_by_game_id(db, game_id)]
@@ -184,6 +219,7 @@ class CourierRushModule(ApiModule, SharedModuleBase):
             principal: CurrentPrincipal,
             db: DbSession,
         ) -> PickupResponse:
+            """Create a pickup point for the specified game."""
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
 
@@ -214,6 +250,7 @@ class CourierRushModule(ApiModule, SharedModuleBase):
             principal: CurrentPrincipal,
             db: DbSession,
         ) -> PickupResponse:
+            """Update an existing pickup point."""
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
 
@@ -241,6 +278,7 @@ class CourierRushModule(ApiModule, SharedModuleBase):
             summary=f"{ACCESS_ADMIN_LABEL} Delete courier rush pickup",
         )
         def delete_pickup(game_id: str, pickup_id: str, principal: CurrentPrincipal, db: DbSession) -> None:
+            """Delete a pickup point from the game."""
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
 
@@ -261,6 +299,7 @@ class CourierRushModule(ApiModule, SharedModuleBase):
             summary=f"{ACCESS_ADMIN_LABEL} List courier rush dropoffs",
         )
         def list_dropoffs(game_id: str, principal: CurrentPrincipal, db: DbSession) -> DropoffListResponse:
+            """List configured dropoff points for a game."""
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
             dropoffs = [self._serialize_dropoff(dropoff) for dropoff in self._repository.fetch_dropoffs_by_game_id(db, game_id)]
@@ -278,6 +317,7 @@ class CourierRushModule(ApiModule, SharedModuleBase):
             principal: CurrentPrincipal,
             db: DbSession,
         ) -> DropoffResponse:
+            """Create a dropoff point for the specified game."""
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
 
@@ -308,6 +348,7 @@ class CourierRushModule(ApiModule, SharedModuleBase):
             principal: CurrentPrincipal,
             db: DbSession,
         ) -> DropoffResponse:
+            """Update an existing dropoff point."""
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
 
@@ -335,6 +376,7 @@ class CourierRushModule(ApiModule, SharedModuleBase):
             summary=f"{ACCESS_ADMIN_LABEL} Delete courier rush dropoff",
         )
         def delete_dropoff(game_id: str, dropoff_id: str, principal: CurrentPrincipal, db: DbSession) -> None:
+            """Delete a dropoff point from the game."""
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
 
@@ -351,6 +393,7 @@ class CourierRushModule(ApiModule, SharedModuleBase):
 
         @router.post("/{game_id}/teams/{team_id}/pickup/confirm", response_model=ActionResponse, summary=f"{ACCESS_BOTH_LABEL} Confirm pickup")
         def confirm_pickup(game_id: str, team_id: str, body: PickupRequest, principal: CurrentPrincipal, db: DbSession, locale: CurrentLocale) -> ActionResponse:
+            """Record team confirmation of a pickup objective."""
             self._require_game(db, game_id)
             self._require_team_self_or_manage_access(db, game_id, team_id, principal)
             if not body.pickup_id.strip():
@@ -368,6 +411,7 @@ class CourierRushModule(ApiModule, SharedModuleBase):
 
         @router.post("/{game_id}/teams/{team_id}/dropoff/confirm", response_model=ActionResponse, summary=f"{ACCESS_BOTH_LABEL} Confirm dropoff")
         def confirm_dropoff(game_id: str, team_id: str, body: DropoffRequest, principal: CurrentPrincipal, db: DbSession, locale: CurrentLocale) -> ActionResponse:
+            """Record team confirmation of a dropoff objective."""
             self._require_game(db, game_id)
             self._require_team_self_or_manage_access(db, game_id, team_id, principal)
             if not body.dropoff_id.strip():
@@ -393,6 +437,7 @@ class CourierRushModule(ApiModule, SharedModuleBase):
 
     @staticmethod
     def _serialize_pickup(record: Dict[str, Any]) -> Dict[str, Any]:
+        """Normalize pickup records for frontend-facing API payloads."""
         return {
             "id": str(record.get("id") or ""),
             "title": str(record.get("title") or ""),
@@ -406,6 +451,7 @@ class CourierRushModule(ApiModule, SharedModuleBase):
 
     @staticmethod
     def _serialize_dropoff(record: Dict[str, Any]) -> Dict[str, Any]:
+        """Normalize dropoff records for frontend-facing API payloads."""
         return {
             "id": str(record.get("id") or ""),
             "title": str(record.get("title") or ""),
@@ -418,6 +464,7 @@ class CourierRushModule(ApiModule, SharedModuleBase):
 
     @staticmethod
     def _validate_pickup_payload(payload: Dict[str, Any]) -> Dict[str, Any]:
+        """Validate and normalize pickup payload fields."""
         title = str(payload.get("title") or "").strip()
         marker_color = str(payload.get("marker_color") or "#2563eb").strip().lower()
 
@@ -438,6 +485,7 @@ class CourierRushModule(ApiModule, SharedModuleBase):
 
     @staticmethod
     def _validate_dropoff_payload(payload: Dict[str, Any]) -> Dict[str, Any]:
+        """Validate and normalize dropoff payload fields."""
         title = str(payload.get("title") or "").strip()
         marker_color = str(payload.get("marker_color") or "#16a34a").strip().lower()
 
@@ -457,6 +505,7 @@ class CourierRushModule(ApiModule, SharedModuleBase):
 
     @staticmethod
     def _normalize_spawn_area_geojson(raw: Optional[str]) -> Optional[str]:
+        """Validate polygon GeoJSON and return compact normalized string."""
         import json
 
         trimmed = str(raw or "").strip()

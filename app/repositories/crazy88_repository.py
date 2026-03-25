@@ -7,27 +7,34 @@ from app.repositories.game_logic_state_repository import GameLogicStateRepositor
 
 
 class Crazy88Repository(GameLogicStateRepository):
+    """Data-access layer for Crazy88 tasks, submissions, and review workflow."""
+
     @staticmethod
     def _first_present(row: Dict[str, Any], keys: list[str], default: Any = None) -> Any:
+        """Return the first matching key value from the input row."""
         for key in keys:
             if key in row:
                 return row.get(key)
         return default
 
     def get_task_table(self, db: DbSession) -> Table:
+        """Return reflected table for Crazy88 tasks."""
         return self._get_table(db, "crazy88_task")
 
     def get_submission_table(self, db: DbSession) -> Table:
+        """Return reflected table for Crazy88 submissions."""
         return self._get_table(db, "crazy88_submission")
 
     @staticmethod
     def _pick_column(table: Table, candidates: list[str]) -> Optional[str]:
+        """Resolve a compatible column name from legacy/new candidates."""
         for candidate in candidates:
             if candidate in table.c:
                 return candidate
         return None
 
     def get_configuration(self, db: DbSession, game_id: str) -> Dict[str, Any]:
+        """Load Crazy88 gameplay configuration values for one game."""
         game = self.get_game_by_id(db, game_id)
         if game is None:
             return {}
@@ -37,6 +44,7 @@ class Crazy88Repository(GameLogicStateRepository):
         }
 
     def update_configuration_without_commit(self, db: DbSession, game_id: str, values: Dict[str, Any]) -> None:
+        """Persist Crazy88 configuration updates without committing."""
         table = self.get_game_table(db)
         updates: Dict[str, Any] = {}
 
@@ -60,11 +68,13 @@ class Crazy88Repository(GameLogicStateRepository):
             )
 
     def fetch_tasks_by_game_id(self, db: DbSession, game_id: str) -> list[Dict[str, Any]]:
+        """Fetch all task records configured for a game."""
         table = self.get_task_table(db)
         rows = db.execute(select(table).where(table.c["game_id"] == game_id)).mappings().all()
         return [dict(row) for row in rows]
 
     def _submission_context_select(self, db: DbSession):
+        """Build a schema-aware joined submissions query and related metadata."""
         submission_table = self.get_submission_table(db)
         task_table = self.get_task_table(db)
         team_table = self.get_team_table(db)
@@ -153,6 +163,7 @@ class Crazy88Repository(GameLogicStateRepository):
         }
 
     def fetch_submission_threads_by_game_id(self, db: DbSession, game_id: str) -> list[Dict[str, Any]]:
+        """Fetch submission rows joined with task/team context ordered by thread."""
         context = self._submission_context_select(db, game_id)
         submission_table = context["submission_table"]
         submitted_at_column = context["submitted_at_column"]
@@ -167,10 +178,12 @@ class Crazy88Repository(GameLogicStateRepository):
         return [dict(row) for row in rows]
 
     def count_pending_submissions_by_game_id(self, db: DbSession, game_id: str) -> int:
+        """Count pending submissions currently awaiting review."""
         records = self.fetch_submission_threads_by_game_id(db, game_id)
         return sum(1 for record in records if str(record.get("status") or "").lower() == "pending")
 
     def fetch_submission_by_id_for_game(self, db: DbSession, game_id: str, submission_id: str) -> Dict[str, Any] | None:
+        """Fetch one submission row with joined context for a game."""
         context = self._submission_context_select(db, game_id)
         row = db.execute(
             context["query"].where(context["submission_table"].c["id"] == submission_id).limit(1)
@@ -178,6 +191,7 @@ class Crazy88Repository(GameLogicStateRepository):
         return dict(row) if row else None
 
     def fetch_thread_for_task_and_team(self, db: DbSession, game_id: str, task_id: str, team_id: str) -> list[Dict[str, Any]]:
+        """Fetch submission history for a single task/team combination."""
         context = self._submission_context_select(db, game_id)
         submission_table = context["submission_table"]
         submitted_at_column = context["submitted_at_column"]
@@ -191,6 +205,7 @@ class Crazy88Repository(GameLogicStateRepository):
         return [dict(row) for row in rows]
 
     def find_pending_submission_for_task_and_team(self, db: DbSession, task_id: str, team_id: str) -> Dict[str, Any] | None:
+        """Return the latest pending submission for a task/team pair."""
         table = self.get_submission_table(db)
         task_column = self._pick_column(table, ["task_id", "taskId"])
         team_column = self._pick_column(table, ["team_id", "teamId"])
@@ -211,6 +226,7 @@ class Crazy88Repository(GameLogicStateRepository):
         return dict(row) if row else None
 
     def create_submission_without_commit(self, db: DbSession, values: Dict[str, Any]) -> str:
+        """Insert a submission row and return its id without committing."""
         table = self.get_submission_table(db)
         if "id" in values and values["id"]:
             db.execute(insert(table).values(**values))
@@ -220,10 +236,16 @@ class Crazy88Repository(GameLogicStateRepository):
         return str(result.scalar_one())
 
     def update_submission_without_commit(self, db: DbSession, submission_id: str, values: Dict[str, Any]) -> None:
+        """Update a submission row by id without committing."""
         table = self.get_submission_table(db)
         db.execute(update(table).where(table.c["id"] == submission_id).values(**values))
 
     def acquire_pending_submission_for_judge(self, db: DbSession, game_id: str, judge_id: str) -> Dict[str, Any] | None:
+        """Acquire and assign one pending submission to a judge user.
+
+        The method first reuses existing assignments, then performs optimistic
+        assignment attempts to avoid duplicate reviewer claims.
+        """
         context = self._submission_context_select(db, game_id)
         status_column = context["status_column"]
         reviewed_by_column = context["reviewed_by_column"]
@@ -283,10 +305,12 @@ class Crazy88Repository(GameLogicStateRepository):
         return dict(row) if row else None
 
     def fetch_submissions_for_export(self, db: DbSession, game_id: str) -> list[Dict[str, Any]]:
+        """Return only submissions that include an uploaded proof file."""
         records = self.fetch_submission_threads_by_game_id(db, game_id)
         return [record for record in records if record.get("proof_path")]
 
     def get_task_by_game_id_and_task_id(self, db: DbSession, game_id: str, task_id: str) -> Dict[str, Any] | None:
+        """Fetch a single task by game and task identifier."""
         table = self.get_task_table(db)
         row = (
             db.execute(
@@ -301,11 +325,13 @@ class Crazy88Repository(GameLogicStateRepository):
         return dict(row) if row else None
 
     def create_task_without_commit(self, db: DbSession, values: Dict[str, Any]) -> str:
+        """Insert a task row and return the generated task id."""
         table = self.get_task_table(db)
         result = db.execute(insert(table).values(**values).returning(table.c["id"]))
         return str(result.scalar_one())
 
     def update_task_without_commit(self, db: DbSession, game_id: str, task_id: str, values: Dict[str, Any]) -> None:
+        """Update an existing task without committing the transaction."""
         table = self.get_task_table(db)
         db.execute(
             update(table)
@@ -315,6 +341,7 @@ class Crazy88Repository(GameLogicStateRepository):
         )
 
     def delete_task_without_commit(self, db: DbSession, game_id: str, task_id: str) -> None:
+        """Delete a task by id without committing."""
         table = self.get_task_table(db)
         db.execute(
             delete(table)
