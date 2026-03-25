@@ -41,15 +41,19 @@ class EchoHuntService(GameLogicService):
         ]
         return base
 
-    def claim_beacon(self, db: DbSession, *, game_id: str, team_id: str, beacon_id: str, points: int = 1) -> GameActionResult:
-        """Record one-time beacon claim and award configured points."""
+    def claim_beacon(self, db: DbSession, *, game_id: str, team_id: str, beacon_id: str) -> GameActionResult:
+        """Record one-time beacon claim and award server-configured points."""
+        beacon = self._repository.get_beacon_by_game_id_and_beacon_id(db, game_id, beacon_id)
+        if beacon is None:
+            raise ValueError("echo_hunt.beacon.notFound")
+        server_points = max(0, int(beacon.get("points") or 0))
         return self.apply_action(
             db,
             game_id=game_id,
             team_id=team_id,
             action_name="echo_hunt.beacon.claim",
             object_id=beacon_id,
-            points_awarded=max(0, int(points)),
+            points_awarded=server_points,
             allow_repeat=False,
             success_message_key="echo_hunt.beacon.claimed",
             already_message_key="echo_hunt.beacon.alreadyClaimed",

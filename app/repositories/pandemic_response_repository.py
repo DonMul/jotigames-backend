@@ -1,4 +1,4 @@
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 from sqlalchemy import Table, select, update
 
@@ -74,6 +74,23 @@ class PandemicResponseRepository(GameLogicStateRepository):
         table = self.get_hotspot_table(db)
         rows = db.execute(select(table).where(table.c["game_id"] == game_id)).mappings().all()
         return [dict(row) for row in rows]
+
+    def get_hotspot_by_game_id_and_hotspot_id(self, db: DbSession, game_id: str, hotspot_id: str) -> Optional[Dict[str, Any]]:
+        """Fetch one hotspot by scoped game/hotspot identifiers."""
+        table = self.get_hotspot_table(db)
+        row = (
+            db.execute(
+                select(table)
+                .where(table.c["game_id"] == game_id)
+                .where(table.c["id"] == hotspot_id)
+                .limit(1)
+            )
+            .mappings()
+            .first()
+        )
+        if row is None:
+            return None
+        return dict(row)
 
     def fetch_pickups_by_game_id(self, db: DbSession, game_id: str) -> list[Dict[str, Any]]:
         """List pickup points for a game."""

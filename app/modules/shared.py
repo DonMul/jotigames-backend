@@ -36,9 +36,16 @@ class SharedModuleBase:
         return game
 
     def _require_user_manage_access(self, db: DbSession, game_id: str, principal: CurrentPrincipal) -> None:
-        """Require user principal with owner/admin permissions for a game."""
+        """Require user principal with owner/admin permissions for a game.
+
+        Platform admins (ROLE_ADMIN / ROLE_SUPER_ADMIN) bypass per-game
+        ownership checks and can manage any game.
+        """
         if principal.principal_type != "user":
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="game.auth.userRequired")
+
+        if principal.is_admin:
+            return
 
         is_owner = self._game_repository.isGameOwnerByGameIdAndUserId(db, game_id, principal.principal_id)
         is_admin = self._game_repository.hasGameManagerByGameIdAndUserId(db, game_id, principal.principal_id)

@@ -22,7 +22,7 @@ class AdminOverviewResponse(BaseModel):
 
 class GeoHunterAnswerRequest(BaseModel):
     poi_id: str = Field(min_length=1, max_length=64)
-    correct: bool = False
+    answer: str = Field(min_length=1, max_length=512)
 
 
 class ActionResponse(BaseModel):
@@ -527,7 +527,7 @@ class GeoHunterModule(ApiModule, SharedModuleBase):
                 game_id=game_id,
                 team_id=team_id,
                 poi_id=body.poi_id.strip(),
-                correct=body.correct,
+                answer=body.answer,
             )
             
             return ActionResponse(

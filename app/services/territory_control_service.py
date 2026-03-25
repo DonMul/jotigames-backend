@@ -39,15 +39,19 @@ class TerritoryControlService(GameLogicService):
         ]
         return base
 
-    def claim_zone(self, db: DbSession, *, game_id: str, team_id: str, zone_id: str, points: int = 1) -> GameActionResult:
-        """Record one-time zone claim action and award capture points."""
+    def claim_zone(self, db: DbSession, *, game_id: str, team_id: str, zone_id: str) -> GameActionResult:
+        """Record one-time zone claim action and award server-configured capture points."""
+        zone = self._repository.get_zone_by_game_id_and_zone_id(db, game_id, zone_id)
+        if zone is None:
+            raise ValueError("territory_control.zone.notFound")
+        server_points = max(0, int(zone.get("capture_points") or 0))
         return self.apply_action(
             db,
             game_id=game_id,
             team_id=team_id,
             action_name="territory_control.poi.claim",
             object_id=zone_id,
-            points_awarded=max(0, int(points)),
+            points_awarded=server_points,
             allow_repeat=False,
             success_message_key="territory_control.claim.recorded",
             already_message_key="territory_control.claim.alreadyOwned",

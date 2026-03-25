@@ -74,6 +74,7 @@ class LoginResponse(BaseModel):
     expires_at: datetime
     principal_type: str
     principal_id: str
+    username: str
     access_level: str
     roles: list[str]
 
@@ -153,7 +154,7 @@ class AuthModule(ApiModule):
                     detail="auth.user.invalidEmailOrPassword",
                 )
 
-            has_valid_user_role = ("ROLE_USER" in user.roles) or ("ROLE_SUPER_ADMIN" in user.roles)
+            has_valid_user_role = ("ROLE_USER" in user.roles) or ("ROLE_ADMIN" in user.roles) or ("ROLE_SUPER_ADMIN" in user.roles)
             if not has_valid_user_role:
                 raise HTTPException(
                     status_code=status.HTTP_403_FORBIDDEN,
@@ -168,6 +169,7 @@ class AuthModule(ApiModule):
                 expires_at=expires_at,
                 principal_type=user.principal_type,
                 principal_id=user.principal_id,
+                username=user.username,
                 access_level=user.access_level,
                 roles=user.roles,
             )
@@ -190,6 +192,7 @@ class AuthModule(ApiModule):
                 expires_at=expires_at,
                 principal_type=team.principal_type,
                 principal_id=team.principal_id,
+                username=team.username,
                 access_level=team.access_level,
                 roles=team.roles,
             )
@@ -330,7 +333,7 @@ class AuthModule(ApiModule):
                 has_access = self._teamRepository.getTeamByGameIdAndTeamId(db, body.game_id, principal.principal_id) is not None
                 channel_target = f"channel:{body.game_id}:{principal.principal_id}"
             else:
-                has_access = principal.is_super_admin or (
+                has_access = principal.is_admin or (
                     self._gameRepository.isGameOwnerByGameIdAndUserId(db, body.game_id, principal.principal_id)
                     or self._gameRepository.hasGameManagerByGameIdAndUserId(db, body.game_id, principal.principal_id)
                     or self._gameRepository.hasGameMasterByGameIdAndUserId(db, body.game_id, principal.principal_id)

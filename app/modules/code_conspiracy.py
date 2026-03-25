@@ -28,7 +28,6 @@ class SubmitCodeRequest(BaseModel):
 
     target_team_id: str = Field(min_length=1, max_length=64)
     code: str = Field(min_length=1, max_length=64)
-    points_delta: int = Field(default=0, ge=-1000, le=1000)
 
 
 class ActionResponse(BaseModel):
@@ -177,7 +176,6 @@ class CodeConspiracyModule(ApiModule, SharedModuleBase):
                 team_id=team_id,
                 target_team_id=body.target_team_id.strip(),
                 code_value=body.code.strip(),
-                points_delta=body.points_delta,
             )
             
             return ActionResponse(

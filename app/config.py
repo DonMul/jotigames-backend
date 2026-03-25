@@ -56,7 +56,7 @@ class Settings(BaseSettings):
     auth_game_id_column: str = Field(default="id", alias="AUTH_GAME_ID_COLUMN")
     auth_game_code_column: str = Field(default="code", alias="AUTH_GAME_CODE_COLUMN")
 
-    token_ttl_minutes: int = Field(default=43200, alias="TOKEN_TTL_MINUTES")
+    token_ttl_minutes: int = Field(default=1440, alias="TOKEN_TTL_MINUTES")
 
     ws_base_url: Optional[str] = Field(default=None, alias="WS_BASE_URL")
     ws_events_url: Optional[str] = Field(default=None, alias="WS_EVENTS_URL")
@@ -81,6 +81,12 @@ class Settings(BaseSettings):
 
     default_locale: str = Field(default="en", alias="DEFAULT_LOCALE")
     translations_dir: Optional[str] = Field(default="translations/locales", alias="TRANSLATIONS_DIR")
+
+    cors_allowed_origins: str = Field(
+        default="",
+        alias="CORS_ALLOWED_ORIGINS",
+        description="Comma-separated list of allowed CORS origins. Empty = same-origin only.",
+    )
 
     @field_validator("ws_port", mode="before")
     @classmethod

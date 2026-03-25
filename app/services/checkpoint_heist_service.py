@@ -41,15 +41,19 @@ class CheckpointHeistService(GameLogicService):
         ]
         return base
 
-    def capture_checkpoint(self, db: DbSession, *, game_id: str, team_id: str, checkpoint_id: str, points: int = 1) -> GameActionResult:
-        """Record one-time checkpoint capture event and award points."""
+    def capture_checkpoint(self, db: DbSession, *, game_id: str, team_id: str, checkpoint_id: str) -> GameActionResult:
+        """Record one-time checkpoint capture event and award server-configured points."""
+        checkpoint = self._repository.get_checkpoint_by_game_id_and_checkpoint_id(db, game_id, checkpoint_id)
+        if checkpoint is None:
+            raise ValueError("checkpoint_heist.checkpoint.notFound")
+        server_points = max(0, int(checkpoint.get("points") or 0))
         return self.apply_action(
             db,
             game_id=game_id,
             team_id=team_id,
             action_name="checkpoint_heist.capture.confirm",
             object_id=checkpoint_id,
-            points_awarded=max(0, int(points)),
+            points_awarded=server_points,
             allow_repeat=False,
             success_message_key="checkpoint_heist.capture.recorded",
             already_message_key="checkpoint_heist.capture.alreadyCaptured",

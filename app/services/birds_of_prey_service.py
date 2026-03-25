@@ -412,8 +412,8 @@ class BirdsOfPreyService(GameLogicService):
             already_message_key="birds_of_prey.egg.alreadyDropped",
         )
 
-    def destroy_egg(self, db: DbSession, *, game_id: str, team_id: str, egg_id: str, points: int = 1) -> GameActionResult:
-        """Destroy a visible, unprotected enemy egg and award points."""
+    def destroy_egg(self, db: DbSession, *, game_id: str, team_id: str, egg_id: str) -> GameActionResult:
+        """Destroy a visible, unprotected enemy egg and award server-fixed points."""
         config = self._configuration(db, game_id)
         eggs = self.get_active_eggs(db, game_id=game_id)
         egg = eggs.get(str(egg_id or "").strip())
@@ -456,7 +456,7 @@ class BirdsOfPreyService(GameLogicService):
             team_id=team_id,
             action_name=self._EGG_DESTROY_ACTION,
             object_id=egg_id,
-            points_awarded=max(0, int(points)),
+            points_awarded=1,
             allow_repeat=True,
             metadata={
                 "owner_team_id": owner_team_id,

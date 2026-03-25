@@ -206,7 +206,8 @@ def test_geohunter_get_team_bootstrap_includes_pois_and_highscore():
     assert p["question_type"] == "multiple_choice"
     assert p["question_text"] == "What?"
     assert len(p["choices"]) == 1
-    assert p["choices"][0]["is_correct"] is True
+    assert "is_correct" not in p["choices"][0], "is_correct must not be exposed to teams"
+    assert "correct_answer" not in p, "correct_answer must not be exposed to teams"
     assert "retry_enabled" in result
     assert "retry_timeout_seconds" in result
     assert "highscore" in result

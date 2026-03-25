@@ -28,7 +28,6 @@ class CaptureCheckpointRequest(BaseModel):
     """Request body for confirming a checkpoint capture."""
 
     checkpoint_id: str = Field(min_length=1, max_length=64)
-    points: int = Field(default=1, ge=0, le=1000)
 
 
 class ActionResponse(BaseModel):
@@ -314,7 +313,6 @@ class CheckpointHeistModule(ApiModule, SharedModuleBase):
                 game_id=game_id,
                 team_id=team_id,
                 checkpoint_id=body.checkpoint_id.strip(),
-                points=body.points,
             )
             
             return ActionResponse(

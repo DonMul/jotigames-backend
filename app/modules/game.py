@@ -230,8 +230,14 @@ class GameModule(ApiModule, SharedModuleBase):
         )
 
     def _require_can_manage_game(self, db: DbSession, game_id: str, principal: CurrentPrincipal) -> Dict[str, Any]:
-        """Authorize owner/admin management access for a game and return the game."""
+        """Authorize owner/admin management access for a game and return the game.
+
+        Platform admins (ROLE_ADMIN / ROLE_SUPER_ADMIN) bypass per-game
+        ownership checks and can manage any game.
+        """
         game = self._require_existing_game(db, game_id)
+        if principal.is_admin:
+            return game
         is_owner = self._gameRepository.isGameOwnerByGameIdAndUserId(db, game_id, principal.principal_id)
         is_admin = self._gameRepository.hasGameManagerByGameIdAndUserId(db, game_id, principal.principal_id)
         if is_owner or is_admin:
@@ -243,8 +249,14 @@ class GameModule(ApiModule, SharedModuleBase):
         )
 
     def _require_can_view_game(self, db: DbSession, game_id: str, principal: CurrentPrincipal) -> Dict[str, Any]:
-        """Authorize owner/admin/game-master view access and return the game."""
+        """Authorize owner/admin/game-master view access and return the game.
+
+        Platform admins (ROLE_ADMIN / ROLE_SUPER_ADMIN) bypass per-game
+        ownership checks and can view any game.
+        """
         game = self._require_existing_game(db, game_id)
+        if principal.is_admin:
+            return game
         is_owner = self._gameRepository.isGameOwnerByGameIdAndUserId(db, game_id, principal.principal_id)
         is_admin = self._gameRepository.hasGameManagerByGameIdAndUserId(db, game_id, principal.principal_id)
         is_game_master = self._gameRepository.hasGameMasterByGameIdAndUserId(db, game_id, principal.principal_id)
@@ -288,7 +300,10 @@ class GameModule(ApiModule, SharedModuleBase):
         return team
 
     def _require_can_access_game_chat(self, db: DbSession, game_id: str, principal: CurrentPrincipal) -> None:
-        """Authorize chat access for teams in-game and users with manage rights."""
+        """Authorize chat access for teams in-game and users with manage rights.
+
+        Platform admins bypass per-game ownership checks.
+        """
         if principal.principal_type == "team":
             team = self._teamRepository.getTeamByGameIdAndTeamId(db, game_id, principal.principal_id)
             if team is None:
@@ -296,6 +311,8 @@ class GameModule(ApiModule, SharedModuleBase):
             return
 
         self._ensure_user_principal(principal)
+        if principal.is_admin:
+            return
         self._require_can_manage_game(db, game_id, principal)
 
     @staticmethod
@@ -384,9 +401,9 @@ class GameModule(ApiModule, SharedModuleBase):
             summary=f"{ACCESS_ADMIN_LABEL} Super admin game type availability",
         )
         def get_game_type_availability(principal: CurrentPrincipal, db: DbSession) -> GameTypeAvailabilityResponse:
-            """Return full game-type availability matrix for super-admin controls."""
+            """Return full game-type availability matrix for admin controls."""
             self._ensure_user_principal(principal)
-            if not principal.is_super_admin:
+            if not principal.is_admin:
                 raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="auth.user.superAdminRequired")
 
             records = self._gameRepository.fetchGameTypeAvailability(db)
@@ -413,7 +430,7 @@ class GameModule(ApiModule, SharedModuleBase):
         ) -> GameTypeAvailabilityResponse:
             """Replace global game-type availability states from normalized request list."""
             self._ensure_user_principal(principal)
-            if not principal.is_super_admin:
+            if not principal.is_admin:
                 raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="auth.user.superAdminRequired")
 
             normalized: list[str] = []
@@ -449,12 +466,19 @@ class GameModule(ApiModule, SharedModuleBase):
 
         @router.get("", response_model=GamesListResponse, summary=f"{ACCESS_ADMIN_LABEL} List games")
         def list_games(principal: CurrentPrincipal, db: DbSession) -> GamesListResponse:
-            """List unique games accessible to current user across owner/admin/master roles."""
+            """List unique games accessible to current user.
+
+            Platform admins (ROLE_ADMIN / ROLE_SUPER_ADMIN) see ALL games.
+            Regular users see only games they own, manage, or game-master.
+            """
             self._ensure_user_principal(principal)
 
-            rows = self._gameRepository.fetchGameSummariesByOwnerId(db, principal.principal_id)
-            rows.extend(self._gameRepository.fetchGameSummariesByManagerUserId(db, principal.principal_id))
-            rows.extend(self._gameRepository.fetchGameSummariesByGameMasterUserId(db, principal.principal_id))
+            if principal.is_admin:
+                rows = self._gameRepository.fetchAllGameSummaries(db)
+            else:
+                rows = self._gameRepository.fetchGameSummariesByOwnerId(db, principal.principal_id)
+                rows.extend(self._gameRepository.fetchGameSummariesByManagerUserId(db, principal.principal_id))
+                rows.extend(self._gameRepository.fetchGameSummariesByGameMasterUserId(db, principal.principal_id))
 
             unique_rows: Dict[str, Dict[str, Any]] = {}
             for row in rows:

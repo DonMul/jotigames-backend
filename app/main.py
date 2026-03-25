@@ -4,7 +4,10 @@ import inspect
 from fastapi import FastAPI, HTTPException, Request
 from fastapi import routing as fastapi_routing
 from fastapi.exceptions import RequestValidationError
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.responses import Response
 
 from app.config import get_settings
 from app.controller import ModuleController
@@ -35,6 +38,20 @@ from app.services.ws_client import WsEventPublisher
 fastapi_routing.asyncio.iscoroutinefunction = inspect.iscoroutinefunction
 
 
+class SecurityHeadersMiddleware(BaseHTTPMiddleware):
+    """Inject standard security response headers on every HTTP response."""
+
+    async def dispatch(self, request: Request, call_next) -> Response:
+        response = await call_next(request)
+        response.headers["X-Content-Type-Options"] = "nosniff"
+        response.headers["X-Frame-Options"] = "DENY"
+        response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+        response.headers["X-XSS-Protection"] = "1; mode=block"
+        response.headers["Cache-Control"] = "no-store"
+        response.headers["Permissions-Policy"] = "geolocation=(self), camera=(), microphone=()"
+        return response
+
+
 def create_app() -> FastAPI:
     """Create and configure the FastAPI application with all domain modules.
 
@@ -51,6 +68,20 @@ def create_app() -> FastAPI:
     app = FastAPI(
         title=settings.app_name,
         version="0.1.0",
+    )
+
+    # -- Security middleware ------------------------------------------------
+    app.add_middleware(SecurityHeadersMiddleware)
+
+    cors_origins_raw = str(settings.cors_allowed_origins or "").strip()
+    cors_origins = [o.strip() for o in cors_origins_raw.split(",") if o.strip()] if cors_origins_raw else []
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=cors_origins,
+        allow_credentials=True,
+        allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+        allow_headers=["Authorization", "Content-Type", "Accept-Language"],
+        max_age=600,
     )
 
     @app.exception_handler(HTTPException)

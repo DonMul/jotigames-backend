@@ -39,15 +39,19 @@ class ResourceRunService(GameLogicService):
         ]
         return base
 
-    def claim_resource(self, db: DbSession, *, game_id: str, team_id: str, node_id: str, points: int = 1) -> GameActionResult:
-        """Record one-time resource claim action and award configured points."""
+    def claim_resource(self, db: DbSession, *, game_id: str, team_id: str, node_id: str) -> GameActionResult:
+        """Record one-time resource claim action and award server-configured points."""
+        node = self._repository.get_node_by_game_id_and_node_id(db, game_id, node_id)
+        if node is None:
+            raise ValueError("resource_run.node.notFound")
+        server_points = max(0, int(node.get("points") or 0))
         return self.apply_action(
             db,
             game_id=game_id,
             team_id=team_id,
             action_name="resource_run.resource.claim",
             object_id=node_id,
-            points_awarded=max(0, int(points)),
+            points_awarded=server_points,
             allow_repeat=False,
             success_message_key="resource_run.claim.recorded",
             already_message_key="resource_run.claim.alreadyCollected",

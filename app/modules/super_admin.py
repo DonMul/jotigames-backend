@@ -117,8 +117,8 @@ class SuperAdminModule(ApiModule):
 
     @staticmethod
     def _ensure_super_admin(principal: CurrentPrincipal) -> None:
-        """Guard helper that enforces super-admin-only access."""
-        if principal.principal_type != "user" or not principal.is_super_admin:
+        """Guard helper that enforces admin-or-above access."""
+        if principal.principal_type != "user" or not principal.is_admin:
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="auth.user.superAdminRequired")
 
     @staticmethod
@@ -172,10 +172,10 @@ class SuperAdminModule(ApiModule):
     def _ensure_allowed_roles(roles: list[str]) -> list[str]:
         """Validate and normalize assignable user roles for admin mutations.
 
-        Only `ROLE_USER` and `ROLE_SUPER_ADMIN` are accepted. `ROLE_USER` is
-        always enforced as base capability.
+        Only `ROLE_USER`, `ROLE_ADMIN` and `ROLE_SUPER_ADMIN` are accepted.
+        `ROLE_USER` is always enforced as base capability.
         """
-        allowed = {"ROLE_USER", "ROLE_SUPER_ADMIN"}
+        allowed = {"ROLE_USER", "ROLE_ADMIN", "ROLE_SUPER_ADMIN"}
         normalized = [str(role).strip() for role in roles if str(role).strip()]
         for role in normalized:
             if role not in allowed:
@@ -489,6 +489,14 @@ class SuperAdminModule(ApiModule):
             if updated is None:
                 raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="auth.user.fetchFailed")
             return SuperAdminUserResponse(user=self._serialize_user_record(updated, settings))
+
+        @router.get("/users/{user_id}/games", summary="Super admin list games owned by user")
+        def super_admin_user_games(user_id: str, principal: CurrentPrincipal, db: DbSession) -> Dict[str, Any]:
+            """List game summaries for games owned by a specific user."""
+            self._ensure_super_admin(principal)
+            games = self._game_repository.fetchGameSummariesByOwnerId(db, user_id)
+            serialized = [self._serialize_row(g) for g in games]
+            return {"games": serialized}
 
         @router.delete("/users/{user_id}", response_model=SuperAdminMessageResponse, summary="Super admin delete user")
         def super_admin_delete_user(user_id: str, principal: CurrentPrincipal, db: DbSession) -> SuperAdminMessageResponse:

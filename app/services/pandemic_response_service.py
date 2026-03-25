@@ -67,15 +67,19 @@ class PandemicResponseService(GameLogicService):
             already_message_key="pandemic_response.pickup.alreadyCollected",
         )
 
-    def resolve_hotspot(self, db: DbSession, *, game_id: str, team_id: str, hotspot_id: str, points: int = 1) -> GameActionResult:
-        """Record one-time hotspot resolution event and award points."""
+    def resolve_hotspot(self, db: DbSession, *, game_id: str, team_id: str, hotspot_id: str) -> GameActionResult:
+        """Record one-time hotspot resolution event and award server-configured points."""
+        hotspot = self._repository.get_hotspot_by_game_id_and_hotspot_id(db, game_id, hotspot_id)
+        if hotspot is None:
+            raise ValueError("pandemic_response.hotspot.notFound")
+        server_points = max(0, int(hotspot.get("points") or 0))
         return self.apply_action(
             db,
             game_id=game_id,
             team_id=team_id,
             action_name="pandemic_response.hotspot.resolve",
             object_id=hotspot_id,
-            points_awarded=max(0, int(points)),
+            points_awarded=server_points,
             allow_repeat=False,
             success_message_key="pandemic_response.hotspot.resolved",
             already_message_key="pandemic_response.hotspot.alreadyResolved",

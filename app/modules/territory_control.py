@@ -22,7 +22,6 @@ class AdminOverviewResponse(BaseModel):
 
 class ClaimZoneRequest(BaseModel):
     zone_id: str = Field(min_length=1, max_length=64)
-    points: int = Field(default=1, ge=0, le=1000)
 
 
 class ActionResponse(BaseModel):
@@ -258,7 +257,6 @@ class TerritoryControlModule(ApiModule, SharedModuleBase):
                 game_id=game_id,
                 team_id=team_id,
                 zone_id=body.zone_id.strip(),
-                points=body.points,
             )
             
             return ActionResponse(

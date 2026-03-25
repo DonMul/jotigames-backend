@@ -44,14 +44,30 @@ class CodeConspiracyService(GameLogicService):
         ]
         return base
 
-    def submit_code(self, db: DbSession, *, game_id: str, team_id: str, target_team_id: str, code_value: str, points_delta: int = 0) -> GameActionResult:
-        """Record a code submission attempt against a target team.
+    def submit_code(self, db: DbSession, *, game_id: str, team_id: str, target_team_id: str, code_value: str) -> GameActionResult:
+        """Validate a code submission server-side against the target team's secret code.
 
-        The submission is modeled as a repeatable action claim so teams can submit
-        multiple guesses over time. The action object identifier combines target
-        team and normalized code value for traceability in the audit trail.
+        When the ``code_conspiracy_team_code`` table contains a stored code for
+        the target team, correctness and points are determined entirely
+        server-side using the game configuration (``correct_points``,
+        ``penalty_enabled``, ``penalty_value``).  When no stored code is
+        available the submission is recorded with zero points.
         """
-        object_id = f"{target_team_id}:{code_value.strip().lower()}"
+        config = self._repository.get_configuration(db, game_id)
+        stored_code = self._repository.get_team_code(db, game_id, target_team_id)
+
+        normalized_submission = code_value.strip().lower()
+        correct = False
+        points_delta = 0
+
+        if stored_code is not None:
+            correct = normalized_submission == stored_code.lower()
+            if correct:
+                points_delta = max(0, int(config.get("correct_points") or 10))
+            elif config.get("penalty_enabled"):
+                points_delta = -abs(int(config.get("penalty_value") or 0))
+
+        object_id = f"{target_team_id}:{normalized_submission}"
         return self.apply_action(
             db,
             game_id=game_id,
@@ -60,7 +76,7 @@ class CodeConspiracyService(GameLogicService):
             object_id=object_id,
             points_awarded=int(points_delta),
             allow_repeat=True,
-            metadata={"target_team_id": target_team_id},
+            metadata={"target_team_id": target_team_id, "correct": correct},
             success_message_key="code_conspiracy.code.submitted",
             already_message_key="code_conspiracy.code.submitted",
         )

@@ -69,15 +69,19 @@ class CourierRushService(GameLogicService):
             already_message_key="courier_rush.pickup.alreadyConfirmed",
         )
 
-    def confirm_dropoff(self, db: DbSession, *, game_id: str, team_id: str, dropoff_id: str, points: int = 1) -> GameActionResult:
-        """Persist a dropoff confirmation and award points for completion."""
+    def confirm_dropoff(self, db: DbSession, *, game_id: str, team_id: str, dropoff_id: str) -> GameActionResult:
+        """Persist a dropoff confirmation and award server-configured points."""
+        dropoff = self._repository.get_dropoff_by_game_id_and_dropoff_id(db, game_id, dropoff_id)
+        if dropoff is None:
+            raise ValueError("courier_rush.dropoff.notFound")
+        server_points = max(0, int(dropoff.get("points") or 0))
         return self.apply_action(
             db,
             game_id=game_id,
             team_id=team_id,
             action_name="courier_rush.dropoff.confirm",
             object_id=dropoff_id,
-            points_awarded=max(0, int(points)),
+            points_awarded=server_points,
             allow_repeat=True,
             success_message_key="courier_rush.dropoff.confirmed",
             already_message_key="courier_rush.dropoff.confirmed",

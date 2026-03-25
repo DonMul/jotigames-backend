@@ -35,12 +35,10 @@ class GeoHunterService(GameLogicService):
                 "is_active": bool(p.get("is_active", True)),
                 "question_type": str(p.get("question_type") or "open"),
                 "question_text": str(p.get("question_text") or ""),
-                "correct_answer": str(p.get("correct_answer") or ""),
                 "choices": [
                     {
                         "id": str(c.get("id", "")),
                         "label": str(c.get("label", "")),
-                        "is_correct": bool(c.get("is_correct", False)),
                     }
                     for c in choices_map.get(str(p.get("id", "")), [])
                 ],
@@ -60,9 +58,30 @@ class GeoHunterService(GameLogicService):
         ]
         return base
 
-    def answer_question(self, db: DbSession, *, game_id: str, team_id: str, poi_id: str, correct: bool) -> GameActionResult:
-        """Record answer action once per POI and award points on correct answers."""
-        points = 1 if correct else 0
+    def answer_question(self, db: DbSession, *, game_id: str, team_id: str, poi_id: str, answer: str) -> GameActionResult:
+        """Validate answer server-side against the POI's expected answer and award configured points."""
+        poi = self._repository.get_poi_by_game_id_and_poi_id(db, game_id, poi_id)
+        if poi is None:
+            raise ValueError("geohunter.poi.notFound")
+
+        question_type = str(poi.get("question_type") or "open").strip().lower()
+        server_points = max(0, int(poi.get("points") or 0))
+        submitted = str(answer or "").strip()
+
+        if question_type == "multiple_choice":
+            # answer must be a choice id; look up that choice and check is_correct
+            choices = self._repository.fetch_choices_by_poi_ids(db, [poi_id]).get(poi_id, [])
+            matched_choice = next(
+                (c for c in choices if str(c.get("id", "")).strip() == submitted),
+                None,
+            )
+            correct = matched_choice is not None and bool(matched_choice.get("is_correct", False))
+        else:
+            # open answer: case-insensitive comparison with configured correct_answer
+            expected = str(poi.get("correct_answer") or "").strip().lower()
+            correct = submitted.lower() == expected and expected != ""
+
+        points = server_points if correct else 0
         return self.apply_action(
             db,
             game_id=game_id,
@@ -71,7 +90,7 @@ class GeoHunterService(GameLogicService):
             object_id=poi_id,
             points_awarded=points,
             allow_repeat=False,
-            metadata={"correct": bool(correct)},
+            metadata={"correct": correct, "answer": submitted},
             success_message_key="geohunter.answer.recorded",
             already_message_key="geohunter.answer.alreadySubmitted",
         )

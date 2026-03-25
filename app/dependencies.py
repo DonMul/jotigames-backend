@@ -77,15 +77,15 @@ CurrentPrincipal = Annotated[AuthenticatedPrincipal, Depends(require_authenticat
 
 
 def require_super_admin(principal: CurrentPrincipal) -> AuthenticatedPrincipal:
-    """Enforce that the current principal is a user with `ROLE_SUPER_ADMIN`.
+    """Enforce that the current principal is a user with admin or super-admin role.
 
     This is used for platform-level endpoints that must not be reachable by
     normal users or team principals.
 
     Raises:
-        HTTPException: 403 when the principal lacks super-admin privileges.
+        HTTPException: 403 when the principal lacks admin privileges.
     """
-    if principal.principal_type != "user" or not principal.is_super_admin:
+    if principal.principal_type != "user" or not principal.is_admin:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="auth.user.superAdminRequired",

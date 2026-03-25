@@ -78,6 +78,21 @@ class GameRepository:
         rows = db.execute(query).mappings().all()
         return [dict(row) for row in rows]
 
+    def fetchAllGameSummaries(self, db: DbSession) -> list[Dict[str, Any]]:
+        """Fetch lightweight game summaries for all games (admin view)."""
+        table = self.getGameTable(db)
+        query = select(
+            table.c["id"],
+            table.c["name"],
+            table.c["game_type"],
+            table.c["start_at"],
+            table.c["end_at"],
+        )
+        if "owner_id" in table.c:
+            query = query.add_columns(table.c["owner_id"])
+        rows = db.execute(query).mappings().all()
+        return [dict(row) for row in rows]
+
     def fetchGameSummariesByOwnerId(self, db: DbSession, owner_id: str) -> list[Dict[str, Any]]:
         """Fetch lightweight game summaries for games owned by a user."""
         table = self.getGameTable(db)

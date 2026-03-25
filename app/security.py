@@ -52,12 +52,19 @@ class AuthenticatedPrincipal:
         return "ROLE_SUPER_ADMIN" in self.roles
 
     @property
+    def is_admin(self) -> bool:
+        """Return whether this principal has admin privileges (admin or super-admin)."""
+        return "ROLE_ADMIN" in self.roles or "ROLE_SUPER_ADMIN" in self.roles
+
+    @property
     def access_level(self) -> str:
         """Map principal identity to a coarse-grained access level label."""
         if self.principal_type == "team":
             return "team"
         if self.is_super_admin:
             return "super_admin"
+        if self.is_admin:
+            return "admin"
         return "user"
 
 

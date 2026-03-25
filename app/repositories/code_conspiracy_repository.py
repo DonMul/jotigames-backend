@@ -1,8 +1,9 @@
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 from datetime import UTC, datetime
 
-from sqlalchemy import update
+from sqlalchemy import select, update
+from sqlalchemy.exc import NoSuchTableError
 
 from app.dependencies import DbSession
 from app.repositories.game_logic_state_repository import GameLogicStateRepository
@@ -10,6 +11,36 @@ from app.repositories.game_logic_state_repository import GameLogicStateRepositor
 
 class CodeConspiracyRepository(GameLogicStateRepository):
     """Repository helpers for Code Conspiracy configuration and outcome writes."""
+
+    def get_team_code(self, db: DbSession, game_id: str, team_id: str) -> Optional[str]:
+        """Fetch the secret code assigned to a team, or None if unavailable.
+
+        Returns None when the ``code_conspiracy_team_code`` table does not
+        exist or contains no matching row, so the caller can fall back to an
+        unvalidated recording mode.
+        """
+        try:
+            table = self._get_table(db, "code_conspiracy_team_code")
+        except (NoSuchTableError, Exception):
+            return None
+
+        row = (
+            db.execute(
+                select(table)
+                .where(table.c["game_id"] == game_id)
+                .where(table.c["team_id"] == team_id)
+                .limit(1)
+            )
+            .mappings()
+            .first()
+        )
+        if row is None:
+            return None
+        # Try common column names for the actual code value
+        for col in ("code_value", "code", "secret_code"):
+            if col in row and row[col] is not None:
+                return str(row[col]).strip()
+        return None
 
     @staticmethod
     def _first_present(row: Dict[str, Any], keys: list[str], default: Any = None) -> Any:

@@ -28,7 +28,6 @@ class ClaimBeaconRequest(BaseModel):
     """Request body for claiming a beacon."""
 
     beacon_id: str = Field(min_length=1, max_length=64)
-    points: int = Field(default=1, ge=0, le=1000)
 
 
 class ActionResponse(BaseModel):
@@ -303,7 +302,6 @@ class EchoHuntModule(ApiModule, SharedModuleBase):
                 game_id=game_id,
                 team_id=team_id,
                 beacon_id=body.beacon_id.strip(),
-                points=body.points,
             )
             
             return ActionResponse(
