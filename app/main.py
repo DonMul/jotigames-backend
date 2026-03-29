@@ -27,6 +27,7 @@ from app.modules import (
     MarketCrashModule,
     PandemicResponseModule,
     ResourceRunModule,
+    SubscriptionModule,
     SuperAdminModule,
     SystemModule,
     TerritoryControlModule,
@@ -138,6 +139,7 @@ def create_app() -> FastAPI:
     controller.register_module(PandemicResponseModule(ws_publisher=ws_publisher))
     controller.register_module(BirdsOfPreyModule(ws_publisher=ws_publisher))
     controller.register_module(CodeConspiracyModule(ws_publisher=ws_publisher))
+    controller.register_module(SubscriptionModule())
     controller.register_module(SuperAdminModule())
     controller.register_module(SystemModule(ws_publisher=ws_publisher))
     controller.mount()

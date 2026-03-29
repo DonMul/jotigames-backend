@@ -3,6 +3,7 @@ from sqlalchemy import text
 
 from app.main import create_app
 from app.database import engine
+from app.models import Base
 
 
 _ALLOWED_STATUS_CODES = {200, 201, 204, 400, 401, 403, 404, 405, 409, 422}
@@ -48,16 +49,11 @@ def _request_with_method(client: TestClient, method: str, path: str):
 
 
 def _ensure_minimal_schema() -> None:
-    with engine.begin() as connection:
-        connection.execute(text(
-            """
-            CREATE TABLE IF NOT EXISTS game_type_availability (
-                game_type TEXT PRIMARY KEY,
-                enabled INTEGER NOT NULL DEFAULT 1
-            )
-            """
-        ))
+    # Drop + recreate all ORM-defined tables so new columns are always present
+    Base.metadata.drop_all(engine)
+    Base.metadata.create_all(engine)
 
+    with engine.begin() as connection:
         connection.execute(text(
             """
             INSERT OR IGNORE INTO game_type_availability (game_type, enabled)

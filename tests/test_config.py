@@ -1,4 +1,4 @@
-from app.config import Settings
+from app.config import Settings, get_settings
 
 
 def test_ws_socket_endpoint_mapping_variants():
@@ -27,3 +27,13 @@ def test_auth_urls_are_built_from_public_base_url():
     )
     assert settings.auth_verify_url == 'https://jotigames.example/api/auth/verify'
     assert settings.auth_password_reset_url == 'https://jotigames.example/reset-password'
+
+
+def test_get_settings_refresh_reloads_enable_monetisation(monkeypatch):
+    monkeypatch.setenv('DATABASE_URL', 'sqlite:///./test.db')
+
+    monkeypatch.setenv('ENABLE_MONETISATION', 'true')
+    assert get_settings(refresh=True).enable_monetisation is True
+
+    monkeypatch.setenv('ENABLE_MONETISATION', 'false')
+    assert get_settings(refresh=True).enable_monetisation is False

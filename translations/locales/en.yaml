@@ -296,6 +296,9 @@ auth:
     invalidEmailOrPassword: Invalid email address or password.
     disallowedRole: This account does not have access to this backend.
     superAdminRequired: Super admin access is required for this action.
+    notFound: User not found.
+    updateFailed: Failed to update profile.
+    userRequired: User account required for this action.
   team:
     invalidCodes: Invalid game code or team code.
   token:
@@ -322,6 +325,10 @@ auth:
       been sent.
     tokenColumnsMissing: Password reset token storage is not configured correctly.
     emailSendFailed: Password reset email could not be sent.
+  password:
+    currentIncorrect: Current password is incorrect.
+    changeFailed: Failed to change password.
+    changed: Password changed successfully.
 mailer:
   verify:
     subject: Confirm your email address

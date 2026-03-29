@@ -88,6 +88,17 @@ class Settings(BaseSettings):
         description="Comma-separated list of allowed CORS origins. Empty = same-origin only.",
     )
 
+    # ── Monetisation settings ────────────────────────────────────────────
+    enable_monetisation: bool = Field(
+        default=False,
+        alias="ENABLE_MONETISATION",
+        description="Master switch for the subscription & game-minutes billing system.",
+    )
+    stripe_secret_key: Optional[str] = Field(default=None, alias="STRIPE_SECRET_KEY")
+    stripe_publishable_key: Optional[str] = Field(default=None, alias="STRIPE_PUBLISHABLE_KEY")
+    stripe_webhook_secret: Optional[str] = Field(default=None, alias="STRIPE_WEBHOOK_SECRET")
+    stripe_currency: str = Field(default="eur", alias="STRIPE_CURRENCY")
+
     @field_validator("ws_port", mode="before")
     @classmethod
     def _normalize_ws_port(cls, value: object) -> object:
@@ -225,9 +236,16 @@ class Settings(BaseSettings):
 
 
 @lru_cache(maxsize=1)
-def get_settings() -> Settings:
-    """Return cached settings instance to avoid repeated env parsing."""
+def _get_cached_settings() -> Settings:
+    """Build and cache a settings instance."""
     return Settings()
+
+
+def get_settings(*, refresh: bool = False) -> Settings:
+    """Return settings, optionally forcing a re-read from environment/.env."""
+    if refresh:
+        _get_cached_settings.cache_clear()
+    return _get_cached_settings()
 
 
 def normalize_database_url(database_url: str) -> str:

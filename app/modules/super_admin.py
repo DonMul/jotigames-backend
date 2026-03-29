@@ -1,6 +1,6 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 import json
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional
 from uuid import uuid4
 
 from argon2 import PasswordHasher
@@ -106,6 +106,92 @@ class TokenRuleResponse(BaseModel):
     rule: Dict[str, Any]
 
 
+# ── Subscription / monetisation request & response models ─────────────────
+
+
+class SubscriptionPlanCreateRequest(BaseModel):
+    slug: str = Field(min_length=1, max_length=64)
+    name: str = Field(min_length=1, max_length=120)
+    monthly_minutes: Optional[int] = Field(default=None, ge=0)
+    price_cents: int = Field(ge=0)
+    currency: str = Field(default="eur", min_length=3, max_length=3)
+    stripe_price_id: Optional[str] = None
+    is_active: bool = True
+    sort_order: int = 0
+
+
+class SubscriptionPlanUpdateRequest(BaseModel):
+    slug: Optional[str] = Field(default=None, min_length=1, max_length=64)
+    name: Optional[str] = Field(default=None, min_length=1, max_length=120)
+    monthly_minutes: Optional[int] = Field(default=None, ge=0)
+    price_cents: Optional[int] = Field(default=None, ge=0)
+    currency: Optional[str] = Field(default=None, min_length=3, max_length=3)
+    stripe_price_id: Optional[str] = None
+    is_active: Optional[bool] = None
+    sort_order: Optional[int] = None
+
+
+class ReorderPlansRequest(BaseModel):
+    plan_ids: List[str] = Field(min_length=1, description="Ordered list of plan IDs")
+
+
+class SubscriptionPlansListResponse(BaseModel):
+    plans: List[Dict[str, Any]]
+
+
+class SubscriptionPlanResponse(BaseModel):
+    plan: Dict[str, Any]
+
+
+class TopupPackageCreateRequest(BaseModel):
+    name: str = Field(min_length=1, max_length=120)
+    minutes: int = Field(ge=1)
+    price_cents: int = Field(ge=0)
+    currency: str = Field(default="eur", min_length=3, max_length=3)
+    is_active: bool = True
+
+
+class TopupPackageUpdateRequest(BaseModel):
+    name: Optional[str] = Field(default=None, min_length=1, max_length=120)
+    minutes: Optional[int] = Field(default=None, ge=1)
+    price_cents: Optional[int] = Field(default=None, ge=0)
+    currency: Optional[str] = Field(default=None, min_length=3, max_length=3)
+    is_active: Optional[bool] = None
+
+
+class TopupPackagesListResponse(BaseModel):
+    packages: List[Dict[str, Any]]
+
+
+class TopupPackageResponse(BaseModel):
+    package: Dict[str, Any]
+
+
+class AdminSubscriptionsListResponse(BaseModel):
+    subscriptions: List[Dict[str, Any]]
+
+
+class DefaultPlanRequest(BaseModel):
+    plan_id: Optional[str] = Field(default=None, description="Plan ID to set as default, or null to clear")
+
+
+class DefaultPlanResponse(BaseModel):
+    default_plan: Optional[Dict[str, Any]] = None
+
+
+class RevenueStatsResponse(BaseModel):
+    summary: List[Dict[str, Any]]
+    projected: Dict[str, Any]
+    total_subscriptions: int
+    active_subscriptions: int
+
+
+class AdminUserSubscriptionResponse(BaseModel):
+    subscription: Optional[Dict[str, Any]]
+    balance: Dict[str, Any]
+    topup_minutes: int
+
+
 class SuperAdminModule(ApiModule):
     name = "super_admin"
     _password_hasher = PasswordHasher()
@@ -114,6 +200,13 @@ class SuperAdminModule(ApiModule):
         """Initialize repository dependencies for super-admin control-plane APIs."""
         self._repository = SuperAdminRepository()
         self._game_repository = GameRepository()
+
+        # Lazy imports to avoid circular deps – only used when routes hit
+        from app.repositories.subscription_repository import SubscriptionRepository
+        from app.services.subscription_service import SubscriptionService
+
+        self._sub_repo = SubscriptionRepository()
+        self._sub_service = SubscriptionService()
 
     @staticmethod
     def _ensure_super_admin(principal: CurrentPrincipal) -> None:
@@ -434,6 +527,10 @@ class SuperAdminModule(ApiModule):
             )
             if created is None:
                 raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="auth.user.fetchFailed")
+
+            # Auto-subscribe to default plan (best-effort, never blocks user creation)
+            self._sub_service.auto_subscribe_default_plan(db, str(values[settings.auth_user_id_column]))
+
             return SuperAdminUserResponse(user=self._serialize_user_record(created, settings))
 
         @router.put("/users/{user_id}", response_model=SuperAdminUserResponse, summary="Super admin update user")
@@ -529,4 +626,246 @@ class SuperAdminModule(ApiModule):
 
             return SuperAdminMessageResponse(message_key="auth.user.deleted")
 
+        # ── Subscription plan management ──────────────────────────────────
+
+        @router.get("/subscription/plans", response_model=SubscriptionPlansListResponse, summary="List all subscription plans")
+        def admin_list_plans(principal: CurrentPrincipal, db: DbSession) -> SubscriptionPlansListResponse:
+            self._ensure_super_admin(principal)
+            plans = self._sub_repo.list_plans(db, active_only=False)
+            return SubscriptionPlansListResponse(
+                plans=[self._serialize_row(self._plan_to_dict(p)) for p in plans]
+            )
+
+        @router.post("/subscription/plans", response_model=SubscriptionPlanResponse, status_code=status.HTTP_201_CREATED, summary="Create subscription plan")
+        def admin_create_plan(body: SubscriptionPlanCreateRequest, principal: CurrentPrincipal, db: DbSession) -> SubscriptionPlanResponse:
+            self._ensure_super_admin(principal)
+            plan = self._sub_repo.create_plan(
+                db,
+                slug=body.slug,
+                name=body.name,
+                monthly_minutes=body.monthly_minutes,
+                price_cents=body.price_cents,
+                currency=body.currency,
+                stripe_price_id=body.stripe_price_id,
+                is_active=body.is_active,
+                sort_order=body.sort_order,
+            )
+            return SubscriptionPlanResponse(plan=self._serialize_row(self._plan_to_dict(plan)))
+
+        @router.put("/subscription/plans/reorder", response_model=SubscriptionPlansListResponse, summary="Reorder subscription plans")
+        def admin_reorder_plans(body: ReorderPlansRequest, principal: CurrentPrincipal, db: DbSession) -> SubscriptionPlansListResponse:
+            self._ensure_super_admin(principal)
+            for idx, plan_id in enumerate(body.plan_ids):
+                plan = self._sub_repo.get_plan_by_id(db, plan_id)
+                if plan is None:
+                    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="subscription.planNotFound")
+                self._sub_repo.update_plan(db, plan, sort_order=idx)
+            db.commit()
+            plans = self._sub_repo.list_plans(db, active_only=False)
+            return SubscriptionPlansListResponse(
+                plans=[self._serialize_row(self._plan_to_dict(p)) for p in plans]
+            )
+
+        @router.put("/subscription/plans/{plan_id}", response_model=SubscriptionPlanResponse, summary="Update subscription plan")
+        def admin_update_plan(plan_id: str, body: SubscriptionPlanUpdateRequest, principal: CurrentPrincipal, db: DbSession) -> SubscriptionPlanResponse:
+            self._ensure_super_admin(principal)
+            plan = self._sub_repo.get_plan_by_id(db, plan_id)
+            if plan is None:
+                raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="subscription.planNotFound")
+            updates = body.model_dump(exclude_unset=True)
+            if "slug" in updates and updates["slug"] != plan.slug:
+                existing = self._sub_repo.get_plan_by_slug(db, updates["slug"])
+                if existing and existing.id != plan.id:
+                    raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="subscription.slugConflict")
+            self._sub_repo.update_plan(db, plan, **updates)
+            db.commit()
+            db.refresh(plan)
+            return SubscriptionPlanResponse(plan=self._serialize_row(self._plan_to_dict(plan)))
+
+        @router.post("/subscription/seed-plans", response_model=SuperAdminMessageResponse, summary="Seed default plans")
+        def admin_seed_plans(principal: CurrentPrincipal, db: DbSession) -> SuperAdminMessageResponse:
+            self._ensure_super_admin(principal)
+            self._sub_service.seed_default_plans(db)
+            return SuperAdminMessageResponse(message_key="subscription.planSeeded")
+
+        # ── Default plan for new users ────────────────────────────────────
+
+        @router.get("/subscription/default-plan", response_model=DefaultPlanResponse, summary="Get default plan for new users")
+        def admin_get_default_plan(principal: CurrentPrincipal, db: DbSession) -> DefaultPlanResponse:
+            self._ensure_super_admin(principal)
+            plan = self._sub_repo.get_default_plan(db)
+            return DefaultPlanResponse(
+                default_plan=self._serialize_row(self._plan_to_dict(plan)) if plan else None
+            )
+
+        @router.put("/subscription/default-plan", response_model=DefaultPlanResponse, summary="Set default plan for new users")
+        def admin_set_default_plan(body: DefaultPlanRequest, principal: CurrentPrincipal, db: DbSession) -> DefaultPlanResponse:
+            self._ensure_super_admin(principal)
+            if body.plan_id is None:
+                self._sub_repo.clear_default_plan(db)
+                db.commit()
+                return DefaultPlanResponse(default_plan=None)
+            plan = self._sub_repo.set_default_plan(db, body.plan_id)
+            if not plan:
+                raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="subscription.planNotFound")
+            db.commit()
+            return DefaultPlanResponse(
+                default_plan=self._serialize_row(self._plan_to_dict(plan))
+            )
+
+        # ── Top-up package management ─────────────────────────────────────
+
+        @router.get("/subscription/topup-packages", response_model=TopupPackagesListResponse, summary="List top-up packages")
+        def admin_list_topup_packages(principal: CurrentPrincipal, db: DbSession) -> TopupPackagesListResponse:
+            self._ensure_super_admin(principal)
+            packages = self._sub_repo.list_topup_packages(db, active_only=False)
+            return TopupPackagesListResponse(
+                packages=[self._serialize_row(self._topup_pkg_to_dict(p)) for p in packages]
+            )
+
+        @router.post("/subscription/topup-packages", response_model=TopupPackageResponse, status_code=status.HTTP_201_CREATED, summary="Create top-up package")
+        def admin_create_topup_package(body: TopupPackageCreateRequest, principal: CurrentPrincipal, db: DbSession) -> TopupPackageResponse:
+            self._ensure_super_admin(principal)
+            pkg = self._sub_repo.create_topup_package(
+                db,
+                name=body.name,
+                minutes=body.minutes,
+                price_cents=body.price_cents,
+                currency=body.currency,
+                is_active=body.is_active,
+            )
+            return TopupPackageResponse(package=self._serialize_row(self._topup_pkg_to_dict(pkg)))
+
+        @router.put("/subscription/topup-packages/{package_id}", response_model=TopupPackageResponse, summary="Update top-up package")
+        def admin_update_topup_package(package_id: str, body: TopupPackageUpdateRequest, principal: CurrentPrincipal, db: DbSession) -> TopupPackageResponse:
+            self._ensure_super_admin(principal)
+            pkg = self._sub_repo.get_topup_package_by_id(db, package_id)
+            if pkg is None:
+                raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="subscription.topupPackageNotFound")
+            self._sub_repo.update_topup_package(db, pkg, **{k: v for k, v in body.model_dump().items() if v is not None})
+            db.commit()
+            db.refresh(pkg)
+            return TopupPackageResponse(package=self._serialize_row(self._topup_pkg_to_dict(pkg)))
+
+        # ── Subscriptions overview & user subscription management ─────────
+
+        @router.get("/subscription/subscriptions", response_model=AdminSubscriptionsListResponse, summary="List all user subscriptions")
+        def admin_list_subscriptions(principal: CurrentPrincipal, db: DbSession) -> AdminSubscriptionsListResponse:
+            self._ensure_super_admin(principal)
+            subs = self._sub_repo.list_all_subscriptions(db)
+            return AdminSubscriptionsListResponse(
+                subscriptions=[self._serialize_row(self._subscription_to_dict(s)) for s in subs]
+            )
+
+        @router.get("/subscription/users/{user_id}", response_model=AdminUserSubscriptionResponse, summary="View user subscription")
+        def admin_get_user_subscription(user_id: str, principal: CurrentPrincipal, db: DbSession) -> AdminUserSubscriptionResponse:
+            self._ensure_super_admin(principal)
+            summary = self._sub_service.get_user_subscription_summary(db, user_id)
+            return AdminUserSubscriptionResponse(
+                subscription=summary.get("subscription"),
+                balance=summary["balance"],
+                topup_minutes=summary.get("topup_minutes_remaining", 0),
+            )
+
+        # ── Revenue statistics ────────────────────────────────────────────
+
+        @router.get("/subscription/revenue", response_model=RevenueStatsResponse, summary="Revenue statistics")
+        def admin_revenue_stats(principal: CurrentPrincipal, db: DbSession) -> RevenueStatsResponse:
+            self._ensure_super_admin(principal)
+            summary = self._sub_repo.revenue_summary(db)
+            projected_until = datetime.utcnow() + timedelta(days=30)
+            projected = self._sub_repo.projected_revenue(db, until=projected_until)
+            all_subs = self._sub_repo.list_all_subscriptions(db)
+            active_count = sum(1 for s in all_subs if s.status == "active")
+            return RevenueStatsResponse(
+                summary=[self._serialize_row(g) for g in summary.get("groups", [])],
+                projected=projected if projected else {"total_cents": 0, "subscription_count": 0},
+                total_subscriptions=len(all_subs),
+                active_subscriptions=active_count,
+            )
+
+        # ── Payments log ──────────────────────────────────────────────────
+
+        @router.get("/subscription/payments", summary="List payment records")
+        def admin_list_payments(
+            principal: CurrentPrincipal,
+            db: DbSession,
+            user_id: Optional[str] = None,
+            limit: int = 100,
+            offset: int = 0,
+        ) -> Dict[str, Any]:
+            self._ensure_super_admin(principal)
+            payments = self._sub_repo.list_payments(db, user_id=user_id)
+            # Apply offset/limit in-memory for simplicity
+            paginated = payments[offset:offset + limit]
+            return {
+                "payments": [self._serialize_row(self._payment_to_dict(p)) for p in paginated],
+            }
+
         return router
+
+    # ── Helpers for serialising subscription ORM objects ──────────────────
+
+    @staticmethod
+    def _plan_to_dict(plan) -> Dict[str, Any]:
+        return {
+            "id": plan.id,
+            "slug": plan.slug,
+            "name": plan.name,
+            "monthly_minutes": plan.monthly_minutes,
+            "price_cents": plan.price_cents,
+            "currency": plan.currency,
+            "stripe_price_id": plan.stripe_price_id,
+            "is_active": plan.is_active,
+            "is_default": plan.is_default,
+            "sort_order": plan.sort_order,
+            "created_at": plan.created_at,
+            "updated_at": plan.updated_at,
+        }
+
+    @staticmethod
+    def _topup_pkg_to_dict(pkg) -> Dict[str, Any]:
+        return {
+            "id": pkg.id,
+            "name": pkg.name,
+            "minutes": pkg.minutes,
+            "price_cents": pkg.price_cents,
+            "currency": pkg.currency,
+            "is_active": pkg.is_active,
+            "sort_order": pkg.sort_order,
+            "created_at": pkg.created_at,
+            "updated_at": pkg.updated_at,
+        }
+
+    @staticmethod
+    def _subscription_to_dict(sub) -> Dict[str, Any]:
+        return {
+            "id": sub.id,
+            "user_id": sub.user_id,
+            "plan_id": sub.plan_id,
+            "status": sub.status,
+            "stripe_subscription_id": sub.stripe_subscription_id,
+            "stripe_customer_id": sub.stripe_customer_id,
+            "current_period_start": sub.current_period_start,
+            "current_period_end": sub.current_period_end,
+            "cancel_at_period_end": sub.cancel_at_period_end,
+            "created_at": sub.created_at,
+            "updated_at": sub.updated_at,
+        }
+
+    @staticmethod
+    def _payment_to_dict(payment) -> Dict[str, Any]:
+        return {
+            "id": payment.id,
+            "user_id": payment.user_id,
+            "amount_cents": payment.amount_cents,
+            "currency": payment.currency,
+            "type": payment.type,
+            "stripe_payment_intent_id": payment.stripe_payment_intent_id,
+            "stripe_invoice_id": payment.stripe_invoice_id,
+            "subscription_id": payment.subscription_id,
+            "topup_purchase_id": payment.topup_purchase_id,
+            "description": payment.description,
+            "status": payment.status,
+            "created_at": payment.created_at,
+        }

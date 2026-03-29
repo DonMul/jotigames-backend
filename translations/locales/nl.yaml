@@ -300,6 +300,9 @@ auth:
     invalidEmailOrPassword: Ongeldig e-mailadres of wachtwoord.
     disallowedRole: Dit account heeft geen toegang tot deze backend.
     superAdminRequired: Super admin-toegang is vereist voor deze actie.
+    notFound: Gebruiker niet gevonden.
+    updateFailed: Profiel bijwerken mislukt.
+    userRequired: Gebruikersaccount vereist voor deze actie.
   team:
     invalidCodes: Ongeldige gamecode of teamcode.
   token:
@@ -326,6 +329,10 @@ auth:
       verzonden.
     tokenColumnsMissing: Opslag voor wachtwoord-resettokens is niet correct geconfigureerd.
     emailSendFailed: Wachtwoord reset-e-mail kon niet worden verzonden.
+  password:
+    currentIncorrect: Huidig wachtwoord is onjuist.
+    changeFailed: Wachtwoord wijzigen mislukt.
+    changed: Wachtwoord succesvol gewijzigd.
 mailer:
   verify:
     subject: Bevestig je e-mailadres

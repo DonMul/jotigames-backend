@@ -13,6 +13,7 @@ from app.modules.market_crash import MarketCrashModule
 from app.modules.pandemic_response import PandemicResponseModule
 from app.modules.resource_run import ResourceRunModule
 from app.modules.shared import ACCESS_ADMIN_LABEL, ACCESS_BOTH_LABEL, ACCESS_SUPER_ADMIN_LABEL, ACCESS_TEAM_LABEL
+from app.modules.subscription import SubscriptionModule
 from app.modules.super_admin import SuperAdminModule
 from app.modules.system import SystemModule
 from app.modules.territory_control import TerritoryControlModule
@@ -32,6 +33,7 @@ __all__ = [
 	"MarketCrashModule",
 	"PandemicResponseModule",
 	"ResourceRunModule",
+	"SubscriptionModule",
 	"SuperAdminModule",
 	"SystemModule",
 	"TerritoryControlModule",

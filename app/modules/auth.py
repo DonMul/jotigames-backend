@@ -1,15 +1,18 @@
 from datetime import datetime
+import json
 import secrets
 from urllib.parse import urlencode
-from typing import Optional
+from typing import Any, Dict, Optional
 
+from argon2 import PasswordHasher
 from fastapi import APIRouter, HTTPException, Query, Request, status
 from pydantic import BaseModel, EmailStr, Field
 
-from app.dependencies import CurrentLocale, DbSession
+from app.dependencies import CurrentLocale, CurrentPrincipal, DbSession
 from app.modules.base import ApiModule
 from app.modules.shared import ACCESS_SUPER_ADMIN_LABEL
 from app.repositories.game_repository import GameRepository
+from app.repositories.super_admin_repository import SuperAdminRepository
 from app.repositories.team_repository import TeamRepository
 from app.security import (
     RegistrationError,
@@ -83,6 +86,22 @@ class MessageKeyResponse(BaseModel):
     message_key: str
 
 
+class UserProfileResponse(BaseModel):
+    email: str
+    username: str
+    principal_id: str
+
+
+class UpdateProfileRequest(BaseModel):
+    email: Optional[EmailStr] = None
+    username: Optional[str] = Field(default=None, min_length=3, max_length=60)
+
+
+class ChangePasswordRequest(BaseModel):
+    current_password: str = Field(min_length=1)
+    new_password: str = Field(min_length=8, max_length=512)
+
+
 class AuthModule(ApiModule):
     name = "auth"
 
@@ -91,6 +110,13 @@ class AuthModule(ApiModule):
         self._ws_publisher = ws_publisher
         self._gameRepository = GameRepository()
         self._teamRepository = TeamRepository()
+        self._user_repo = SuperAdminRepository()
+        self._password_hasher = PasswordHasher()
+
+        # Lazy imports to avoid circular deps
+        from app.services.subscription_service import SubscriptionService
+
+        self._sub_service = SubscriptionService()
 
     def build_router(self) -> APIRouter:
         """Build authentication, registration, and token-access verification routes."""
@@ -219,6 +245,9 @@ class AuthModule(ApiModule):
                     status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
                 raise HTTPException(status_code=status_code, detail=error.message_key) from error
 
+            # Auto-subscribe to default plan (best-effort, never blocks registration)
+            self._sub_service.auto_subscribe_default_plan(db, user_id)
+
             verify_url = f"{settings.auth_verify_url}?{urlencode({'token': verification_token})}"
             try:
                 send_verification_email(
@@ -295,6 +324,104 @@ class AuthModule(ApiModule):
 
             return MessageKeyResponse(
                 message_key=translate_value("auth.verify.success", locale=locale_header)
+            )
+
+        # ── User profile self-service ────────────────────────────────────
+
+        def _require_user_principal(principal: CurrentPrincipal) -> None:
+            if principal.principal_type != "user":
+                raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="auth.userRequired")
+
+        @router.get("/me", response_model=UserProfileResponse, summary="Get own profile")
+        def get_my_profile(principal: CurrentPrincipal, db: DbSession) -> UserProfileResponse:
+            """Return the current user's profile data."""
+            _require_user_principal(principal)
+            settings = get_settings()
+            user = self._user_repo.get_user_by_id(
+                db, table_name=settings.auth_users_table,
+                id_column=settings.auth_user_id_column,
+                user_id=principal.principal_id,
+            )
+            if user is None:
+                raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="auth.user.notFound")
+            return UserProfileResponse(
+                email=str(user.get(settings.auth_username_column, "")),
+                username=str(user.get(settings.auth_user_display_name_column, "")),
+                principal_id=principal.principal_id,
+            )
+
+        @router.put("/me", response_model=UserProfileResponse, summary="Update own profile")
+        def update_my_profile(body: UpdateProfileRequest, principal: CurrentPrincipal, db: DbSession) -> UserProfileResponse:
+            """Update the current user's display name and/or email."""
+            _require_user_principal(principal)
+            settings = get_settings()
+            values: Dict[str, Any] = {}
+            if body.email is not None:
+                values[settings.auth_username_column] = str(body.email).strip()
+            if body.username is not None:
+                values[settings.auth_user_display_name_column] = str(body.username).strip()
+            if "updated_at" in self._user_repo.get_user_table(db, table_name=settings.auth_users_table).c:
+                values["updated_at"] = datetime.utcnow()
+            if values:
+                try:
+                    self._user_repo.update_user_without_commit(
+                        db, table_name=settings.auth_users_table,
+                        id_column=settings.auth_user_id_column,
+                        user_id=principal.principal_id, values=values,
+                    )
+                    self._user_repo.commit_changes(db)
+                except Exception as error:
+                    self._user_repo.rollback_on_error(db, error)
+                    raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="auth.user.updateFailed") from error
+            user = self._user_repo.get_user_by_id(
+                db, table_name=settings.auth_users_table,
+                id_column=settings.auth_user_id_column,
+                user_id=principal.principal_id,
+            )
+            if user is None:
+                raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="auth.user.notFound")
+            return UserProfileResponse(
+                email=str(user.get(settings.auth_username_column, "")),
+                username=str(user.get(settings.auth_user_display_name_column, "")),
+                principal_id=principal.principal_id,
+            )
+
+        @router.put("/me/password", response_model=MessageKeyResponse, summary="Change own password")
+        def change_my_password(body: ChangePasswordRequest, principal: CurrentPrincipal, db: DbSession, locale_header: CurrentLocale) -> MessageKeyResponse:
+            """Change the current user's password after verifying current password."""
+            _require_user_principal(principal)
+            settings = get_settings()
+            # Verify current password
+            user_row = self._user_repo.get_user_by_id(
+                db, table_name=settings.auth_users_table,
+                id_column=settings.auth_user_id_column,
+                user_id=principal.principal_id,
+            )
+            if user_row is None:
+                raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="auth.user.notFound")
+            stored_hash = user_row.get(settings.auth_password_column, "")
+            try:
+                self._password_hasher.verify(stored_hash, body.current_password)
+            except Exception:
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="auth.password.currentIncorrect")
+            # Update password
+            new_hash = self._password_hasher.hash(body.new_password)
+            values: Dict[str, Any] = {settings.auth_password_column: new_hash}
+            user_table = self._user_repo.get_user_table(db, table_name=settings.auth_users_table)
+            if "updated_at" in user_table.c:
+                values["updated_at"] = datetime.utcnow()
+            try:
+                self._user_repo.update_user_without_commit(
+                    db, table_name=settings.auth_users_table,
+                    id_column=settings.auth_user_id_column,
+                    user_id=principal.principal_id, values=values,
+                )
+                self._user_repo.commit_changes(db)
+            except Exception as error:
+                self._user_repo.rollback_on_error(db, error)
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="auth.password.changeFailed") from error
+            return MessageKeyResponse(
+                message_key=translate_value("auth.password.changed", locale=locale_header)
             )
 
         @router.post(
