@@ -12,6 +12,7 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import json
 import logging
 import sys
 import time
@@ -56,6 +57,32 @@ def _is_active(game: dict, now: datetime) -> bool:
     return start <= now <= end
 
 
+def _parse_roles(value: object) -> list[str]:
+    if value is None:
+        return []
+    if isinstance(value, list):
+        return [str(role) for role in value if str(role)]
+    if isinstance(value, tuple):
+        return [str(role) for role in value if str(role)]
+
+    text_value = str(value).strip()
+    if not text_value:
+        return []
+
+    if text_value.startswith("[") and text_value.endswith("]"):
+        try:
+            parsed = json.loads(text_value)
+            if isinstance(parsed, list):
+                return [str(role) for role in parsed if str(role)]
+        except json.JSONDecodeError:
+            pass
+
+    if "," in text_value:
+        return [part.strip() for part in text_value.split(",") if part.strip()]
+
+    return [text_value]
+
+
 def run_cycle() -> tuple[int, int]:
     """Execute a single tick cycle.
 
@@ -76,10 +103,28 @@ def run_cycle() -> tuple[int, int]:
 
         game_table = metadata.tables.get("game")
         team_table = metadata.tables.get("team")
+        user_table = metadata.tables.get(settings.auth_users_table)
+
+        user_id_column_name = settings.auth_user_id_column
+        if user_table is not None and user_id_column_name not in user_table.c and "id" in user_table.c:
+            user_id_column_name = "id"
+
+        user_roles_column_name = settings.auth_user_roles_column
+        if user_table is not None and user_roles_column_name not in user_table.c and "roles" in user_table.c:
+            user_roles_column_name = "roles"
 
         if game_table is None or team_table is None:
             log.warning("game or team table not found – skipping")
             return 0, 0
+
+        if (
+            user_table is None
+            or user_id_column_name not in user_table.c
+            or user_roles_column_name not in user_table.c
+        ):
+            log.warning("user table or role columns unavailable – super admin exclusion disabled for this cycle")
+
+        owner_super_admin_cache: dict[str, bool] = {}
 
         # Fetch all games with a start_at/end_at that bracket now
         rows = db.execute(select(game_table)).mappings().all()
@@ -94,6 +139,30 @@ def run_cycle() -> tuple[int, int]:
             if not game_id or not owner_id:
                 continue
 
+            if owner_id not in owner_super_admin_cache:
+                is_super_admin = False
+                if (
+                    user_table is not None
+                    and user_id_column_name in user_table.c
+                    and user_roles_column_name in user_table.c
+                ):
+                    roles_raw = db.execute(
+                        select(user_table.c[user_roles_column_name]).where(
+                            user_table.c[user_id_column_name] == owner_id
+                        )
+                    ).scalar_one_or_none()
+                    owner_roles = _parse_roles(roles_raw)
+                    is_super_admin = "ROLE_SUPER_ADMIN" in owner_roles
+                owner_super_admin_cache[owner_id] = is_super_admin
+
+            if owner_super_admin_cache[owner_id]:
+                log.debug(
+                    "Game %s (owner=%s): skipped minute tick for super admin owner",
+                    game_id,
+                    owner_id,
+                )
+                continue
+
             # Count teams in this game
             team_count_result = db.execute(
                 select(func.count()).select_from(team_table).where(team_table.c["game_id"] == game_id)
@@ -104,7 +173,13 @@ def run_cycle() -> tuple[int, int]:
 
             # Each tick interval consumes team_count minutes from the owner
             minutes_to_deduct = team_count
-            ok = service.consume_minutes(db, owner_id, minutes_to_deduct)
+            ok = service.consume_minutes(
+                db,
+                owner_id,
+                game_id,
+                minutes_to_deduct,
+                team_count,
+            )
             if ok:
                 games_processed += 1
                 total_minutes += minutes_to_deduct
