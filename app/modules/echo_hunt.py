@@ -40,6 +40,19 @@ class ActionResponse(BaseModel):
     state_version: int
 
 
+class TeamLocationUpdateRequest(BaseModel):
+    latitude: float
+    longitude: float
+
+
+class TeamLocationUpdateResponse(BaseModel):
+    success: bool
+    message_key: str
+    location: Dict[str, Any]
+    nearby_beacons: list[Dict[str, Any]]
+    nearby_beacon_ids: list[str]
+
+
 class EchoHuntBeaconCreateRequest(BaseModel):
     """Request body for creating a beacon."""
 
@@ -139,6 +152,69 @@ class EchoHuntModule(ApiModule, SharedModuleBase):
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
             return AdminOverviewResponse(overview=self._service.get_admin_overview(db, game_id))
+
+        @router.post(
+            "/{game_id}/teams/{team_id}/location/update",
+            response_model=TeamLocationUpdateResponse,
+            summary=f"{ACCESS_BOTH_LABEL} Update team location",
+        )
+        def update_location(
+            game_id: str,
+            team_id: str,
+            body: TeamLocationUpdateRequest,
+            principal: CurrentPrincipal,
+            db: DbSession,
+            locale: CurrentLocale,
+        ) -> TeamLocationUpdateResponse:
+            """Update team location and return currently nearby beacons."""
+            self._require_game(db, game_id)
+            self._require_team_self_or_manage_access(db, game_id, team_id, principal)
+
+            try:
+                location = self._service.update_team_location(
+                    db,
+                    game_id=game_id,
+                    team_id=team_id,
+                    latitude=float(body.latitude),
+                    longitude=float(body.longitude),
+                )
+            except ValueError as error:
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(error)) from error
+
+            nearby_beacons = self._service.get_nearby_beacons_for_team(db, game_id, team_id)
+            nearby_beacon_ids = [str(beacon.get("id") or "") for beacon in nearby_beacons]
+            should_publish = self._service.should_publish_location_event(db, game_id=game_id, team_id=team_id, min_interval_seconds=10)
+
+            if should_publish:
+                self._ws_publisher.publish(
+                    "admin.echo_hunt.team.location.updated",
+                    {
+                        "game_id": game_id,
+                        "team_id": team_id,
+                        "lat": location.get("lat"),
+                        "lon": location.get("lon"),
+                        "updated_at": location.get("updated_at"),
+                    },
+                    channels=[f"channel:{game_id}:admin"],
+                )
+                self._ws_publisher.publish(
+                    "team.echo_hunt.nearby.updated",
+                    {
+                        "game_id": game_id,
+                        "team_id": team_id,
+                        "nearby_beacon_ids": nearby_beacon_ids,
+                        "nearby_beacons": nearby_beacons,
+                    },
+                    channels=[f"channel:{game_id}:{team_id}"],
+                )
+
+            return TeamLocationUpdateResponse(
+                success=True,
+                message_key=self._localize_message_key("echo_hunt.location.updated", locale),
+                location=location,
+                nearby_beacons=nearby_beacons,
+                nearby_beacon_ids=nearby_beacon_ids,
+            )
 
         @router.get(
             "/{game_id}/beacons",

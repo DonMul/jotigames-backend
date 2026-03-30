@@ -65,7 +65,7 @@ team:
     failed: No se pudo actualizar el equipo.
   delete:
     failed: No se pudo eliminar el equipo.
-    success: Equipo eliminado exitosamente.
+    success: El equipo se eliminó correctamente.
 explodingKittens:
   gameTypeRequired: Este punto final solo está disponible para los juegos Exploding
     Kittens.
@@ -289,7 +289,7 @@ birds_of_prey:
     alreadyDestroyed: El huevo ya ha sido destruido.
     notFound: Huevo no encontrado.
     cannotDestroyOwn: No puedes destruir tu propio óvulo.
-    notVisible: El huevo no es visible dentro de tu alcance.
+    notVisible: El huevo no es visible a tu alcance.
     protected: El huevo está protegido porque el dueño está cerca.
 code_conspiracy:
   gameTypeRequired: Este punto final solo está disponible para juegos de Code Conspiracy.
@@ -310,6 +310,9 @@ auth:
     invalidEmailOrPassword: Dirección de correo electrónico o contraseña no válida.
     disallowedRole: Esta cuenta no tiene acceso a este backend.
     superAdminRequired: Se requiere acceso de superadministrador para esta acción.
+    notFound: Usuario no encontrado.
+    updateFailed: Error al actualizar el perfil.
+    userRequired: Se requiere cuenta de usuario para esta promoción.
   team:
     invalidCodes: Código de juego o código de equipo no válido.
   token:
@@ -341,6 +344,10 @@ auth:
     tokenColumnsMissing: El almacenamiento del token de restablecimiento de contraseña
       no está configurado correctamente.
     emailSendFailed: No se pudo enviar el correo electrónico para restablecer la contraseña.
+  password:
+    currentIncorrect: La contraseña actual es incorrecta.
+    changeFailed: Error al cambiar la contraseña.
+    changed: La contraseña se cambió correctamente.
 mailer:
   verify:
     subject: Confirma tu dirección de correo electrónico

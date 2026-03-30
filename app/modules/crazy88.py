@@ -69,6 +69,7 @@ class Crazy88ConfigUpdateRequest(BaseModel):
     """Request body for Crazy88 configuration updates."""
 
     visibility_mode: str = Field(default="all_visible", min_length=3, max_length=24)
+    show_highscore: bool = True
 
 
 class Crazy88TaskPayload(BaseModel):
@@ -80,7 +81,7 @@ class Crazy88TaskPayload(BaseModel):
     latitude: Optional[float] = None
     longitude: Optional[float] = None
     radius_meters: int = Field(default=25, ge=5, le=5000)
-    sort_order: int = Field(default=0, ge=0, le=100000)
+    sort_order: Optional[int] = Field(default=None, ge=0, le=100000)
 
 
 class Crazy88TaskResponse(BaseModel):
@@ -95,12 +96,30 @@ class Crazy88TaskListResponse(BaseModel):
     tasks: list[Dict[str, Any]]
 
 
+class Crazy88TaskOrderResponse(BaseModel):
+    """Response containing ordered task ids after reorder."""
+
+    ordered_ids: list[str]
+
+
+class Crazy88TaskReorderRequest(BaseModel):
+    """Request payload defining new task ordering."""
+
+    ordered_ids: list[str] = Field(default_factory=list)
+
+
 class Crazy88ReviewsResponse(BaseModel):
     """Response payload for the Crazy88 review queue view."""
 
     pending_count: int
     has_assigned_submission: bool
     threads: list[Dict[str, Any]]
+
+
+class Crazy88UnlockReviewResponse(BaseModel):
+    """Response payload for reviewer unlock operation."""
+
+    unlocked: bool
 
 
 class Crazy88ExportFilesRequest(BaseModel):
@@ -177,7 +196,14 @@ class Crazy88Module(ApiModule, SharedModuleBase):
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="crazy88.config.invalidVisibilityMode")
 
             try:
-                self._repository.update_configuration_without_commit(db, game_id, {"visibility_mode": visibility_mode})
+                self._repository.update_configuration_without_commit(
+                    db,
+                    game_id,
+                    {
+                        "visibility_mode": visibility_mode,
+                        "show_highscore": bool(body.show_highscore),
+                    },
+                )
                 self._repository.commit_changes(db)
             except Exception as error:
                 self._repository.rollback_on_error(db, error)
@@ -321,7 +347,12 @@ class Crazy88Module(ApiModule, SharedModuleBase):
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
 
-            values = self._validate_task_payload(body.model_dump(), self._repository.get_configuration(db, game_id))
+            values = self._validate_task_payload(
+                body.model_dump(),
+                self._repository.get_configuration(db, game_id),
+                default_sort_order=self._repository.get_next_sort_order(db, game_id),
+            )
+            values["id"] = str(uuid4())
             values["game_id"] = game_id
 
             try:
@@ -357,6 +388,8 @@ class Crazy88Module(ApiModule, SharedModuleBase):
                 raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="crazy88.task.notFound")
 
             values = self._validate_task_payload(body.model_dump(), self._repository.get_configuration(db, game_id))
+            if body.sort_order is None:
+                values["sort_order"] = int(existing.get("sort_order") or 0)
 
             try:
                 self._repository.update_task_without_commit(db, game_id, task_id, values)
@@ -369,6 +402,56 @@ class Crazy88Module(ApiModule, SharedModuleBase):
             if task is None:
                 raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="crazy88.task.fetchFailed")
             return Crazy88TaskResponse(task=self._serialize_task(task))
+
+        @router.post(
+            "/{game_id}/tasks/reorder",
+            response_model=Crazy88TaskOrderResponse,
+            summary=f"{ACCESS_ADMIN_LABEL} Reorder crazy88 tasks",
+        )
+        def reorder_tasks(
+            game_id: str,
+            body: Crazy88TaskReorderRequest,
+            principal: CurrentPrincipal,
+            db: DbSession,
+        ) -> Crazy88TaskOrderResponse:
+            """Persist task order for Crazy88 admin list management."""
+            self._require_game(db, game_id)
+            self._require_user_manage_access(db, game_id, principal)
+
+            try:
+                self._repository.reorder_tasks_without_commit(db, game_id, body.ordered_ids)
+                self._repository.commit_changes(db)
+            except Exception as error:
+                self._repository.rollback_on_error(db, error)
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="crazy88.task.reorderFailed") from error
+
+            ordered_ids = [str(task.get("id") or "") for task in self._repository.fetch_tasks_by_game_id(db, game_id)]
+            return Crazy88TaskOrderResponse(ordered_ids=[task_id for task_id in ordered_ids if task_id])
+
+        @router.post(
+            "/{game_id}/reviews/unlock",
+            response_model=Crazy88UnlockReviewResponse,
+            summary=f"{ACCESS_ADMIN_LABEL} Unlock assigned crazy88 review",
+        )
+        def unlock_review(
+            game_id: str,
+            principal: CurrentPrincipal,
+            db: DbSession,
+        ) -> Crazy88UnlockReviewResponse:
+            """Release currently assigned pending review for the active judge."""
+            self._require_game(db, game_id)
+            self._require_user_manage_access(db, game_id, principal)
+            if principal.principal_type != "user":
+                raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="auth.user.manageGameRequired")
+
+            try:
+                unlocked = self._repository.unlock_pending_submission_for_judge(db, game_id, principal.principal_id)
+                self._repository.commit_changes(db)
+            except Exception as error:
+                self._repository.rollback_on_error(db, error)
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="crazy88.review.unlockFailed") from error
+
+            return Crazy88UnlockReviewResponse(unlocked=bool(unlocked))
 
         @router.delete(
             "/{game_id}/tasks/{task_id}",
@@ -638,7 +721,7 @@ class Crazy88Module(ApiModule, SharedModuleBase):
             return
 
     @staticmethod
-    def _validate_task_payload(payload: Dict[str, Any], config: Dict[str, Any]) -> Dict[str, Any]:
+    def _validate_task_payload(payload: Dict[str, Any], config: Dict[str, Any], default_sort_order: Optional[int] = None) -> Dict[str, Any]:
         """Validate and normalize Crazy88 task payload input values."""
         title = str(payload.get("title") or "").strip()
         if not title:
@@ -655,6 +738,10 @@ class Crazy88Module(ApiModule, SharedModuleBase):
             latitude = None
             longitude = None
 
+        sort_order = payload.get("sort_order")
+        if sort_order is None:
+            sort_order = default_sort_order if default_sort_order is not None else 0
+
         return {
             "title": title,
             "description": str(payload.get("description") or "").strip() or None,
@@ -662,5 +749,5 @@ class Crazy88Module(ApiModule, SharedModuleBase):
             "latitude": None if latitude is None else float(latitude),
             "longitude": None if longitude is None else float(longitude),
             "radius_meters": max(5, int(payload.get("radius_meters") or 25)),
-            "sort_order": max(0, int(payload.get("sort_order") or 0)),
+            "sort_order": max(0, int(sort_order or 0)),
         }

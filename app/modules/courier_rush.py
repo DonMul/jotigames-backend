@@ -1,4 +1,5 @@
 from typing import Any, Dict, Optional
+from uuid import uuid4
 
 from fastapi import APIRouter, HTTPException, status
 from pydantic import BaseModel, Field
@@ -223,6 +224,7 @@ class CourierRushModule(ApiModule, SharedModuleBase):
             self._require_user_manage_access(db, game_id, principal)
 
             values = self._validate_pickup_payload(body.model_dump())
+            values["id"] = str(uuid4())
             values["game_id"] = game_id
 
             try:
@@ -321,6 +323,7 @@ class CourierRushModule(ApiModule, SharedModuleBase):
             self._require_user_manage_access(db, game_id, principal)
 
             values = self._validate_dropoff_payload(body.model_dump())
+            values["id"] = str(uuid4())
             values["game_id"] = game_id
 
             try:

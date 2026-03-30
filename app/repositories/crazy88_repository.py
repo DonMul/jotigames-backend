@@ -41,6 +41,7 @@ class Crazy88Repository(GameLogicStateRepository):
 
         return {
             "visibility_mode": str(self._first_present(game, ["crazy88_visibility_mode", "crazy88VisibilityMode"], "all_visible") or "all_visible"),
+            "show_highscore": bool(self._first_present(game, ["crazy88_show_highscore", "crazy88ShowHighscore"], True)),
         }
 
     def update_configuration_without_commit(self, db: DbSession, game_id: str, values: Dict[str, Any]) -> None:
@@ -50,6 +51,7 @@ class Crazy88Repository(GameLogicStateRepository):
 
         column_map = {
             "visibility_mode": ["crazy88_visibility_mode", "crazy88VisibilityMode"],
+            "show_highscore": ["crazy88_show_highscore", "crazy88ShowHighscore"],
         }
 
         for payload_key, candidates in column_map.items():
@@ -70,10 +72,54 @@ class Crazy88Repository(GameLogicStateRepository):
     def fetch_tasks_by_game_id(self, db: DbSession, game_id: str) -> list[Dict[str, Any]]:
         """Fetch all task records configured for a game."""
         table = self.get_task_table(db)
-        rows = db.execute(select(table).where(table.c["game_id"] == game_id)).mappings().all()
+        rows = db.execute(
+            select(table)
+            .where(table.c["game_id"] == game_id)
+            .order_by(table.c["sort_order"].asc(), table.c["title"].asc())
+        ).mappings().all()
         return [dict(row) for row in rows]
 
-    def _submission_context_select(self, db: DbSession):
+    def get_next_sort_order(self, db: DbSession, game_id: str) -> int:
+        """Return the next available sort order for a game's task list."""
+        tasks = self.fetch_tasks_by_game_id(db, game_id)
+        highest = 0
+        for task in tasks:
+            highest = max(highest, int(task.get("sort_order") or 0))
+        return highest + 1
+
+    def reorder_tasks_without_commit(self, db: DbSession, game_id: str, ordered_ids: list[str]) -> None:
+        """Apply task order based on ordered ids and append missing tasks."""
+        table = self.get_task_table(db)
+        task_ids = [str(entry).strip() for entry in ordered_ids if str(entry).strip()]
+        if not task_ids:
+            return
+
+        current = self.fetch_tasks_by_game_id(db, game_id)
+        known = {str(item.get("id") or ""): item for item in current}
+
+        sequence = 1
+        for task_id in task_ids:
+            if task_id not in known:
+                continue
+            db.execute(
+                update(table)
+                .where(table.c["game_id"] == game_id)
+                .where(table.c["id"] == task_id)
+                .values(sort_order=sequence)
+            )
+            sequence += 1
+            known.pop(task_id, None)
+
+        for task_id in known.keys():
+            db.execute(
+                update(table)
+                .where(table.c["game_id"] == game_id)
+                .where(table.c["id"] == task_id)
+                .values(sort_order=sequence)
+            )
+            sequence += 1
+
+    def _submission_context_select(self, db: DbSession, game_id: str):
         """Build a schema-aware joined submissions query and related metadata."""
         submission_table = self.get_submission_table(db)
         task_table = self.get_task_table(db)
@@ -304,6 +350,36 @@ class Crazy88Repository(GameLogicStateRepository):
         ).mappings().first()
         return dict(row) if row else None
 
+    def unlock_pending_submission_for_judge(self, db: DbSession, game_id: str, judge_id: str) -> bool:
+        """Release one currently assigned pending submission for the judge."""
+        context = self._submission_context_select(db, game_id)
+        reviewed_by_column = context["reviewed_by_column"]
+        status_column = context["status_column"]
+        submitted_at_column = context["submitted_at_column"]
+        submission_table = context["submission_table"]
+
+        if not reviewed_by_column:
+            return False
+
+        assigned = db.execute(
+            context["query"]
+            .where(submission_table.c[status_column] == "pending")
+            .where(submission_table.c[reviewed_by_column] == judge_id)
+            .order_by(submission_table.c[submitted_at_column] if submitted_at_column else submission_table.c["id"])
+            .limit(1)
+        ).mappings().first()
+        if not assigned:
+            return False
+
+        updated = db.execute(
+            update(submission_table)
+            .where(submission_table.c["id"] == str(assigned.get("id") or ""))
+            .where(submission_table.c[status_column] == "pending")
+            .where(submission_table.c[reviewed_by_column] == judge_id)
+            .values(**{reviewed_by_column: None})
+        )
+        return updated.rowcount == 1
+
     def fetch_submissions_for_export(self, db: DbSession, game_id: str) -> list[Dict[str, Any]]:
         """Return only submissions that include an uploaded proof file."""
         records = self.fetch_submission_threads_by_game_id(db, game_id)
@@ -327,6 +403,9 @@ class Crazy88Repository(GameLogicStateRepository):
     def create_task_without_commit(self, db: DbSession, values: Dict[str, Any]) -> str:
         """Insert a task row and return the generated task id."""
         table = self.get_task_table(db)
+        if "id" in values and values["id"]:
+            db.execute(insert(table).values(**values))
+            return str(values["id"])
         result = db.execute(insert(table).values(**values).returning(table.c["id"]))
         return str(result.scalar_one())
 

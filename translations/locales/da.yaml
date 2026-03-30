@@ -63,7 +63,7 @@ team:
     failed: Holdet kunne ikke opdateres.
   delete:
     failed: Holdet kunne ikke slettes.
-    success: Teamet blev slettet.
+    success: Teamet blev fjernet.
 explodingKittens:
   gameTypeRequired: Dette slutpunkt er kun tilgængeligt for Exploding Kittens-spil.
   lives:
@@ -100,7 +100,7 @@ explodingKittens:
     removeBlocked: Kortet kan ikke fjernes, mens det er i en hånd eller låst.
     pdfDependenciesMissing: QR-PDF-eksportafhængigheder er ikke tilgængelige på serveren.
     pdfLogoInvalid: Centerlogoet skal være en billedfil.
-    pdfLogoTooLarge: Midterlogoet er for stort. Maksimal størrelse er 2 MB.
+    pdfLogoTooLarge: Det midterste logo er for stort. Maksimal størrelse er 2 MB.
   scan:
     failed: Kortscanning mislykkedes.
     cardNotFound: Kort blev ikke fundet for dette spil.
@@ -128,14 +128,14 @@ explodingKittens:
     invalid: Handlingen er ugyldig.
     notAllowed: Handlingen kan ikke håndteres af dette team.
     nopeMissing: Der kræves intet kort for at annullere denne kampagne.
-    nopeUsed: Kampagnen annulleret med Nej.
+    nopeUsed: Kampagnen er annulleret med Nej.
     favorNoCards: Target Team har ingen kort til Favor.
     favorTaken: Gunst løst og et kort tages.
     resolveFailed: Handlingen kunne ikke fuldføres.
   combo:
     failed: Combo kunne ikke bruges.
     invalid: Ugyldig kombinationsvalg.
-    cardNotInHand: Et eller flere valgte kort er ikke på hånden.
+    cardNotInHand: Et eller flere udvalgte kort er ikke på hånden.
     needsTarget: Combo kræver et målhold.
     targetSelf: Teamet kan ikke målrette sig selv for denne kombination.
     targetInvalid: Målteamet for kombinationen er ugyldigt.
@@ -143,7 +143,7 @@ explodingKittens:
     twoNoCards: Målteamet har ingen kort til 2-af-en-slags kombination.
     twoTaken: 2-of-a-kind combo løst og et kort taget.
     threeNeedsType: 3-af-en- slags kombination kræver den ønskede korttype.
-    threeInvalidType: Den ønskede korttype er ugyldig for kombinationen af ​​3-af-en-slag.
+    threeInvalidType: Den ønskede korttype er ugyldig for 3-af-en-kind-kombinationen.
     threeReady: 3-of-a-kind combo i kø.
     threeTaken: 3-af-en-slags kombination løst og ønsket kort taget.
     threeNoMatch: Den ønskede korttype findes ikke i målholdets hånd.
@@ -229,7 +229,7 @@ courier_rush:
     missingPickupId: Afhentnings-id er påkrævet.
     missingDropoffId: Afleverings-id er påkrævet.
   pickup:
-    confirmed: Afhentning blev bekræftet.
+    confirmed: Afhentning bekræftet.
     alreadyConfirmed: Afhentning allerede bekræftet.
   dropoff:
     confirmed: Aflevering blev bekræftet.
@@ -298,6 +298,9 @@ auth:
     invalidEmailOrPassword: Ugyldig e-mailadresse eller adgangskode.
     disallowedRole: Denne konto har ikke adgang til denne backend.
     superAdminRequired: Superadministratoradgang er påkrævet for denne handling.
+    notFound: Bruger ikke fundet.
+    updateFailed: Profilopdatering mislykkedes.
+    userRequired: Brugerkonto påkrævet til denne kampagne.
   team:
     invalidCodes: Ugyldig spilkode eller holdkode.
   token:
@@ -325,6 +328,10 @@ auth:
     tokenColumnsMissing: Lagring af token til nulstilling af adgangskode er ikke konfigureret
       korrekt.
     emailSendFailed: E-mail til nulstilling af adgangskode kunne ikke sendes.
+  password:
+    currentIncorrect: Nuværende adgangskode er forkert.
+    changeFailed: Ændring af adgangskode mislykkedes.
+    changed: Adgangskoden blev ændret.
 mailer:
   verify:
     subject: Bekræft din e-mailadresse

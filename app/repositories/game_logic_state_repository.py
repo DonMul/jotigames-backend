@@ -14,6 +14,9 @@ class GameLogicStateRepository:
     """Common repository helpers for game-state JSON and team score updates."""
 
     _SETTINGS_COLUMN_CANDIDATES = ["settings", "game_settings", "settings_json", "gameSettings"]
+    _GAME_ID_COLUMN_CANDIDATES = ["id", "game_id", "gameId"]
+    _TEAM_ID_COLUMN_CANDIDATES = ["id", "team_id", "teamId"]
+    _TEAM_GAME_ID_COLUMN_CANDIDATES = ["game_id", "gameId"]
 
     def __init__(self) -> None:
         """Initialize reflection metadata used for dynamic table access."""
@@ -39,10 +42,32 @@ class GameLogicStateRepository:
         """Return reflected metadata for the `team` table."""
         return self._get_table(db, "team")
 
+    def _get_game_id_column(self, table: Table) -> str:
+        """Resolve game table primary key column name with legacy compatibility."""
+        name = self._pick_column(table, self._GAME_ID_COLUMN_CANDIDATES)
+        if not name:
+            raise KeyError("game id column not found")
+        return name
+
+    def _get_team_id_column(self, table: Table) -> str:
+        """Resolve team table primary key column name with legacy compatibility."""
+        name = self._pick_column(table, self._TEAM_ID_COLUMN_CANDIDATES)
+        if not name:
+            raise KeyError("team id column not found")
+        return name
+
+    def _get_team_game_id_column(self, table: Table) -> str:
+        """Resolve team table game foreign key column name with legacy compatibility."""
+        name = self._pick_column(table, self._TEAM_GAME_ID_COLUMN_CANDIDATES)
+        if not name:
+            raise KeyError("team game_id column not found")
+        return name
+
     def get_game_by_id(self, db: DbSession, game_id: str) -> Optional[Dict[str, Any]]:
         """Fetch a game row by id as a plain dictionary."""
         table = self.get_game_table(db)
-        row = db.execute(select(table).where(table.c["id"] == game_id).limit(1)).mappings().first()
+        game_id_col = self._get_game_id_column(table)
+        row = db.execute(select(table).where(table.c[game_id_col] == game_id).limit(1)).mappings().first()
         if row is None:
             return None
         return dict(row)
@@ -50,11 +75,13 @@ class GameLogicStateRepository:
     def get_team_by_game_and_id(self, db: DbSession, game_id: str, team_id: str) -> Optional[Dict[str, Any]]:
         """Fetch one team row scoped to a game id and team id."""
         table = self.get_team_table(db)
+        team_id_col = self._get_team_id_column(table)
+        team_game_id_col = self._get_team_game_id_column(table)
         row = (
             db.execute(
                 select(table)
-                .where(table.c["game_id"] == game_id)
-                .where(table.c["id"] == team_id)
+                .where(table.c[team_game_id_col] == game_id)
+                .where(table.c[team_id_col] == team_id)
                 .limit(1)
             )
             .mappings()
@@ -67,7 +94,8 @@ class GameLogicStateRepository:
     def fetch_teams_by_game_id(self, db: DbSession, game_id: str) -> list[Dict[str, Any]]:
         """Fetch all team rows for a specific game."""
         table = self.get_team_table(db)
-        rows = db.execute(select(table).where(table.c["game_id"] == game_id)).mappings().all()
+        team_game_id_col = self._get_team_game_id_column(table)
+        rows = db.execute(select(table).where(table.c[team_game_id_col] == game_id)).mappings().all()
         return [dict(row) for row in rows]
 
     @staticmethod
@@ -158,14 +186,15 @@ class GameLogicStateRepository:
 
         db.execute(
             update(table)
-            .where(table.c["id"] == game_id)
+            .where(table.c[self._get_game_id_column(table)] == game_id)
             .values(**values)
         )
 
     def increment_team_geo_score_without_commit(self, db: DbSession, team_id: str, points: int) -> int:
         """Increment and persist one team's geo score without committing."""
         team_table = self.get_team_table(db)
-        team = db.execute(select(team_table).where(team_table.c["id"] == team_id).limit(1)).mappings().first()
+        team_id_col = self._get_team_id_column(team_table)
+        team = db.execute(select(team_table).where(team_table.c[team_id_col] == team_id).limit(1)).mappings().first()
         if team is None:
             return 0
 
@@ -173,10 +202,70 @@ class GameLogicStateRepository:
         updated = current + int(points)
         db.execute(
             update(team_table)
-            .where(team_table.c["id"] == team_id)
+            .where(team_table.c[team_id_col] == team_id)
             .values(geo_score=updated)
         )
         return updated
+
+    @staticmethod
+    def _safe_float(value: Any) -> Optional[float]:
+        """Convert raw value to float with `None` fallback."""
+        try:
+            numeric = float(value)
+        except (TypeError, ValueError):
+            return None
+        return numeric if numeric == numeric else None
+
+    @staticmethod
+    def _to_iso(value: Any) -> str:
+        """Normalize datetime-like values into string representation."""
+        if isinstance(value, datetime):
+            return value.isoformat()
+        return str(value or "")
+
+    def _extract_team_location(self, row: Dict[str, Any]) -> Dict[str, Any]:
+        """Normalize team row location fields into API shape."""
+        latitude = self._safe_float(row.get("geo_latitude", row.get("geoLatitude", row.get("latitude"))))
+        longitude = self._safe_float(row.get("geo_longitude", row.get("geoLongitude", row.get("longitude"))))
+        updated_at_raw = row.get("geo_updated_at", row.get("geoUpdatedAt", row.get("updated_at", row.get("updatedAt"))))
+        return {
+            "lat": latitude,
+            "lon": longitude,
+            "updated_at": self._to_iso(updated_at_raw),
+        }
+
+    def get_team_location(self, db: DbSession, game_id: str, team_id: str) -> Dict[str, Any]:
+        """Return normalized location for one team in a game."""
+        team = self.get_team_by_game_and_id(db, game_id, team_id)
+        if not isinstance(team, dict):
+            return {"lat": None, "lon": None, "updated_at": ""}
+        return self._extract_team_location(team)
+
+    def update_team_location_without_commit(self, db: DbSession, game_id: str, team_id: str, *, latitude: float, longitude: float) -> None:
+        """Persist team location coordinates without committing transaction."""
+        table = self.get_team_table(db)
+        team_id_col = self._get_team_id_column(table)
+        team_game_id_col = self._get_team_game_id_column(table)
+        lat_col = self._pick_column(table, ["geo_latitude", "geoLatitude", "latitude"])
+        lon_col = self._pick_column(table, ["geo_longitude", "geoLongitude", "longitude"])
+        updated_col = self._pick_column(table, ["geo_updated_at", "geoUpdatedAt", "updated_at", "updatedAt"])
+
+        updates: Dict[str, Any] = {}
+        if lat_col:
+            updates[lat_col] = float(latitude)
+        if lon_col:
+            updates[lon_col] = float(longitude)
+        if updated_col:
+            updates[updated_col] = datetime.now(UTC).replace(tzinfo=None)
+        if not updates:
+            return
+
+        db.execute(
+            update(table)
+            .where(table.c[team_game_id_col] == game_id)
+            .where(table.c[team_id_col] == team_id)
+            .values(**updates)
+        )
 
     @staticmethod
     def commit_changes(db: DbSession) -> None:

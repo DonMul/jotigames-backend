@@ -1,344 +1,349 @@
 validation:
-  invalidRequest: De aanvraaginhoud is ongeldig.
+  invalidRequest: محتوى الطلب غير صالح.
 game:
   auth:
-    userRequired: Een gebruiker-principal is vereist voor gamebeheer-eindpunten.
-    viewAccessRequired: Je hebt geen leestoegang tot deze game.
-    manageAccessRequired: Je hebt geen schrijftoegang tot deze game.
+    userRequired: مطلوب مدير المستخدم لنقاط نهاية إدارة اللعبة.
+    viewAccessRequired: ليس لديك حق الوصول للقراءة إلى هذه اللعبة.
+    manageAccessRequired: ليس لديك حق الوصول للكتابة إلى هذه اللعبة.
   teamMessage:
-    sent: Bericht succesvol naar team verstuurd.
-    sendFailed: Bericht kon niet naar team worden verstuurd.
+    sent: تم إرسال الرسالة بنجاح إلى الفريق.
+    sendFailed: لا يمكن إرسال الرسالة إلى الفريق.
   chat:
-    emptyMessage: Chatbericht mag niet leeg zijn.
-    sendFailed: Chatbericht kon niet worden verstuurd.
-  notFound: Game is niet gevonden.
+    emptyMessage: لا يمكن أن تكون رسالة الدردشة فارغة.
+    sendFailed: لا يمكن إرسال رسالة الدردشة.
+  notFound: لم يتم العثور على اللعبة.
   member:
-    userNotFound: Gebruiker is niet gevonden.
-    emailNotFound: Er is geen gebruiker gevonden met dat e-mailadres.
+    userNotFound: لم يتم العثور على المستخدم.
+    emailNotFound: لم يتم العثور على مستخدم باستخدام عنوان البريد الإلكتروني هذا.
   schema:
-    columnMissing: Het schema van de gametabel mist een verplichte kolom.
+    columnMissing: يفتقد مخطط جدول اللعبة عمودًا إلزاميًا.
   types:
-    columnMissing: Het schema van game type availability mist een verplichte kolom.
+    columnMissing: يفتقد جدول توفر نوع اللعبة إلى عمود إلزامي.
   validation:
-    requiredFieldsMissing: Verplichte gamevelden ontbreken.
-    startBeforeEndRequired: De starttijd van een game moet vóór de eindtijd liggen.
-    unknownSetting: Eén of meer game-instellingen-sleutels zijn onbekend.
+    requiredFieldsMissing: حقول اللعبة الإلزامية مفقودة.
+    startBeforeEndRequired: يجب أن يكون وقت بدء اللعبة قبل وقت الانتهاء.
+    unknownSetting: واحد أو أكثر من مفاتيح إعدادات اللعبة غير معروف.
   create:
-    failed: Game kon niet worden aangemaakt.
+    failed: لا يمكن إنشاء اللعبة.
   update:
-    failed: Game kon niet worden bijgewerkt.
+    failed: لا يمكن تحديث اللعبة.
   delete:
-    failed: Game kon niet worden verwijderd.
-    success: Game succesvol verwijderd.
+    failed: لا يمكن حذف اللعبة.
+    success: تم حذف اللعبة بنجاح.
   reset:
-    failed: Game kon niet worden gereset.
-    success: Game succesvol gereset.
+    failed: لا يمكن إعادة ضبط اللعبة.
+    success: تمت إعادة ضبط اللعبة بنجاح.
   admin:
     add:
-      failed: Game admin kon niet worden toegevoegd.
-      success: Game admin succesvol toegevoegd.
+      failed: لا يمكن إضافة مشرف اللعبة.
+      success: تمت إضافة مشرف اللعبة بنجاح.
     remove:
-      failed: Game admin kon niet worden verwijderd.
-      success: Game admin succesvol verwijderd.
-      ownerForbidden: De game-eigenaar kan niet als admin worden verwijderd.
-      selfForbidden: Je kunt jezelf niet uit game admins verwijderen.
+      failed: لا يمكن إزالة مسؤول اللعبة.
+      success: تمت إزالة مسؤول اللعبة بنجاح.
+      ownerForbidden: لا يمكن إزالة مالك اللعبة كمسؤول.
+      selfForbidden: لا يمكنك إزالة نفسك من مدراء اللعبة.
   gameMaster:
     add:
-      failed: Game master kon niet worden toegevoegd.
-      success: Game master succesvol toegevoegd.
+      failed: لا يمكن إضافة سيد اللعبة.
+      success: تمت إضافة سيد اللعبة بنجاح.
     remove:
-      failed: Game master kon niet worden verwijderd.
-      success: Game master succesvol verwijderd.
+      failed: لا يمكن إزالة سيد اللعبة.
+      success: تمت إزالة سيد اللعبة بنجاح.
 team:
-  notFound: Team is niet gevonden in deze game.
+  notFound: لم يتم العثور على الفريق في هذه اللعبة.
   auth:
-    selfRequired: Teamtokens hebben alleen toegang tot hun eigen team.
+    selfRequired: يمكن لرموز الفريق الوصول إلى فريقهم فقط.
   validation:
-    codeAlreadyUsed: Teamcode is al in gebruik voor deze game.
+    codeAlreadyUsed: رمز الفريق قيد الاستخدام بالفعل لهذه اللعبة.
   create:
-    failed: Team kon niet worden aangemaakt.
-    codeGenerationFailed: Er kon geen unieke teamcode worden gegenereerd.
+    failed: لا يمكن إنشاء الفريق.
+    codeGenerationFailed: لا يمكن إنشاء رمز فريق فريد.
   update:
-    failed: Team kon niet worden bijgewerkt.
+    failed: لا يمكن تحديث الفريق.
   delete:
-    failed: Team kon niet worden verwijderd.
-    success: Team succesvol verwijderd.
+    failed: لا يمكن حذف الفريق.
+    success: تمت إزالة الفريق بنجاح.
 explodingKittens:
-  gameTypeRequired: Dit eindpunt is alleen beschikbaar voor Exploding Kittens-games.
+  gameTypeRequired: نقطة النهاية هذه متاحة فقط لألعاب Exploding Kittens.
   lives:
-    invalidDelta: Leven-delta moet ongelijk aan nul zijn.
-    updated: Teamlevens succesvol bijgewerkt.
-    updateFailed: Teamlevens konden niet worden bijgewerkt.
+    invalidDelta: يجب أن تكون دلتا ليفين غير صفرية.
+    updated: تم تحديث حياة الفريق بنجاح.
+    updateFailed: لا يمكن تحديث حياة الفريق.
   play:
-    failed: Kaart kon niet worden gespeeld.
-    cardNotInHand: Kaart zit niet in de hand van dit team.
-    cardNotPlayable: Deze kaart kan niet direct gespeeld worden.
-    needsTarget: Voor deze kaart is een doelteam vereist.
-    targetSelf: Een team kan zichzelf niet targeten.
-    targetInvalid: Doelteam is ongeldig voor deze game.
-    attackAlreadyPending: Er staat al een aanval in de wachtrij voor dit team.
-    peekAlreadyPending: See the future staat al in de wachtrij voor dit team.
-    skipAlreadyPending: Skip staat al in de wachtrij voor dit team.
-    attackReady: Attack-kaart succesvol gespeeld.
-    favorTargeted: Favor-kaart gespeeld en doelactie aangemaakt.
-    peekReady: See the future-kaart succesvol gespeeld.
-    shuffleDone: Shuffle-kaart succesvol gespeeld.
-    skipReady: Skip-kaart succesvol gespeeld.
+    failed: لا يمكن تشغيل البطاقة.
+    cardNotInHand: البطاقة ليست في يد هذا الفريق.
+    cardNotPlayable: لا يمكن لعب هذه البطاقة مباشرة.
+    needsTarget: تتطلب هذه البطاقة فريقًا مستهدفًا.
+    targetSelf: لا يمكن للفريق أن يستهدف نفسه.
+    targetInvalid: الفريق المستهدف غير صالح لهذه اللعبة.
+    attackAlreadyPending: هناك بالفعل هجوم مُعد لهذا الفريق.
+    peekAlreadyPending: رؤية المستقبل موجود بالفعل في قائمة الانتظار لهذا الفريق.
+    skipAlreadyPending: التخطي موجود بالفعل في قائمة الانتظار لهذا الفريق.
+    attackReady: تم لعب بطاقة الهجوم بنجاح.
+    favorTargeted: تم تشغيل بطاقة التفضيل وإنشاء الإجراء المستهدف.
+    peekReady: شاهد البطاقة المستقبلية التي تم لعبها بنجاح.
+    shuffleDone: تم تشغيل البطاقة العشوائية بنجاح.
+    skipReady: تخطي البطاقة التي تم لعبها بنجاح.
   hand:
-    addFailed: Willekeurige handkaart kon niet worden toegevoegd.
-    removeFailed: Willekeurige handkaart kon niet worden verwijderd.
+    addFailed: لا يمكن إضافة بطاقة يد عشوائية.
+    removeFailed: لا يمكن إزالة بطاقة اليد العشوائية.
   cards:
-    invalidType: Kaarttype is ongeldig voor Exploding Kittens.
-    notFound: Kaart is niet gevonden.
-    addFailed: Kaarten konden niet worden toegevoegd.
-    addSuccess: Kaarten succesvol toegevoegd.
-    createFailed: Kaart kon niet worden aangemaakt.
-    updateFailed: Kaart kon niet worden bijgewerkt.
-    deleteFailed: Kaart kon niet worden verwijderd.
-    deleteSuccess: Kaart succesvol verwijderd.
-    removeBlocked: Kaart kan niet worden verwijderd zolang deze in een hand zit of
-      vergrendeld is.
-    pdfDependenciesMissing: QR-PDF exportafhankelijkheden zijn niet beschikbaar op
-      de server.
-    pdfLogoInvalid: Middenlogo moet een afbeeldingsbestand zijn.
-    pdfLogoTooLarge: Middenlogo is te groot. Maximale grootte is 2 MB.
+    invalidType: نوع البطاقة غير صالح لـ Exploding Kittens.
+    notFound: لم يتم العثور على الخريطة.
+    addFailed: لا يمكن إضافة البطاقات.
+    addSuccess: تمت إضافة البطاقات بنجاح.
+    createFailed: لا يمكن إنشاء الخريطة.
+    updateFailed: لا يمكن تحديث الخريطة.
+    deleteFailed: لا يمكن إزالة البطاقة.
+    deleteSuccess: تمت إزالة البطاقة بنجاح.
+    removeBlocked: لا يمكن إزالة البطاقة وهي في اليد أو مقفلة.
+    pdfDependenciesMissing: تبعيات تصدير QR-PDF غير متوفرة على الخادم.
+    pdfLogoInvalid: يجب أن يكون شعار المركز عبارة عن ملف صورة.
+    pdfLogoTooLarge: شعار المركز كبير جدًا. الحد الأقصى للحجم هو 2 ميجابايت.
   scan:
-    failed: Kaart scannen is mislukt.
-    cardNotFound: Kaart is niet gevonden voor deze game.
-    cardInHand: Kaart zit al in een teamhand.
-    cardLocked: Kaart is momenteel vergrendeld.
-    cardAdded: Kaart aan hand toegevoegd.
-    cardNoEffect: Kaart heeft geen effect.
-    felixGain: Felix-kaart gaf één leven erbij.
-    felixAlreadyUsed: Felix-kaart is al gebruikt door dit team.
-    explodingDefused: Exploding kitten is onschadelijk gemaakt.
-    explodingHit: Exploding kitten heeft het team geraakt.
-    attackTargeted: Aanval is gericht en wacht op afhandeling.
+    failed: فشل مسح البطاقة.
+    cardNotFound: لم يتم العثور على الخريطة لهذه اللعبة.
+    cardInHand: البطاقة موجودة بالفعل في يد الفريق.
+    cardLocked: الخريطة مقفلة حاليا.
+    cardAdded: تمت إضافة البطاقة إلى اليد.
+    cardNoEffect: البطاقة ليس لها أي تأثير.
+    felixGain: أعطت بطاقة فيليكس حياة إضافية.
+    felixAlreadyUsed: لقد تم استخدام بطاقة فيليكس بالفعل من قبل هذا الفريق.
+    explodingDefused: تم إبطال مفعول القطة المتفجرة.
+    explodingHit: ضرب القطة المتفجرة الفريق.
+    attackTargeted: الهجوم مستهدف وينتظر التعامل معه.
   state:
-    fetched: Teamstatus opgehaald.
-    resolveFailed: Status kon niet worden afgehandeld.
-    none: Geen wachtende status om af te handelen.
-    skipPending: Skip staat in wachtrij voor dit team.
-    skipResolved: Skip-status afgehandeld.
-    peekPending: See the future staat in wachtrij voor dit team.
-    peekNeedsConfirm: See the future vereist bevestiging om af te handelen.
-    peekResolved: See the future-status afgehandeld.
-    attackNeedsTarget: Attack vereist een doelteam en gescande kaart.
-    attackInvalidTarget: Doelteam voor attack is ongeldig.
+    fetched: تم استرداد حالة الفريق.
+    resolveFailed: لا يمكن معالجة الحالة.
+    none: لا توجد حالة معلقة للتعامل معها.
+    skipPending: تخطي في قائمة الانتظار لهذا الفريق.
+    skipResolved: تمت معالجة حالة التخطي.
+    peekPending: انظر المستقبل في قائمة الانتظار لهذا الفريق.
+    peekNeedsConfirm: رؤية المستقبل يتطلب تأكيدا لإكمال.
+    peekResolved: شاهد الحالة المستقبلية مكتملة.
+    attackNeedsTarget: يتطلب الهجوم وجود فريق مستهدف وخريطة ممسوحة ضوئيًا.
+    attackInvalidTarget: الفريق المستهدف للهجوم غير صالح.
   action:
-    invalid: Actie is ongeldig.
-    notAllowed: Actie kan niet door dit team worden afgehandeld.
-    nopeMissing: Nope-kaart is vereist om deze actie te annuleren.
-    nopeUsed: Actie geannuleerd met Nope.
-    favorNoCards: Doelteam heeft geen kaarten voor Favor.
-    favorTaken: Favor afgehandeld en een kaart is genomen.
-    resolveFailed: Actie kon niet worden afgehandeld.
+    invalid: الإجراء غير صالح.
+    notAllowed: لا يمكن التعامل مع هذا العمل من قبل هذا الفريق.
+    nopeMissing: لا يلزم وجود بطاقة لإلغاء هذا العرض الترويجي.
+    nopeUsed: تم إلغاء الترويج مع لا.
+    favorNoCards: الفريق المستهدف ليس لديه بطاقات لصالح.
+    favorTaken: تم حل المعروف وأخذ البطاقة.
+    resolveFailed: لا يمكن إكمال الإجراء.
   combo:
-    failed: Combo kon niet worden gebruikt.
-    invalid: Ongeldige combo-selectie.
-    cardNotInHand: Een of meer geselecteerde kaarten zitten niet in de hand.
-    needsTarget: Combo vereist een doelteam.
-    targetSelf: Team kan zichzelf niet als doel kiezen voor deze combo.
-    targetInvalid: Doelteam voor combo is ongeldig.
-    twoReady: 2-van-gelijke combo in wachtrij gezet.
-    twoNoCards: Doelteam heeft geen kaarten voor 2-van-gelijke combo.
-    twoTaken: 2-van-gelijke combo afgehandeld en een kaart is genomen.
-    threeNeedsType: 3-van-gelijke combo vereist gewenst kaarttype.
-    threeInvalidType: Gewenst kaarttype is ongeldig voor 3-van-gelijke combo.
-    threeReady: 3-van-gelijke combo in wachtrij gezet.
-    threeTaken: 3-van-gelijke combo afgehandeld en gewenste kaart is genomen.
-    threeNoMatch: Gewenst kaarttype niet gevonden in hand van doelteam.
-    fiveNeedsType: 5-verschillende combo vereist gewenst kaarttype.
-    fiveTaken: 5-verschillende combo afgehandeld en kaart uit deck genomen.
-    fiveNone: 5-verschillende combo afgehandeld maar gewenst kaarttype niet beschikbaar
-      in deck.
+    failed: لا يمكن استخدام التحرير والسرد.
+    invalid: تحديد التحرير والسرد غير صالح.
+    cardNotInHand: واحدة أو أكثر من البطاقات المحددة ليست في متناول اليد.
+    needsTarget: التحرير والسرد يتطلب فريقا مستهدفا.
+    targetSelf: لا يمكن للفريق استهداف نفسه بهذه المجموعة.
+    targetInvalid: الفريق المستهدف للسرد غير صالح.
+    twoReady: التحرير والسرد 2 من نوع في قائمة الانتظار.
+    twoNoCards: الفريق المستهدف ليس لديه بطاقات لمجموعة ثنائية من نفس النوع.
+    twoTaken: تم حل مجموعة ثنائية من نوعها وتم أخذ البطاقة.
+    threeNeedsType: التحرير والسرد 3 من النوع يتطلب نوع البطاقة المطلوبة.
+    threeInvalidType: نوع البطاقة المطلوب غير صالح لمجموعة 3 من نفس النوع.
+    threeReady: 3-من نوع التحرير والسرد في قائمة الانتظار.
+    threeTaken: تم حل مجموعة من 3 أنواع من النوع وتم أخذ البطاقة المطلوبة.
+    threeNoMatch: لم يتم العثور على نوع البطاقة المرغوبة في يد الفريق المستهدف.
+    fiveNeedsType: 5-السرد المختلف يتطلب نوع البطاقة المطلوبة.
+    fiveTaken: تم حل 5 مجموعات مختلفة وتم أخذ البطاقة من سطح السفينة.
+    fiveNone: 5-تم حل مجموعة مختلفة من المجموعات ولكن نوع البطاقة المطلوب غير متوفر
+      في المجموعة.
 geohunter:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Geohunter-games.
+  gameTypeRequired: نقطة النهاية هذه متاحة فقط لألعاب Geohunter.
   validation:
-    missingPoiId: Point of interest-id is verplicht.
+    missingPoiId: معرف نقطة الاهتمام مطلوب.
   answer:
-    recorded: Antwoord succesvol ingediend.
-    alreadySubmitted: Dit punt is al beantwoord door je team.
+    recorded: تم إرسال الإجابة بنجاح.
+    alreadySubmitted: لقد تم الرد على هذه النقطة من قبل فريقك بالفعل.
 blindhike:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Blindhike-games.
+  gameTypeRequired: نقطة النهاية هذه متاحة فقط لألعاب Blindhike.
   validation:
-    missingMarkerId: Marker-id is verplicht.
+    missingMarkerId: معرف العلامة مطلوب.
   marker:
-    added: Marker succesvol toegevoegd.
-    alreadyAdded: Marker is al toegevoegd door je team.
-    finished: Je team is al gefinisht en kan geen extra markers plaatsen.
+    added: تمت إضافة العلامة بنجاح.
+    alreadyAdded: تمت إضافة العلامة بالفعل بواسطة فريقك.
+    finished: لقد انتهى فريقك بالفعل ولا يمكنه وضع علامات إضافية.
 resource_run:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Resource Run-games.
+  gameTypeRequired: نقطة النهاية هذه متاحة فقط لألعاب Resource Run.
   validation:
-    missingNodeId: Resource node-id is verplicht.
+    missingNodeId: معرف عقدة المورد مطلوب.
   claim:
-    recorded: Resource succesvol geclaimd.
-    alreadyCollected: Resource is al verzameld door je team.
+    recorded: تمت المطالبة بالمورد بنجاح.
+    alreadyCollected: لقد تم بالفعل جمع الموارد من قبل فريقك.
 territory_control:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Territory Control-games.
+  gameTypeRequired: نقطة النهاية هذه متاحة فقط لألعاب التحكم في المنطقة.
   validation:
-    missingZoneId: Zone-id is verplicht.
+    missingZoneId: معرف المنطقة مطلوب.
   claim:
-    recorded: Zone succesvol geclaimd.
-    alreadyOwned: Zone is al geclaimd door je team.
+    recorded: تمت المطالبة بالمنطقة بنجاح.
+    alreadyOwned: لقد تمت المطالبة بالمنطقة بالفعل من قبل فريقك.
 market_crash:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Market Crash-games.
+  gameTypeRequired: نقطة النهاية هذه متاحة فقط لألعاب Market Crash.
   validation:
-    missingTradeId: Trade-id is verplicht.
+    missingTradeId: معرف التجارة مطلوب.
   resource:
-    invalidName: Resourcenaam is ongeldig.
-    exists: Resource bestaat al.
-    createFailed: Resource aanmaken mislukt.
-    notFound: Resource is niet gevonden.
-    updateFailed: Resource bijwerken mislukt.
-    deleteFailed: Resource verwijderen mislukt.
+    invalidName: اسم المورد غير صالح.
+    exists: المورد موجود بالفعل.
+    createFailed: فشل إنشاء المورد.
+    notFound: لم يتم العثور على المورد.
+    updateFailed: فشل تحديث المورد.
+    deleteFailed: فشل حذف المورد.
   point:
-    createFailed: Punt aanmaken mislukt.
-    notFound: Punt is niet gevonden.
-    updateFailed: Punt bijwerken mislukt.
-    deleteFailed: Punt verwijderen mislukt.
-    invalidTitle: Punttitel is ongeldig.
-    invalidColor: De kleur van de puntmarkering is ongeldig.
-    invalidResource: Punt bevat een ongeldige resourceverwijzing.
-    resourcesRequired: Minimaal één resource-instelling is verplicht voor een punt.
-    invalid: Puntcoördinaten zijn ongeldig.
+    createFailed: فشل إنشاء النقطة.
+    notFound: لم يتم العثور على النقطة.
+    updateFailed: فشل تحديث النقطة.
+    deleteFailed: فشل حذف النقطة.
+    invalidTitle: عنوان النقطة غير صالح.
+    invalidColor: لون علامة النقطة غير صالح.
+    invalidResource: تحتوي النقطة على مرجع مورد غير صالح.
+    resourcesRequired: مطلوب إعداد مورد واحد على الأقل للنقطة.
+    invalid: إحداثيات النقطة غير صالحة.
   location:
-    required: Locatie is verplicht voordat je kunt handelen.
-    invalid: Locatiecoördinaten zijn ongeldig.
-    updated: Locatie bijgewerkt.
+    required: الموقع مطلوب قبل أن تتمكن من التداول.
+    invalid: إحداثيات الموقع غير صالحة.
+    updated: تم تحديث الموقع.
   trade:
-    executed: Trade succesvol uitgevoerd.
-    invalidSide: Trade-richting is ongeldig.
-    invalidResource: Resource is niet verhandelbaar op dit punt.
-    outOfRange: Je bent buiten bereik van dit handelspunt.
-    invalidPrice: Trade-prijs is ongeldig.
-    insufficientCash: Onvoldoende cash voor deze trade.
-    insufficientInventory: Onvoldoende voorraad voor deze trade.
+    executed: تم تنفيذ التجارة بنجاح.
+    invalidSide: اتجاه التجارة غير صالح.
+    invalidResource: المورد غير قابل للتداول في هذه المرحلة.
+    outOfRange: أنت خارج نطاق نقطة التداول هذه.
+    invalidPrice: سعر التجارة غير صالح.
+    insufficientCash: عدم كفاية النقد لهذه التجارة.
+    insufficientInventory: مخزون غير كاف لهذه التجارة.
 crazy88:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Crazy 88-games.
+  gameTypeRequired: نقطة النهاية هذه متاحة فقط لألعاب Crazy 88.
   validation:
-    missingTaskId: Task-id is verplicht.
-    missingSubmissionId: Submission-id is verplicht.
+    missingTaskId: معرف المهمة مطلوب.
+    missingSubmissionId: معرف التقديم مطلوب.
   task:
-    submitted: Taak succesvol ingediend.
+    submitted: تم تقديم الوظيفة بنجاح.
   review:
-    judged: Inzending succesvol beoordeeld.
-    alreadyJudged: Inzending is al beoordeeld.
+    judged: تم الحكم على التقديم بأنه ناجح.
+    alreadyJudged: لقد تم بالفعل تقييم التقديم.
 courier_rush:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Courier Rush-games.
+  gameTypeRequired: نقطة النهاية هذه متاحة فقط لألعاب Courier Rush.
   validation:
-    missingPickupId: Pickup-id is verplicht.
-    missingDropoffId: Dropoff-id is verplicht.
+    missingPickupId: معرف الالتقاط مطلوب.
+    missingDropoffId: معرف التسليم مطلوب.
   pickup:
-    confirmed: Pickup succesvol bevestigd.
-    alreadyConfirmed: Pickup is al bevestigd.
+    confirmed: تم تأكيد الاستلام بنجاح.
+    alreadyConfirmed: تم تأكيد الاستلام بالفعل.
   dropoff:
-    confirmed: Dropoff succesvol bevestigd.
+    confirmed: تم تأكيد الإنزال بنجاح.
 echo_hunt:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Echo Hunt-games.
+  gameTypeRequired: نقطة النهاية هذه متاحة فقط لألعاب Echo Hunt.
   validation:
-    missingBeaconId: Beacon-id is verplicht.
+    missingBeaconId: معرف المنارة مطلوب.
   beacon:
-    claimed: Beacon succesvol geclaimd.
-    alreadyClaimed: Beacon is al geclaimd door je team.
+    claimed: تمت المطالبة بالإشارة بنجاح.
+    alreadyClaimed: تمت المطالبة بالإشارة التنبيهية من قبل فريقك بالفعل.
 checkpoint_heist:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Checkpoint Heist-games.
+  gameTypeRequired: نقطة النهاية هذه متاحة فقط لألعاب Checkpoint Heist.
   validation:
-    missingCheckpointId: Checkpoint-id is verplicht.
+    missingCheckpointId: معرف نقطة التفتيش مطلوب.
   capture:
-    recorded: Checkpoint succesvol veroverd.
-    alreadyCaptured: Checkpoint is al veroverd door je team.
+    recorded: تم الاستيلاء على نقطة التفتيش بنجاح.
+    alreadyCaptured: لقد تم بالفعل الاستيلاء على نقطة التفتيش من قبل فريقك.
 pandemic_response:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Pandemic Response-games.
+  gameTypeRequired: نقطة النهاية هذه متاحة فقط لألعاب Pandemic Response.
   validation:
-    missingPickupId: Pickup-id is verplicht.
-    missingHotspotId: Hotspot-id is verplicht.
+    missingPickupId: معرف الالتقاط مطلوب.
+    missingHotspotId: معرف نقطة الاتصال مطلوب.
   pickup:
-    collected: Pickup succesvol verzameld.
-    alreadyCollected: Pickup is al verzameld door je team.
+    collected: تم جمع الالتقاط بنجاح.
+    alreadyCollected: لقد تم بالفعل جمع الالتقاط بواسطة فريقك.
   hotspot:
-    resolved: Hotspot succesvol opgelost.
-    alreadyResolved: Hotspot is al opgelost door je team.
+    resolved: تم حل نقطة الاتصال بنجاح.
+    alreadyResolved: لقد تم بالفعل حل نقطة الاتصال بواسطة فريقك.
 birds_of_prey:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Birds of Prey-games.
+  gameTypeRequired: نقطة النهاية هذه متاحة فقط لألعاب Birds of Prey.
   config:
-    updateFailed: Birds of Prey-instellingen opslaan mislukt.
+    updateFailed: فشل حفظ إعدادات Birds of Prey.
   location:
-    required: Locatie is verplicht voordat je deze actie kunt uitvoeren.
-    invalid: Locatiecoördinaten zijn ongeldig.
-    updated: Locatie bijgewerkt.
+    required: الموقع مطلوب قبل أن تتمكن من تنفيذ هذا الإجراء.
+    invalid: إحداثيات الموقع غير صالحة.
+    updated: تم تحديث الموقع.
   validation:
-    missingEggId: Egg-id is verplicht.
+    missingEggId: معرف البيضة مطلوب.
   egg:
-    dropped: Egg succesvol geplaatst.
-    dropFailed: Egg kon niet worden opgeslagen.
-    alreadyDropped: Egg is al geplaatst.
-    persistFailed: Egg-drop is geaccepteerd, maar kon niet uit persistente game-state
-      worden geladen.
-    destroyed: Egg succesvol vernietigd.
-    alreadyDestroyed: Egg is al vernietigd.
-    notFound: Egg is niet gevonden.
-    cannotDestroyOwn: Je kunt je eigen egg niet vernietigen.
-    notVisible: Egg is niet zichtbaar binnen je bereik.
-    protected: Egg is beschermd omdat de eigenaar in de buurt is.
+    dropped: تم وضع البيضة بنجاح.
+    dropFailed: لا يمكن حفظ البيضة.
+    alreadyDropped: لقد تم بالفعل وضع البيضة.
+    persistFailed: تم قبول Egg Drop، ولكن لا يمكن تحميلها من حالة اللعبة المستمرة.
+    destroyed: تم تدمير البيضة بنجاح.
+    alreadyDestroyed: لقد تم بالفعل تدمير البيضة.
+    notFound: لم يتم العثور على البيض.
+    cannotDestroyOwn: لا يمكنك تدمير بيضتك الخاصة.
+    notVisible: البيضة غير مرئية في متناول يدك.
+    protected: البيضة محمية لأن المالك قريب منها.
 code_conspiracy:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Code Conspiracy-games.
+  gameTypeRequired: نقطة النهاية هذه متاحة فقط لألعاب Code Conspiracy.
   validation:
-    missingTargetTeamId: Doelteam-id is verplicht.
-    missingCode: Code is verplicht.
+    missingTargetTeamId: معرف الفريق المستهدف مطلوب.
+    missingCode: الكود مطلوب.
   code:
-    submitted: Code-inzending ontvangen.
+    submitted: تم استلام إرسال الكود.
 auth:
   locale:
-    unsupported: Niet-ondersteunde taal. Toegestane waarden zijn en en nl.
+    unsupported: لغة غير مدعومة. القيم المسموح بها هي en و nl.
   ws:
-    superAdminKeyRequired: WS super admin-sleutel is verplicht.
-    superAdminKeyInvalid: WS-superbeheerderssleutel is ongeldig.
-    superAdminKeyNotConfigured: WS super admin-sleutel is niet geconfigureerd op de
-      backend.
+    superAdminKeyRequired: مطلوب مفتاح المشرف المتميز WS.
+    superAdminKeyInvalid: مفتاح المشرف المتميز لـ WS غير صالح.
+    superAdminKeyNotConfigured: لم يتم تكوين مفتاح المشرف المتميز لـ WS على الواجهة
+      الخلفية.
   user:
-    invalidEmailOrPassword: Ongeldig e-mailadres of wachtwoord.
-    disallowedRole: Dit account heeft geen toegang tot deze backend.
-    superAdminRequired: Super admin-toegang is vereist voor deze actie.
+    invalidEmailOrPassword: عنوان البريد الإلكتروني أو كلمة المرور غير صالحة.
+    disallowedRole: هذا الحساب ليس لديه حق الوصول إلى هذه الواجهة الخلفية.
+    superAdminRequired: مطلوب وصول المشرف المتميز لهذا الإجراء.
+    notFound: لم يتم العثور على المستخدم.
+    updateFailed: فشل تحديث الملف الشخصي.
+    userRequired: حساب المستخدم مطلوب لهذا العرض الترويجي.
   team:
-    invalidCodes: Ongeldige gamecode of teamcode.
+    invalidCodes: رمز اللعبة أو رمز الفريق غير صالح.
   token:
-    missingBearerToken: Bearer-token is verplicht.
-    invalidBearerHeaderFormat: Bearer-token header-formaat is ongeldig.
-    invalidOrExpired: Token is ongeldig of verlopen.
-    gameAccessRequired: Token heeft geen toegang tot de gevraagde game.
+    missingBearerToken: مطلوب رمز حامل.
+    invalidBearerHeaderFormat: تنسيق رأس الرمز المميز لحامله غير صالح.
+    invalidOrExpired: الرمز غير صالح أو منتهي الصلاحية.
+    gameAccessRequired: لا يمكن للرمز الوصول إلى اللعبة المطلوبة.
   register:
-    emailAlreadyUsed: Er bestaat al een account met dit e-mailadres.
-    usernameAlreadyUsed: Deze gebruikersnaam is al in gebruik.
-    verifyEmailSent: Account aangemaakt. Controleer je e-mail om je adres te bevestigen.
-    emailSendFailed: Verificatie-e-mail kon niet worden verzonden.
-    mailerNotConfigured: E-mailservice is niet geconfigureerd.
-    mailerUnsupportedScheme: Het DSN-schema van de e-mailservice wordt niet ondersteund.
-    mailerFromMissing: Afzenderadres voor e-mail is niet geconfigureerd.
+    emailAlreadyUsed: يوجد حساب بالفعل باستخدام عنوان البريد الإلكتروني هذا.
+    usernameAlreadyUsed: اسم المستخدم هذا قيد الاستخدام بالفعل.
+    verifyEmailSent: تم إنشاء الحساب. تحقق من بريدك الإلكتروني لتأكيد عنوانك.
+    emailSendFailed: لا يمكن إرسال البريد الإلكتروني للتحقق.
+    mailerNotConfigured: لم يتم تكوين خدمة البريد الإلكتروني.
+    mailerUnsupportedScheme: نظام DSN لخدمة البريد الإلكتروني غير مدعوم.
+    mailerFromMissing: لم يتم تكوين عنوان مرسل البريد الإلكتروني.
   verify:
-    invalidToken: Deze verificatietoken is ongeldig of verlopen.
-    success: E-mailadres is succesvol bevestigd.
-    pendingEmailConflict: Dit wachtende e-mailadres kan niet meer worden toegepast
-      omdat het al in gebruik is.
-    tokenColumnMissing: Opslag voor verificatietokens is niet correct geconfigureerd.
+    invalidToken: رمز المصادقة هذا غير صالح أو منتهي الصلاحية.
+    success: لقد تم تأكيد عنوان البريد الإلكتروني بنجاح.
+    pendingEmailConflict: لا يمكن تطبيق عنوان البريد الإلكتروني المعلق هذا بعد الآن
+      لأنه قيد الاستخدام بالفعل.
+    tokenColumnMissing: لم يتم تكوين تخزين رمز المصادقة بشكل صحيح.
   reset:
-    requestAccepted: Als een account bestaat en bevestigd is, is een reset-e-mail
-      verzonden.
-    tokenColumnsMissing: Opslag voor wachtwoord-resettokens is niet correct geconfigureerd.
-    emailSendFailed: Wachtwoord reset-e-mail kon niet worden verzonden.
+    requestAccepted: إذا كان هناك حساب وتم تأكيده، فسيتم إرسال بريد إلكتروني لإعادة
+      التعيين.
+    tokenColumnsMissing: لم يتم تكوين تخزين الرمز المميز لإعادة تعيين كلمة المرور
+      بشكل صحيح.
+    emailSendFailed: لا يمكن إرسال البريد الإلكتروني لإعادة تعيين كلمة المرور.
+  password:
+    currentIncorrect: كلمة المرور الحالية غير صحيحة.
+    changeFailed: فشل تغيير كلمة المرور.
+    changed: تم تغيير كلمة المرور بنجاح.
 mailer:
   verify:
-    subject: Bevestig je e-mailadres
-    title: Bevestig je e-mailadres
-    greeting: Hoi %usernaam%,
-    intro: Bevestig je e-mailadres door op de knop hieronder te klikken.
-    cta: E-mailadres bevestigen
-    outro: Als je geen account hebt aangemaakt, kun je deze e-mail negeren.
+    subject: قم بتأكيد عنوان بريدك الإلكتروني
+    title: قم بتأكيد عنوان بريدك الإلكتروني
+    greeting: مرحبًا %uاسم المستخدم%،
+    intro: قم بتأكيد عنوان بريدك الإلكتروني بالضغط على الزر أدناه.
+    cta: تأكيد عنوان البريد الإلكتروني
+    outro: إذا لم تقم بإنشاء حساب، يمكنك تجاهل هذا البريد الإلكتروني.
   reset:
-    subject: Wachtwoord resetten
-    title: Wachtwoord resetten
-    greeting: Hoi %usernaam%,
-    intro: Er is een wachtwoordreset aangevraagd voor je account. Gebruik de knop
-      hieronder om een nieuw wachtwoord te kiezen.
-    cta: Wachtwoord resetten
-    outro: Als je dit niet hebt aangevraagd, kun je deze e-mail negeren.
+    subject: إعادة تعيين كلمة المرور
+    title: إعادة تعيين كلمة المرور
+    greeting: مرحبًا %uاسم المستخدم%،
+    intro: لقد تم طلب إعادة تعيين كلمة المرور لحسابك. استخدم الزر أدناه لاختيار كلمة
+      مرور جديدة.
+    cta: إعادة تعيين كلمة المرور
+    outro: إذا لم تكن قد طلبت ذلك، يمكنك تجاهل هذه الرسالة الإلكترونية.

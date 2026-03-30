@@ -1,344 +1,343 @@
 validation:
-  invalidRequest: De aanvraaginhoud is ongeldig.
+  invalidRequest: 요청 내용이 잘못되었습니다.
 game:
   auth:
-    userRequired: Een gebruiker-principal is vereist voor gamebeheer-eindpunten.
-    viewAccessRequired: Je hebt geen leestoegang tot deze game.
-    manageAccessRequired: Je hebt geen schrijftoegang tot deze game.
+    userRequired: 게임 관리 엔드포인트에는 사용자 주체가 필요합니다.
+    viewAccessRequired: 이 게임에 대한 읽기 액세스 권한이 없습니다.
+    manageAccessRequired: 이 게임에 대한 쓰기 권한이 없습니다.
   teamMessage:
-    sent: Bericht succesvol naar team verstuurd.
-    sendFailed: Bericht kon niet naar team worden verstuurd.
+    sent: 메시지가 팀에 성공적으로 전송되었습니다.
+    sendFailed: 팀에 메시지를 보낼 수 없습니다.
   chat:
-    emptyMessage: Chatbericht mag niet leeg zijn.
-    sendFailed: Chatbericht kon niet worden verstuurd.
-  notFound: Game is niet gevonden.
+    emptyMessage: 채팅 메시지는 비워둘 수 없습니다.
+    sendFailed: 채팅 메시지를 보낼 수 없습니다.
+  notFound: 게임을 찾을 수 없습니다.
   member:
-    userNotFound: Gebruiker is niet gevonden.
-    emailNotFound: Er is geen gebruiker gevonden met dat e-mailadres.
+    userNotFound: 사용자를 찾을 수 없습니다.
+    emailNotFound: 해당 이메일 주소를 사용하는 사용자를 찾을 수 없습니다.
   schema:
-    columnMissing: Het schema van de gametabel mist een verplichte kolom.
+    columnMissing: 게임 테이블 스키마에 필수 열이 누락되었습니다.
   types:
-    columnMissing: Het schema van game type availability mist een verplichte kolom.
+    columnMissing: 게임 유형 가용성 일정에 필수 열이 누락되었습니다.
   validation:
-    requiredFieldsMissing: Verplichte gamevelden ontbreken.
-    startBeforeEndRequired: De starttijd van een game moet vóór de eindtijd liggen.
-    unknownSetting: Eén of meer game-instellingen-sleutels zijn onbekend.
+    requiredFieldsMissing: 필수 게임 필드가 누락되었습니다.
+    startBeforeEndRequired: 게임 시작 시간은 종료 시간 이전이어야 합니다.
+    unknownSetting: 하나 이상의 게임 설정 키를 알 수 없습니다.
   create:
-    failed: Game kon niet worden aangemaakt.
+    failed: 게임을 만들 수 없습니다.
   update:
-    failed: Game kon niet worden bijgewerkt.
+    failed: 게임을 업데이트할 수 없습니다.
   delete:
-    failed: Game kon niet worden verwijderd.
-    success: Game succesvol verwijderd.
+    failed: 게임을 삭제할 수 없습니다.
+    success: 게임이 성공적으로 삭제되었습니다.
   reset:
-    failed: Game kon niet worden gereset.
-    success: Game succesvol gereset.
+    failed: 게임을 초기화할 수 없습니다.
+    success: 게임 재설정에 성공했습니다.
   admin:
     add:
-      failed: Game admin kon niet worden toegevoegd.
-      success: Game admin succesvol toegevoegd.
+      failed: 게임 관리자를 추가할 수 없습니다.
+      success: 게임 관리자가 성공적으로 추가되었습니다.
     remove:
-      failed: Game admin kon niet worden verwijderd.
-      success: Game admin succesvol verwijderd.
-      ownerForbidden: De game-eigenaar kan niet als admin worden verwijderd.
-      selfForbidden: Je kunt jezelf niet uit game admins verwijderen.
+      failed: 게임 관리자를 제거할 수 없습니다.
+      success: 게임 관리자가 성공적으로 제거되었습니다.
+      ownerForbidden: 게임 소유자는 관리자로서 제거될 수 없습니다.
+      selfForbidden: 게임 관리자에서 자신을 제거할 수 없습니다.
   gameMaster:
     add:
-      failed: Game master kon niet worden toegevoegd.
-      success: Game master succesvol toegevoegd.
+      failed: 게임마스터를 추가할 수 없습니다.
+      success: 게임마스터가 성공적으로 추가되었습니다.
     remove:
-      failed: Game master kon niet worden verwijderd.
-      success: Game master succesvol verwijderd.
+      failed: 게임마스터를 제거할 수 없습니다.
+      success: 게임 마스터가 성공적으로 제거되었습니다.
 team:
-  notFound: Team is niet gevonden in deze game.
+  notFound: 이 게임에서는 팀을 찾을 수 없습니다.
   auth:
-    selfRequired: Teamtokens hebben alleen toegang tot hun eigen team.
+    selfRequired: 팀 토큰은 자신의 팀에만 접근할 수 있습니다.
   validation:
-    codeAlreadyUsed: Teamcode is al in gebruik voor deze game.
+    codeAlreadyUsed: 팀코드는 이미 이 게임에 사용 중입니다.
   create:
-    failed: Team kon niet worden aangemaakt.
-    codeGenerationFailed: Er kon geen unieke teamcode worden gegenereerd.
+    failed: 팀을 만들 수 없습니다.
+    codeGenerationFailed: 고유한 팀 코드를 생성할 수 없습니다.
   update:
-    failed: Team kon niet worden bijgewerkt.
+    failed: 팀을 업데이트할 수 없습니다.
   delete:
-    failed: Team kon niet worden verwijderd.
-    success: Team succesvol verwijderd.
+    failed: 팀을 삭제할 수 없습니다.
+    success: 팀이 성공적으로 제거되었습니다.
 explodingKittens:
-  gameTypeRequired: Dit eindpunt is alleen beschikbaar voor Exploding Kittens-games.
+  gameTypeRequired: 이 종료 지점은 Exploding Kittens 게임에서만 사용할 수 있습니다.
   lives:
-    invalidDelta: Leven-delta moet ongelijk aan nul zijn.
-    updated: Teamlevens succesvol bijgewerkt.
-    updateFailed: Teamlevens konden niet worden bijgewerkt.
+    invalidDelta: 레벤델타는 0이 아니어야 합니다.
+    updated: 팀 라이브가 성공적으로 업데이트되었습니다.
+    updateFailed: 팀 생활을 업데이트할 수 없습니다.
   play:
-    failed: Kaart kon niet worden gespeeld.
-    cardNotInHand: Kaart zit niet in de hand van dit team.
-    cardNotPlayable: Deze kaart kan niet direct gespeeld worden.
-    needsTarget: Voor deze kaart is een doelteam vereist.
-    targetSelf: Een team kan zichzelf niet targeten.
-    targetInvalid: Doelteam is ongeldig voor deze game.
-    attackAlreadyPending: Er staat al een aanval in de wachtrij voor dit team.
-    peekAlreadyPending: See the future staat al in de wachtrij voor dit team.
-    skipAlreadyPending: Skip staat al in de wachtrij voor dit team.
-    attackReady: Attack-kaart succesvol gespeeld.
-    favorTargeted: Favor-kaart gespeeld en doelactie aangemaakt.
-    peekReady: See the future-kaart succesvol gespeeld.
-    shuffleDone: Shuffle-kaart succesvol gespeeld.
-    skipReady: Skip-kaart succesvol gespeeld.
+    failed: 카드를 재생할 수 없습니다.
+    cardNotInHand: 이 팀의 손에 카드가 없습니다.
+    cardNotPlayable: 이 카드는 직접 사용할 수 없습니다.
+    needsTarget: 이 카드에는 대상 팀이 필요합니다.
+    targetSelf: 팀은 자신을 목표로 삼을 수 없습니다.
+    targetInvalid: 이 게임에서는 대상 팀이 유효하지 않습니다.
+    attackAlreadyPending: 이 팀에는 이미 공격이 준비되어 있습니다.
+    peekAlreadyPending: 이 팀의 미래는 이미 대기 중입니다.
+    skipAlreadyPending: 건너뛰기는 이미 이 팀의 대기열에 있습니다.
+    attackReady: 공격 카드가 성공적으로 사용되었습니다.
+    favorTargeted: 선호 카드가 사용되었고 타겟 액션이 생성되었습니다.
+    peekReady: 성공적으로 플레이된 미래의 카드를 확인하세요.
+    shuffleDone: 셔플 카드가 성공적으로 재생되었습니다.
+    skipReady: 건너뛰기 카드가 성공적으로 재생되었습니다.
   hand:
-    addFailed: Willekeurige handkaart kon niet worden toegevoegd.
-    removeFailed: Willekeurige handkaart kon niet worden verwijderd.
+    addFailed: 랜덤 핸드 카드를 추가할 수 없습니다.
+    removeFailed: 무작위 핸드 카드를 제거할 수 없습니다.
   cards:
-    invalidType: Kaarttype is ongeldig voor Exploding Kittens.
-    notFound: Kaart is niet gevonden.
-    addFailed: Kaarten konden niet worden toegevoegd.
-    addSuccess: Kaarten succesvol toegevoegd.
-    createFailed: Kaart kon niet worden aangemaakt.
-    updateFailed: Kaart kon niet worden bijgewerkt.
-    deleteFailed: Kaart kon niet worden verwijderd.
-    deleteSuccess: Kaart succesvol verwijderd.
-    removeBlocked: Kaart kan niet worden verwijderd zolang deze in een hand zit of
-      vergrendeld is.
-    pdfDependenciesMissing: QR-PDF exportafhankelijkheden zijn niet beschikbaar op
-      de server.
-    pdfLogoInvalid: Middenlogo moet een afbeeldingsbestand zijn.
-    pdfLogoTooLarge: Middenlogo is te groot. Maximale grootte is 2 MB.
+    invalidType: Exploding Kittens에는 카드 유형이 유효하지 않습니다.
+    notFound: 지도를 찾을 수 없습니다.
+    addFailed: 카드를 추가할 수 없습니다.
+    addSuccess: 카드가 성공적으로 추가되었습니다.
+    createFailed: 지도를 생성할 수 없습니다.
+    updateFailed: 지도를 업데이트할 수 없습니다.
+    deleteFailed: 카드를 제거할 수 없습니다.
+    deleteSuccess: 카드가 성공적으로 제거되었습니다.
+    removeBlocked: 카드가 손에 있거나 잠겨 있는 동안에는 카드를 제거할 수 없습니다.
+    pdfDependenciesMissing: QR-PDF 내보내기 종속성은 서버에서 사용할 수 없습니다.
+    pdfLogoInvalid: 센터 로고는 이미지 파일이어야 합니다.
+    pdfLogoTooLarge: 센터 로고가 너무 큽니다. 최대 크기는 2MB입니다.
   scan:
-    failed: Kaart scannen is mislukt.
-    cardNotFound: Kaart is niet gevonden voor deze game.
-    cardInHand: Kaart zit al in een teamhand.
-    cardLocked: Kaart is momenteel vergrendeld.
-    cardAdded: Kaart aan hand toegevoegd.
-    cardNoEffect: Kaart heeft geen effect.
-    felixGain: Felix-kaart gaf één leven erbij.
-    felixAlreadyUsed: Felix-kaart is al gebruikt door dit team.
-    explodingDefused: Exploding kitten is onschadelijk gemaakt.
-    explodingHit: Exploding kitten heeft het team geraakt.
-    attackTargeted: Aanval is gericht en wacht op afhandeling.
+    failed: 카드 스캔에 실패했습니다.
+    cardNotFound: 이 게임에 대한 지도를 찾을 수 없습니다.
+    cardInHand: 카드가 이미 팀 손에 있습니다.
+    cardLocked: 현재 지도가 잠겨 있습니다.
+    cardAdded: 손에 카드가 추가되었습니다.
+    cardNoEffect: 카드는 효과가 없습니다.
+    felixGain: 펠릭스 카드는 생명을 하나 더 추가했습니다.
+    felixAlreadyUsed: 이 팀에서는 펠릭스 카드를 이미 사용했습니다.
+    explodingDefused: 폭발하는 새끼 고양이가 진정되었습니다.
+    explodingHit: 폭발하는 새끼 고양이가 팀을 강타했습니다.
+    attackTargeted: 공격 대상이 지정되었으며 처리를 기다리고 있습니다.
   state:
-    fetched: Teamstatus opgehaald.
-    resolveFailed: Status kon niet worden afgehandeld.
-    none: Geen wachtende status om af te handelen.
-    skipPending: Skip staat in wachtrij voor dit team.
-    skipResolved: Skip-status afgehandeld.
-    peekPending: See the future staat in wachtrij voor dit team.
-    peekNeedsConfirm: See the future vereist bevestiging om af te handelen.
-    peekResolved: See the future-status afgehandeld.
-    attackNeedsTarget: Attack vereist een doelteam en gescande kaart.
-    attackInvalidTarget: Doelteam voor attack is ongeldig.
+    fetched: 팀 상태가 검색되었습니다.
+    resolveFailed: 상태를 처리할 수 없습니다.
+    none: 처리할 보류 상태가 없습니다.
+    skipPending: 건너뛰기가 이 팀의 대기열에 있습니다.
+    skipResolved: 건너뛰기 상태가 처리되었습니다.
+    peekPending: 이 팀의 미래가 대기 중인지 확인하세요.
+    peekNeedsConfirm: 미래를 완료하려면 확인이 필요합니다.
+    peekResolved: 향후 완료 상태를 확인하세요.
+    attackNeedsTarget: 공격에는 목표 팀과 스캔한 지도가 필요합니다.
+    attackInvalidTarget: 공격 대상 팀이 유효하지 않습니다.
   action:
-    invalid: Actie is ongeldig.
-    notAllowed: Actie kan niet door dit team worden afgehandeld.
-    nopeMissing: Nope-kaart is vereist om deze actie te annuleren.
-    nopeUsed: Actie geannuleerd met Nope.
-    favorNoCards: Doelteam heeft geen kaarten voor Favor.
-    favorTaken: Favor afgehandeld en een kaart is genomen.
-    resolveFailed: Actie kon niet worden afgehandeld.
+    invalid: 작업이 잘못되었습니다.
+    notAllowed: 이 팀에서는 작업을 처리할 수 없습니다.
+    nopeMissing: 이 프로모션을 취소하려면 카드가 필요하지 않습니다.
+    nopeUsed: Nope로 프로모션이 취소되었습니다.
+    favorNoCards: 대상 팀에는 호의 카드가 없습니다.
+    favorTaken: 호의가 해결되고 카드가 가져옵니다.
+    resolveFailed: 작업을 완료할 수 없습니다.
   combo:
-    failed: Combo kon niet worden gebruikt.
-    invalid: Ongeldige combo-selectie.
-    cardNotInHand: Een of meer geselecteerde kaarten zitten niet in de hand.
-    needsTarget: Combo vereist een doelteam.
-    targetSelf: Team kan zichzelf niet als doel kiezen voor deze combo.
-    targetInvalid: Doelteam voor combo is ongeldig.
-    twoReady: 2-van-gelijke combo in wachtrij gezet.
-    twoNoCards: Doelteam heeft geen kaarten voor 2-van-gelijke combo.
-    twoTaken: 2-van-gelijke combo afgehandeld en een kaart is genomen.
-    threeNeedsType: 3-van-gelijke combo vereist gewenst kaarttype.
-    threeInvalidType: Gewenst kaarttype is ongeldig voor 3-van-gelijke combo.
-    threeReady: 3-van-gelijke combo in wachtrij gezet.
-    threeTaken: 3-van-gelijke combo afgehandeld en gewenste kaart is genomen.
-    threeNoMatch: Gewenst kaarttype niet gevonden in hand van doelteam.
-    fiveNeedsType: 5-verschillende combo vereist gewenst kaarttype.
-    fiveTaken: 5-verschillende combo afgehandeld en kaart uit deck genomen.
-    fiveNone: 5-verschillende combo afgehandeld maar gewenst kaarttype niet beschikbaar
-      in deck.
+    failed: 콤보를 사용할 수 없습니다.
+    invalid: 콤보 선택이 잘못되었습니다.
+    cardNotInHand: 선택한 카드 중 하나 이상이 손에 없습니다.
+    needsTarget: 콤보에는 대상 팀이 필요합니다.
+    targetSelf: 팀은 이 콤보로 자신을 목표로 삼을 수 없습니다.
+    targetInvalid: 콤보의 대상 팀이 잘못되었습니다.
+    twoReady: 2종의 콤보가 대기 중입니다.
+    twoNoCards: 대상 팀에는 2종 콤보 카드가 없습니다.
+    twoTaken: 2종 콤보가 해결되고 카드를 가져옵니다.
+    threeNeedsType: 3종 콤보에는 원하는 카드 유형이 필요합니다.
+    threeInvalidType: 원하는 카드 유형이 3종 콤보에 적합하지 않습니다.
+    threeReady: 3가지 콤보가 대기 중입니다.
+    threeTaken: 3종 콤보가 해결되고 원하는 카드를 가져옵니다.
+    threeNoMatch: 대상 팀의 손에 원하는 카드 유형이 없습니다.
+    fiveNeedsType: 5가지 콤보를 사용하려면 원하는 카드 유형이 필요합니다.
+    fiveTaken: 5가지 다른 콤보가 해결되고 덱에서 카드를 가져옵니다.
+    fiveNone: 5가지 콤보가 해결되었지만 원하는 카드 유형을 덱에 사용할 수 없습니다.
 geohunter:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Geohunter-games.
+  gameTypeRequired: 이 엔드포인트는 Geohunter 게임에만 사용할 수 있습니다.
   validation:
-    missingPoiId: Point of interest-id is verplicht.
+    missingPoiId: 관심지점 ID가 필요합니다.
   answer:
-    recorded: Antwoord succesvol ingediend.
-    alreadySubmitted: Dit punt is al beantwoord door je team.
+    recorded: 답변이 성공적으로 제출되었습니다.
+    alreadySubmitted: 이 점에 대해서는 귀하의 팀에서 이미 답변했습니다.
 blindhike:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Blindhike-games.
+  gameTypeRequired: 이 끝점은 Blindhike 게임에만 사용할 수 있습니다.
   validation:
-    missingMarkerId: Marker-id is verplicht.
+    missingMarkerId: 마커 ID가 필요합니다.
   marker:
-    added: Marker succesvol toegevoegd.
-    alreadyAdded: Marker is al toegevoegd door je team.
-    finished: Je team is al gefinisht en kan geen extra markers plaatsen.
+    added: 마커가 추가되었습니다.
+    alreadyAdded: 팀에서 이미 마커를 추가했습니다.
+    finished: 귀하의 팀은 이미 완료했으며 추가 마커를 배치할 수 없습니다.
 resource_run:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Resource Run-games.
+  gameTypeRequired: 이 엔드포인트는 Resource Run 게임에만 사용할 수 있습니다.
   validation:
-    missingNodeId: Resource node-id is verplicht.
+    missingNodeId: 리소스 노드 ID가 필요합니다.
   claim:
-    recorded: Resource succesvol geclaimd.
-    alreadyCollected: Resource is al verzameld door je team.
+    recorded: 리소스를 성공적으로 요청했습니다.
+    alreadyCollected: 팀에서 이미 리소스를 수집했습니다.
 territory_control:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Territory Control-games.
+  gameTypeRequired: 이 엔드포인트는 Territory Control 게임에서만 사용할 수 있습니다.
   validation:
-    missingZoneId: Zone-id is verplicht.
+    missingZoneId: 영역 ID가 필요합니다.
   claim:
-    recorded: Zone succesvol geclaimd.
-    alreadyOwned: Zone is al geclaimd door je team.
+    recorded: 영역을 성공적으로 확보했습니다.
+    alreadyOwned: 귀하의 팀이 이미 영역을 확보했습니다.
 market_crash:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Market Crash-games.
+  gameTypeRequired: 이 엔드포인트는 Market Crash 게임에만 사용할 수 있습니다.
   validation:
-    missingTradeId: Trade-id is verplicht.
+    missingTradeId: 거래 ID가 필요합니다.
   resource:
-    invalidName: Resourcenaam is ongeldig.
-    exists: Resource bestaat al.
-    createFailed: Resource aanmaken mislukt.
-    notFound: Resource is niet gevonden.
-    updateFailed: Resource bijwerken mislukt.
-    deleteFailed: Resource verwijderen mislukt.
+    invalidName: 리소스 이름이 잘못되었습니다.
+    exists: 리소스가 이미 존재합니다.
+    createFailed: 리소스 생성에 실패했습니다.
+    notFound: 리소스를 찾을 수 없습니다.
+    updateFailed: 리소스 업데이트에 실패했습니다.
+    deleteFailed: 리소스 삭제에 실패했습니다.
   point:
-    createFailed: Punt aanmaken mislukt.
-    notFound: Punt is niet gevonden.
-    updateFailed: Punt bijwerken mislukt.
-    deleteFailed: Punt verwijderen mislukt.
-    invalidTitle: Punttitel is ongeldig.
-    invalidColor: De kleur van de puntmarkering is ongeldig.
-    invalidResource: Punt bevat een ongeldige resourceverwijzing.
-    resourcesRequired: Minimaal één resource-instelling is verplicht voor een punt.
-    invalid: Puntcoördinaten zijn ongeldig.
+    createFailed: 포인트 생성에 실패했습니다.
+    notFound: 포인트를 찾을 수 없습니다.
+    updateFailed: 포인트 업데이트에 실패했습니다.
+    deleteFailed: 포인트 삭제에 실패했습니다.
+    invalidTitle: 포인트 제목이 잘못되었습니다.
+    invalidColor: 포인트 마커 색상이 잘못되었습니다.
+    invalidResource: 포인트에 잘못된 리소스 참조가 포함되어 있습니다.
+    resourcesRequired: 포인트에는 하나 이상의 리소스 설정이 필요합니다.
+    invalid: 점 좌표가 잘못되었습니다.
   location:
-    required: Locatie is verplicht voordat je kunt handelen.
-    invalid: Locatiecoördinaten zijn ongeldig.
-    updated: Locatie bijgewerkt.
+    required: 거래하려면 위치가 필요합니다.
+    invalid: 위치 좌표가 잘못되었습니다.
+    updated: 위치가 업데이트되었습니다.
   trade:
-    executed: Trade succesvol uitgevoerd.
-    invalidSide: Trade-richting is ongeldig.
-    invalidResource: Resource is niet verhandelbaar op dit punt.
-    outOfRange: Je bent buiten bereik van dit handelspunt.
-    invalidPrice: Trade-prijs is ongeldig.
-    insufficientCash: Onvoldoende cash voor deze trade.
-    insufficientInventory: Onvoldoende voorraad voor deze trade.
+    executed: 거래가 성공적으로 이루어졌습니다.
+    invalidSide: 거래 방향이 잘못되었습니다.
+    invalidResource: 이 시점에서는 자원을 거래할 수 없습니다.
+    outOfRange: 당신은 이 거래 지점의 범위를 벗어났습니다.
+    invalidPrice: 거래 가격이 유효하지 않습니다.
+    insufficientCash: 이 거래에는 현금이 부족합니다.
+    insufficientInventory: 이 거래에는 재고가 부족합니다.
 crazy88:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Crazy 88-games.
+  gameTypeRequired: 이 엔드포인트는 Crazy 88 게임에서만 사용할 수 있습니다.
   validation:
-    missingTaskId: Task-id is verplicht.
-    missingSubmissionId: Submission-id is verplicht.
+    missingTaskId: 작업 ID가 필요합니다.
+    missingSubmissionId: 제출 ID가 필요합니다.
   task:
-    submitted: Taak succesvol ingediend.
+    submitted: 작업이 성공적으로 제출되었습니다.
   review:
-    judged: Inzending succesvol beoordeeld.
-    alreadyJudged: Inzending is al beoordeeld.
+    judged: 제출이 성공한 것으로 판단되었습니다.
+    alreadyJudged: 제출물은 이미 평가되었습니다.
 courier_rush:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Courier Rush-games.
+  gameTypeRequired: 이 엔드포인트는 Courier Rush 게임에서만 사용할 수 있습니다.
   validation:
-    missingPickupId: Pickup-id is verplicht.
-    missingDropoffId: Dropoff-id is verplicht.
+    missingPickupId: 픽업 ID가 필요합니다.
+    missingDropoffId: 하차 ID가 필요합니다.
   pickup:
-    confirmed: Pickup succesvol bevestigd.
-    alreadyConfirmed: Pickup is al bevestigd.
+    confirmed: 픽업이 성공적으로 확인되었습니다.
+    alreadyConfirmed: 픽업이 이미 확인되었습니다.
   dropoff:
-    confirmed: Dropoff succesvol bevestigd.
+    confirmed: 하차가 성공적으로 확인되었습니다.
 echo_hunt:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Echo Hunt-games.
+  gameTypeRequired: 이 엔드포인트는 Echo Hunt 게임에만 사용할 수 있습니다.
   validation:
-    missingBeaconId: Beacon-id is verplicht.
+    missingBeaconId: 비콘 ID가 필요합니다.
   beacon:
-    claimed: Beacon succesvol geclaimd.
-    alreadyClaimed: Beacon is al geclaimd door je team.
+    claimed: 비콘을 성공적으로 확보했습니다.
+    alreadyClaimed: 귀하의 팀은 이미 비콘을 획득했습니다.
 checkpoint_heist:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Checkpoint Heist-games.
+  gameTypeRequired: 이 엔드포인트는 Checkpoint Heist 게임에서만 사용할 수 있습니다.
   validation:
-    missingCheckpointId: Checkpoint-id is verplicht.
+    missingCheckpointId: 체크포인트 ID가 필요합니다.
   capture:
-    recorded: Checkpoint succesvol veroverd.
-    alreadyCaptured: Checkpoint is al veroverd door je team.
+    recorded: 체크포인트가 성공적으로 캡처되었습니다.
+    alreadyCaptured: 체크포인트는 이미 팀에 의해 점령되었습니다.
 pandemic_response:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Pandemic Response-games.
+  gameTypeRequired: 이 엔드포인트는 Pandemic Response 게임에만 사용할 수 있습니다.
   validation:
-    missingPickupId: Pickup-id is verplicht.
-    missingHotspotId: Hotspot-id is verplicht.
+    missingPickupId: 픽업 ID가 필요합니다.
+    missingHotspotId: 핫스팟 ID가 필요합니다.
   pickup:
-    collected: Pickup succesvol verzameld.
-    alreadyCollected: Pickup is al verzameld door je team.
+    collected: 픽업이 성공적으로 수집되었습니다.
+    alreadyCollected: 팀에서 이미 픽업을 수집했습니다.
   hotspot:
-    resolved: Hotspot succesvol opgelost.
-    alreadyResolved: Hotspot is al opgelost door je team.
+    resolved: 핫스팟이 성공적으로 해결되었습니다.
+    alreadyResolved: 핫스팟은 이미 귀하의 팀에서 해결되었습니다.
 birds_of_prey:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Birds of Prey-games.
+  gameTypeRequired: 이 엔드포인트는 Birds of Prey 게임에서만 사용할 수 있습니다.
   config:
-    updateFailed: Birds of Prey-instellingen opslaan mislukt.
+    updateFailed: Birds of Prey 설정 저장에 실패했습니다.
   location:
-    required: Locatie is verplicht voordat je deze actie kunt uitvoeren.
-    invalid: Locatiecoördinaten zijn ongeldig.
-    updated: Locatie bijgewerkt.
+    required: 이 작업을 수행하려면 위치가 필요합니다.
+    invalid: 위치 좌표가 잘못되었습니다.
+    updated: 위치가 업데이트되었습니다.
   validation:
-    missingEggId: Egg-id is verplicht.
+    missingEggId: 에그 ID가 필요합니다.
   egg:
-    dropped: Egg succesvol geplaatst.
-    dropFailed: Egg kon niet worden opgeslagen.
-    alreadyDropped: Egg is al geplaatst.
-    persistFailed: Egg-drop is geaccepteerd, maar kon niet uit persistente game-state
-      worden geladen.
-    destroyed: Egg succesvol vernietigd.
-    alreadyDestroyed: Egg is al vernietigd.
-    notFound: Egg is niet gevonden.
-    cannotDestroyOwn: Je kunt je eigen egg niet vernietigen.
-    notVisible: Egg is niet zichtbaar binnen je bereik.
-    protected: Egg is beschermd omdat de eigenaar in de buurt is.
+    dropped: 계란을 성공적으로 배치했습니다.
+    dropFailed: 계란을 저장할 수 없습니다.
+    alreadyDropped: 계란은 이미 배치되어 있습니다.
+    persistFailed: 계란 드롭이 허용되었지만 지속적인 게임 상태에서 로드할 수 없습니다.
+    destroyed: 알이 성공적으로 파괴되었습니다.
+    alreadyDestroyed: 알은 이미 파괴되었습니다.
+    notFound: 계란을 찾을 수 없습니다.
+    cannotDestroyOwn: 자신의 알을 파괴할 수는 없습니다.
+    notVisible: 손이 닿는 곳에 계란이 보이지 않습니다.
+    protected: 주인이 근처에 있기 때문에 알은 보호됩니다.
 code_conspiracy:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Code Conspiracy-games.
+  gameTypeRequired: 이 엔드포인트는 Code Conspiracy 게임에만 사용할 수 있습니다.
   validation:
-    missingTargetTeamId: Doelteam-id is verplicht.
-    missingCode: Code is verplicht.
+    missingTargetTeamId: 대상 팀 ID가 필요합니다.
+    missingCode: 코드가 필요합니다.
   code:
-    submitted: Code-inzending ontvangen.
+    submitted: 코드 제출을 받았습니다.
 auth:
   locale:
-    unsupported: Niet-ondersteunde taal. Toegestane waarden zijn en en nl.
+    unsupported: 지원되지 않는 언어입니다. 허용되는 값은 en과 nl입니다.
   ws:
-    superAdminKeyRequired: WS super admin-sleutel is verplicht.
-    superAdminKeyInvalid: WS-superbeheerderssleutel is ongeldig.
-    superAdminKeyNotConfigured: WS super admin-sleutel is niet geconfigureerd op de
-      backend.
+    superAdminKeyRequired: WS 최고 관리자 키가 필요합니다.
+    superAdminKeyInvalid: WS 최고 관리자 키가 잘못되었습니다.
+    superAdminKeyNotConfigured: WS 최고 관리자 키가 백엔드에 구성되어 있지 않습니다.
   user:
-    invalidEmailOrPassword: Ongeldig e-mailadres of wachtwoord.
-    disallowedRole: Dit account heeft geen toegang tot deze backend.
-    superAdminRequired: Super admin-toegang is vereist voor deze actie.
+    invalidEmailOrPassword: 이메일 주소 또는 비밀번호가 잘못되었습니다.
+    disallowedRole: 이 계정은 이 백엔드에 액세스할 수 없습니다.
+    superAdminRequired: 이 작업에는 최고 관리자 액세스가 필요합니다.
+    notFound: 사용자를 찾을 수 없습니다.
+    updateFailed: 프로필 업데이트에 실패했습니다.
+    userRequired: 이 프로모션을 위해서는 사용자 계정이 필요합니다.
   team:
-    invalidCodes: Ongeldige gamecode of teamcode.
+    invalidCodes: 잘못된 게임 코드 또는 팀 코드입니다.
   token:
-    missingBearerToken: Bearer-token is verplicht.
-    invalidBearerHeaderFormat: Bearer-token header-formaat is ongeldig.
-    invalidOrExpired: Token is ongeldig of verlopen.
-    gameAccessRequired: Token heeft geen toegang tot de gevraagde game.
+    missingBearerToken: Bearer 토큰이 필요합니다.
+    invalidBearerHeaderFormat: Bearer 토큰 헤더 형식이 잘못되었습니다.
+    invalidOrExpired: 토큰이 유효하지 않거나 만료되었습니다.
+    gameAccessRequired: 토큰이 요청한 게임에 접근할 수 없습니다.
   register:
-    emailAlreadyUsed: Er bestaat al een account met dit e-mailadres.
-    usernameAlreadyUsed: Deze gebruikersnaam is al in gebruik.
-    verifyEmailSent: Account aangemaakt. Controleer je e-mail om je adres te bevestigen.
-    emailSendFailed: Verificatie-e-mail kon niet worden verzonden.
-    mailerNotConfigured: E-mailservice is niet geconfigureerd.
-    mailerUnsupportedScheme: Het DSN-schema van de e-mailservice wordt niet ondersteund.
-    mailerFromMissing: Afzenderadres voor e-mail is niet geconfigureerd.
+    emailAlreadyUsed: 이 이메일 주소를 사용하는 계정이 이미 존재합니다.
+    usernameAlreadyUsed: 이 사용자 이름은 이미 사용 중입니다.
+    verifyEmailSent: 계정이 생성되었습니다. 이메일을 확인하여 주소를 확인하세요.
+    emailSendFailed: 확인 이메일을 보낼 수 없습니다.
+    mailerNotConfigured: 이메일 서비스가 구성되지 않았습니다.
+    mailerUnsupportedScheme: 이메일 서비스 DSN 체계는 지원되지 않습니다.
+    mailerFromMissing: 이메일 보낸 사람 주소가 구성되지 않았습니다.
   verify:
-    invalidToken: Deze verificatietoken is ongeldig of verlopen.
-    success: E-mailadres is succesvol bevestigd.
-    pendingEmailConflict: Dit wachtende e-mailadres kan niet meer worden toegepast
-      omdat het al in gebruik is.
-    tokenColumnMissing: Opslag voor verificatietokens is niet correct geconfigureerd.
+    invalidToken: 이 인증 토큰이 유효하지 않거나 만료되었습니다.
+    success: 이메일 주소가 성공적으로 확인되었습니다.
+    pendingEmailConflict: 이 보류 이메일 주소는 이미 사용 중이므로 더 이상 적용할 수 없습니다.
+    tokenColumnMissing: 인증 토큰 저장소가 올바르게 구성되지 않았습니다.
   reset:
-    requestAccepted: Als een account bestaat en bevestigd is, is een reset-e-mail
-      verzonden.
-    tokenColumnsMissing: Opslag voor wachtwoord-resettokens is niet correct geconfigureerd.
-    emailSendFailed: Wachtwoord reset-e-mail kon niet worden verzonden.
+    requestAccepted: 계정이 존재하고 확인된 경우 재설정 이메일이 전송되었습니다.
+    tokenColumnsMissing: 비밀번호 재설정 토큰 저장소가 올바르게 구성되지 않았습니다.
+    emailSendFailed: 비밀번호 재설정 이메일을 보낼 수 없습니다.
+  password:
+    currentIncorrect: 현재 비밀번호가 올바르지 않습니다.
+    changeFailed: 비밀번호 변경에 실패했습니다.
+    changed: 비밀번호가 성공적으로 변경되었습니다.
 mailer:
   verify:
-    subject: Bevestig je e-mailadres
-    title: Bevestig je e-mailadres
-    greeting: Hoi %usernaam%,
-    intro: Bevestig je e-mailadres door op de knop hieronder te klikken.
-    cta: E-mailadres bevestigen
-    outro: Als je geen account hebt aangemaakt, kun je deze e-mail negeren.
+    subject: 이메일 주소를 확인하세요
+    title: 이메일 주소를 확인하세요
+    greeting: 안녕하세요 %username% 님,
+    intro: 아래 버튼을 클릭하여 이메일 주소를 확인하세요.
+    cta: 이메일 주소 확인
+    outro: 계정을 만들지 않으셨다면 이 이메일을 무시하셔도 됩니다.
   reset:
-    subject: Wachtwoord resetten
-    title: Wachtwoord resetten
-    greeting: Hoi %usernaam%,
-    intro: Er is een wachtwoordreset aangevraagd voor je account. Gebruik de knop
-      hieronder om een nieuw wachtwoord te kiezen.
-    cta: Wachtwoord resetten
-    outro: Als je dit niet hebt aangevraagd, kun je deze e-mail negeren.
+    subject: 비밀번호 재설정
+    title: 비밀번호 재설정
+    greeting: 안녕하세요 %username% 님,
+    intro: 귀하의 계정에 대한 비밀번호 재설정이 요청되었습니다. 아래 버튼을 사용하여 새 비밀번호를 선택하세요.
+    cta: 비밀번호 재설정
+    outro: 요청하지 않으셨다면 이 이메일을 무시하셔도 됩니다.

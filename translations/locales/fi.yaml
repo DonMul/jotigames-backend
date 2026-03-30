@@ -1,183 +1,185 @@
 validation:
-  invalidRequest: Pyynnön sisältö on virheellinen.
+  invalidRequest: De aanvraaginhoud is ongeldig.
 game:
   auth:
-    userRequired: Pelinhallinnan päätepisteisiin vaaditaan pääkäyttäjätunnus.
-    viewAccessRequired: Sinulla ei ole lukuoikeutta tähän peliin.
-    manageAccessRequired: Sinulla ei ole kirjoitusoikeutta tähän peliin.
+    userRequired: Een gebruiker-principal is vereist voor gamebeheer-eindpunten.
+    viewAccessRequired: Je hebt geen leestoegang tot deze game.
+    manageAccessRequired: Je hebt geen schrijftoegang tot deze game.
   teamMessage:
-    sent: Viesti lähetetty tiimille onnistuneesti.
-    sendFailed: Viestiä ei voitu lähettää tiimille.
+    sent: Bericht succesvol naar team verstuurd.
+    sendFailed: Bericht kon niet naar team worden verstuurd.
   chat:
-    emptyMessage: Chat-viesti ei voi olla tyhjä.
-    sendFailed: Chat-viestiä ei voitu lähettää.
-  notFound: Peliä ei löydy.
+    emptyMessage: Chatbericht mag niet leeg zijn.
+    sendFailed: Chatbericht kon niet worden verstuurd.
+  notFound: Game is niet gevonden.
   member:
-    userNotFound: Käyttäjää ei löydy.
-    emailNotFound: Tällä sähköpostiosoitteella ei löytynyt käyttäjää.
+    userNotFound: Gebruiker is niet gevonden.
+    emailNotFound: Er is geen gebruiker gevonden met dat e-mailadres.
   schema:
-    columnMissing: Pelipöytäkaaviosta puuttuu pakollinen sarake.
+    columnMissing: Het schema van de gametabel mist een verplichte kolom.
   types:
-    columnMissing: Pelityypin saatavuusaikataulusta puuttuu pakollinen sarake.
+    columnMissing: Het schema van game type availability mist een verplichte kolom.
   validation:
-    requiredFieldsMissing: Pakolliset pelikentät puuttuvat.
-    startBeforeEndRequired: Pelin alkamisajan tulee olla ennen lopetusaikaa.
-    unknownSetting: Yksi tai useampi peliasetusnäppäin on tuntematon.
+    requiredFieldsMissing: Verplichte gamevelden ontbreken.
+    startBeforeEndRequired: De starttijd van een game moet vóór de eindtijd liggen.
+    unknownSetting: Eén of meer game-instellingen-sleutels zijn onbekend.
   create:
-    failed: Peliä ei voitu luoda.
+    failed: Game kon niet worden aangemaakt.
   update:
-    failed: Peliä ei voitu päivittää.
+    failed: Game kon niet worden bijgewerkt.
   delete:
-    failed: Peliä ei voitu poistaa.
-    success: Pelin poistaminen onnistui.
+    failed: Game kon niet worden verwijderd.
+    success: Game succesvol verwijderd.
   reset:
-    failed: Peliä ei voitu nollata.
-    success: Pelin nollaus onnistui.
+    failed: Game kon niet worden gereset.
+    success: Game succesvol gereset.
   admin:
     add:
-      failed: Pelin ylläpitäjää ei voitu lisätä.
-      success: Pelin ylläpitäjä lisätty onnistuneesti.
+      failed: Game admin kon niet worden toegevoegd.
+      success: Game admin succesvol toegevoegd.
     remove:
-      failed: Pelin ylläpitäjää ei voitu poistaa.
-      success: Pelin ylläpitäjä poistettu onnistuneesti.
-      ownerForbidden: Pelin omistajaa ei voi poistaa järjestelmänvalvojasta.
-      selfForbidden: Et voi poistaa itseäsi pelin ylläpitäjistä.
+      failed: Game admin kon niet worden verwijderd.
+      success: Game admin succesvol verwijderd.
+      ownerForbidden: De game-eigenaar kan niet als admin worden verwijderd.
+      selfForbidden: Je kunt jezelf niet uit game admins verwijderen.
   gameMaster:
     add:
-      failed: Pelimestaria ei voitu lisätä.
-      success: Pelipäällikön lisäys onnistui.
+      failed: Game master kon niet worden toegevoegd.
+      success: Game master succesvol toegevoegd.
     remove:
-      failed: Pelimestaria ei voitu poistaa.
-      success: Pelimestari poistettiin onnistuneesti.
+      failed: Game master kon niet worden verwijderd.
+      success: Game master succesvol verwijderd.
 team:
-  notFound: Joukkuetta ei löytynyt tästä pelistä.
+  notFound: Team is niet gevonden in deze game.
   auth:
-    selfRequired: Joukkueen tokeneilla on pääsy vain omaan joukkueeseensa.
+    selfRequired: Teamtokens hebben alleen toegang tot hun eigen team.
   validation:
-    codeAlreadyUsed: Teamcode on jo käytössä tässä pelissä.
+    codeAlreadyUsed: Teamcode is al in gebruik voor deze game.
   create:
-    failed: Joukkuetta ei voitu luoda.
-    codeGenerationFailed: Yksilöllistä tiimikoodia ei voitu luoda.
+    failed: Team kon niet worden aangemaakt.
+    codeGenerationFailed: Er kon geen unieke teamcode worden gegenereerd.
   update:
-    failed: Joukkuetta ei voitu päivittää.
+    failed: Team kon niet worden bijgewerkt.
   delete:
-    failed: Joukkuetta ei voitu poistaa.
-    success: Ryhmän poistaminen onnistui.
+    failed: Team kon niet worden verwijderd.
+    success: Team succesvol verwijderd.
 explodingKittens:
-  gameTypeRequired: Tämä lopetuskohta on käytettävissä vain Exploding Kittens -peleissä.
+  gameTypeRequired: Dit eindpunt is alleen beschikbaar voor Exploding Kittens-games.
   lives:
-    invalidDelta: Leven-deltan on oltava nollasta poikkeava.
-    updated: Joukkueen elämä päivitetty onnistuneesti.
-    updateFailed: Joukkueen elämää ei voitu päivittää.
+    invalidDelta: Leven-delta moet ongelijk aan nul zijn.
+    updated: Teamlevens succesvol bijgewerkt.
+    updateFailed: Teamlevens konden niet worden bijgewerkt.
   play:
-    failed: Korttia ei voitu pelata.
-    cardNotInHand: Kortti ei ole tämän joukkueen käsissä.
-    cardNotPlayable: Tätä korttia ei voi pelata suoraan.
-    needsTarget: Tämä kortti vaatii kohderyhmän.
-    targetSelf: Joukkue ei voi kohdistaa itseään.
-    targetInvalid: Kohdejoukkue on virheellinen tässä pelissä.
-    attackAlreadyPending: Tälle joukkueelle on jo tehty hyökkäys.
-    peekAlreadyPending: Katso tulevaisuus on jo jonossa tälle joukkueelle.
-    skipAlreadyPending: Skip on jo jonossa tälle joukkueelle.
-    attackReady: Hyökkäyskortti pelattu onnistuneesti.
-    favorTargeted: Pelikortti pelattu ja kohdetoiminto luotu.
-    peekReady: Katso tulevan kortin onnistuneesti pelattu.
-    shuffleDone: Sekoituskortti pelattiin onnistuneesti.
-    skipReady: Ohituskortti pelattu onnistuneesti.
+    failed: Kaart kon niet worden gespeeld.
+    cardNotInHand: Kaart zit niet in de hand van dit team.
+    cardNotPlayable: Deze kaart kan niet direct gespeeld worden.
+    needsTarget: Voor deze kaart is een doelteam vereist.
+    targetSelf: Een team kan zichzelf niet targeten.
+    targetInvalid: Doelteam is ongeldig voor deze game.
+    attackAlreadyPending: Er staat al een aanval in de wachtrij voor dit team.
+    peekAlreadyPending: See the future staat al in de wachtrij voor dit team.
+    skipAlreadyPending: Skip staat al in de wachtrij voor dit team.
+    attackReady: Attack-kaart succesvol gespeeld.
+    favorTargeted: Favor-kaart gespeeld en doelactie aangemaakt.
+    peekReady: See the future-kaart succesvol gespeeld.
+    shuffleDone: Shuffle-kaart succesvol gespeeld.
+    skipReady: Skip-kaart succesvol gespeeld.
   hand:
-    addFailed: Satunnaiskäsikorttia ei voitu lisätä.
-    removeFailed: Satunnaiskäsikorttia ei voitu poistaa.
+    addFailed: Willekeurige handkaart kon niet worden toegevoegd.
+    removeFailed: Willekeurige handkaart kon niet worden verwijderd.
   cards:
-    invalidType: Korttityyppi ei kelpaa Räjähtäville kissanpennuille.
-    notFound: Karttaa ei löydy.
-    addFailed: Kortteja ei voitu lisätä.
-    addSuccess: Kortit lisätty onnistuneesti.
-    createFailed: Karttaa ei voitu luoda.
-    updateFailed: Karttaa ei voitu päivittää.
-    deleteFailed: Korttia ei voitu poistaa.
-    deleteSuccess: Kortti poistettu onnistuneesti.
-    removeBlocked: Korttia ei voi poistaa sen ollessa kädessä tai lukittuna.
-    pdfDependenciesMissing: QR-PDF-vientiriippuvuudet eivät ole käytettävissä palvelimella.
-    pdfLogoInvalid: Keskuksen logon on oltava kuvatiedosto.
-    pdfLogoTooLarge: Keskuksen logo on liian suuri. Enimmäiskoko on 2 MB.
+    invalidType: Kaarttype is ongeldig voor Exploding Kittens.
+    notFound: Kaart is niet gevonden.
+    addFailed: Kaarten konden niet worden toegevoegd.
+    addSuccess: Kaarten succesvol toegevoegd.
+    createFailed: Kaart kon niet worden aangemaakt.
+    updateFailed: Kaart kon niet worden bijgewerkt.
+    deleteFailed: Kaart kon niet worden verwijderd.
+    deleteSuccess: Kaart succesvol verwijderd.
+    removeBlocked: Kaart kan niet worden verwijderd zolang deze in een hand zit of
+      vergrendeld is.
+    pdfDependenciesMissing: QR-PDF exportafhankelijkheden zijn niet beschikbaar op
+      de server.
+    pdfLogoInvalid: Middenlogo moet een afbeeldingsbestand zijn.
+    pdfLogoTooLarge: Middenlogo is te groot. Maximale grootte is 2 MB.
   scan:
-    failed: Kortin skannaus epäonnistui.
-    cardNotFound: Tämän pelin karttaa ei löydy.
-    cardInHand: Kortti on jo joukkueen kädessä.
-    cardLocked: Kartta on tällä hetkellä lukittu.
-    cardAdded: Kortti lisätty käteen.
-    cardNoEffect: Kortilla ei ole vaikutusta.
-    felixGain: Felix-kortti antoi yhden lisäelämän.
-    felixAlreadyUsed: Felix-kortti on jo käytössä tässä joukkueessa.
-    explodingDefused: Räjähtävä kissanpentu on purettu.
-    explodingHit: Räjähtävä kissanpentu osui joukkueeseen.
-    attackTargeted: Hyökkäys on kohdennettu ja odottaa käsittelyä.
+    failed: Kaart scannen is mislukt.
+    cardNotFound: Kaart is niet gevonden voor deze game.
+    cardInHand: Kaart zit al in een teamhand.
+    cardLocked: Kaart is momenteel vergrendeld.
+    cardAdded: Kaart aan hand toegevoegd.
+    cardNoEffect: Kaart heeft geen effect.
+    felixGain: Felix-kaart gaf één leven erbij.
+    felixAlreadyUsed: Felix-kaart is al gebruikt door dit team.
+    explodingDefused: Exploding kitten is onschadelijk gemaakt.
+    explodingHit: Exploding kitten heeft het team geraakt.
+    attackTargeted: Aanval is gericht en wacht op afhandeling.
   state:
-    fetched: Joukkueen tila haettu.
-    resolveFailed: Tilaa ei voitu käsitellä.
-    none: Ei käsiteltävää odottavaa tilaa.
-    skipPending: Skip on jonossa tälle joukkueelle.
-    skipResolved: Ohituksen tila käsitelty.
-    peekPending: Katso tulevaisuus on jonossa tälle joukkueelle.
-    peekNeedsConfirm: Tulevaisuuden näkeminen vaatii vahvistuksen suorittamiseen.
-    peekResolved: Katso tuleva tila valmis.
-    attackNeedsTarget: Hyökkäys vaatii kohderyhmän ja skannatun kartan.
-    attackInvalidTarget: Hyökkäyksen kohderyhmä on virheellinen.
+    fetched: Teamstatus opgehaald.
+    resolveFailed: Status kon niet worden afgehandeld.
+    none: Geen wachtende status om af te handelen.
+    skipPending: Skip staat in wachtrij voor dit team.
+    skipResolved: Skip-status afgehandeld.
+    peekPending: See the future staat in wachtrij voor dit team.
+    peekNeedsConfirm: See the future vereist bevestiging om af te handelen.
+    peekResolved: See the future-status afgehandeld.
+    attackNeedsTarget: Attack vereist een doelteam en gescande kaart.
+    attackInvalidTarget: Doelteam voor attack is ongeldig.
   action:
-    invalid: Toiminto on virheellinen.
-    notAllowed: Tämä tiimi ei voi hoitaa toimia.
-    nopeMissing: Tämän tarjouksen peruuttaminen ei vaadi Nope-korttia.
-    nopeUsed: Kampanja peruttu Nopella.
-    favorNoCards: Kohderyhmällä ei ole korttia Favorille.
-    favorTaken: Arvonta ratkaistu ja kortti otetaan.
-    resolveFailed: Toimintoa ei voitu suorittaa loppuun.
+    invalid: Actie is ongeldig.
+    notAllowed: Actie kan niet door dit team worden afgehandeld.
+    nopeMissing: Nope-kaart is vereist om deze actie te annuleren.
+    nopeUsed: Actie geannuleerd met Nope.
+    favorNoCards: Doelteam heeft geen kaarten voor Favor.
+    favorTaken: Favor afgehandeld en een kaart is genomen.
+    resolveFailed: Actie kon niet worden afgehandeld.
   combo:
-    failed: Comboa ei voitu käyttää.
-    invalid: Virheellinen yhdistelmävalinta.
-    cardNotInHand: Yksi tai useampi valittu kortti ei ole kädessä.
-    needsTarget: Combo vaatii kohderyhmän.
-    targetSelf: Joukkue ei voi kohdistaa itseään tähän yhdistelmään.
-    targetInvalid: Yhdistelmän kohderyhmä on virheellinen.
-    twoReady: 2-of-a-kind yhdistelmä jonossa.
-    twoNoCards: Kohderyhmällä ei ole kortteja 2-of-a-kind-yhdistelmälle.
-    twoTaken: 2-of-a-kind yhdistelmä ratkaistu ja kortti otettu.
-    threeNeedsType: 3-of-a-kind-yhdistelmä vaatii halutun korttityypin.
-    threeInvalidType: Haluttu korttityyppi ei kelpaa 3-of-a-kind-yhdistelmälle.
-    threeReady: 3-of-a-kind yhdistelmä jonossa.
-    threeTaken: Kolmiosainen yhdistelmä ratkaistu ja haluttu kortti otettu.
-    threeNoMatch: Haluttua korttityyppiä ei löydy kohdejoukkueen kädestä.
-    fiveNeedsType: 5-erilainen yhdistelmä vaatii halutun korttityypin.
-    fiveTaken: 5 erilaista yhdistelmää ratkaistu ja kortti otettu pakkasta.
-    fiveNone: 5 erilaista yhdistelmäratkaisua, mutta haluttua korttityyppiä ei ole
-      saatavilla pakassa.
+    failed: Combo kon niet worden gebruikt.
+    invalid: Ongeldige combo-selectie.
+    cardNotInHand: Een of meer geselecteerde kaarten zitten niet in de hand.
+    needsTarget: Combo vereist een doelteam.
+    targetSelf: Team kan zichzelf niet als doel kiezen voor deze combo.
+    targetInvalid: Doelteam voor combo is ongeldig.
+    twoReady: 2-van-gelijke combo in wachtrij gezet.
+    twoNoCards: Doelteam heeft geen kaarten voor 2-van-gelijke combo.
+    twoTaken: 2-van-gelijke combo afgehandeld en een kaart is genomen.
+    threeNeedsType: 3-van-gelijke combo vereist gewenst kaarttype.
+    threeInvalidType: Gewenst kaarttype is ongeldig voor 3-van-gelijke combo.
+    threeReady: 3-van-gelijke combo in wachtrij gezet.
+    threeTaken: 3-van-gelijke combo afgehandeld en gewenste kaart is genomen.
+    threeNoMatch: Gewenst kaarttype niet gevonden in hand van doelteam.
+    fiveNeedsType: 5-verschillende combo vereist gewenst kaarttype.
+    fiveTaken: 5-verschillende combo afgehandeld en kaart uit deck genomen.
+    fiveNone: 5-verschillende combo afgehandeld maar gewenst kaarttype niet beschikbaar
+      in deck.
 geohunter:
-  gameTypeRequired: Tämä päätepiste on käytettävissä vain Geohunter-peleissä.
+  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Geohunter-games.
   validation:
-    missingPoiId: Kohdetunnus vaaditaan.
+    missingPoiId: Point of interest-id is verplicht.
   answer:
-    recorded: Vastaus lähetetty onnistuneesti.
-    alreadySubmitted: Ryhmäsi on jo vastannut tähän kohtaan.
+    recorded: Antwoord succesvol ingediend.
+    alreadySubmitted: Dit punt is al beantwoord door je team.
 blindhike:
-  gameTypeRequired: Tämä päätepiste on käytettävissä vain Blindhike-peleissä.
+  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Blindhike-games.
   validation:
-    missingMarkerId: Merkin tunnus vaaditaan.
+    missingMarkerId: Marker-id is verplicht.
   marker:
-    added: Merkin lisäys onnistui.
-    alreadyAdded: Tiimisi on jo lisännyt merkin.
-    finished: Joukkueesi on jo lopettanut, eikä se voi asettaa lisämerkkejä.
+    added: Marker succesvol toegevoegd.
+    alreadyAdded: Marker is al toegevoegd door je team.
+    finished: Je team is al gefinisht en kan geen extra markers plaatsen.
 resource_run:
-  gameTypeRequired: Tämä päätepiste on käytettävissä vain Resource Run -peleissä.
+  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Resource Run-games.
   validation:
-    missingNodeId: Resurssisolmun tunnus vaaditaan.
+    missingNodeId: Resource node-id is verplicht.
   claim:
-    recorded: Resurssi on lunastettu.
-    alreadyCollected: Ryhmäsi on jo kerännyt resurssin.
+    recorded: Resource succesvol geclaimd.
+    alreadyCollected: Resource is al verzameld door je team.
 territory_control:
-  gameTypeRequired: Tämä päätepiste on käytettävissä vain Territory Control -peleissä.
+  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Territory Control-games.
   validation:
-    missingZoneId: Aluetunnus vaaditaan.
+    missingZoneId: Zone-id is verplicht.
   claim:
-    recorded: Alue lunastettu onnistuneesti.
+    recorded: Zone succesvol geclaimd.
     alreadyOwned: Zone is al geclaimd door je team.
 market_crash:
   gameTypeRequired: Dit endpoint is alleen beschikbaar voor Market Crash-games.
@@ -269,73 +271,81 @@ birds_of_prey:
     missingEggId: Egg-id is verplicht.
   egg:
     dropped: Egg succesvol geplaatst.
-    dropFailed: Munaa ei voitu pelastaa.
-    alreadyDropped: Muna on jo laitettu.
-    persistFailed: Egg drop hyväksyttiin, mutta sitä ei voitu ladata jatkuvasta pelitilasta.
-    destroyed: Muna tuhottu onnistuneesti.
-    alreadyDestroyed: Muna on jo tuhottu.
-    notFound: Munaa ei löytynyt.
-    cannotDestroyOwn: Et voi tuhota omaa munaasi.
-    notVisible: Muna ei näy ulottuvillasi.
-    protected: Muna on suojattu, koska omistaja on lähellä.
+    dropFailed: Egg kon niet worden opgeslagen.
+    alreadyDropped: Egg is al geplaatst.
+    persistFailed: Egg-drop is geaccepteerd, maar kon niet uit persistente game-state
+      worden geladen.
+    destroyed: Egg succesvol vernietigd.
+    alreadyDestroyed: Egg is al vernietigd.
+    notFound: Egg is niet gevonden.
+    cannotDestroyOwn: Je kunt je eigen egg niet vernietigen.
+    notVisible: Egg is niet zichtbaar binnen je bereik.
+    protected: Egg is beschermd omdat de eigenaar in de buurt is.
 code_conspiracy:
-  gameTypeRequired: Tämä päätepiste on käytettävissä vain Code Conspiracy -peleissä.
+  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Code Conspiracy-games.
   validation:
-    missingTargetTeamId: Kohderyhmän tunnus vaaditaan.
-    missingCode: Koodi vaaditaan.
+    missingTargetTeamId: Doelteam-id is verplicht.
+    missingCode: Code is verplicht.
   code:
-    submitted: Vastaanotettu koodin lähetys.
+    submitted: Code-inzending ontvangen.
 auth:
   locale:
-    unsupported: Kieltä ei tueta. Sallitut arvot ovat en ja nl.
+    unsupported: Niet-ondersteunde taal. Toegestane waarden zijn en en nl.
   ws:
-    superAdminKeyRequired: WS-superadmin-avain vaaditaan.
-    superAdminKeyInvalid: WS-pääkäyttäjän avain on virheellinen.
-    superAdminKeyNotConfigured: WS-superadmin-avainta ei ole määritetty taustajärjestelmässä.
+    superAdminKeyRequired: WS super admin-sleutel is verplicht.
+    superAdminKeyInvalid: WS-superbeheerderssleutel is ongeldig.
+    superAdminKeyNotConfigured: WS super admin-sleutel is niet geconfigureerd op de
+      backend.
   user:
-    invalidEmailOrPassword: Virheellinen sähköpostiosoite tai salasana.
-    disallowedRole: Tällä tilillä ei ole pääsyä tähän taustajärjestelmään.
-    superAdminRequired: Tätä toimintoa varten tarvitaan pääkäyttäjän oikeudet.
+    invalidEmailOrPassword: Ongeldig e-mailadres of wachtwoord.
+    disallowedRole: Dit account heeft geen toegang tot deze backend.
+    superAdminRequired: Super admin-toegang is vereist voor deze actie.
+    notFound: Gebruiker niet gevonden.
+    updateFailed: Profiel bijwerken mislukt.
+    userRequired: Gebruikersaccount vereist voor deze actie.
   team:
-    invalidCodes: Virheellinen peli- tai joukkuekoodi.
+    invalidCodes: Ongeldige gamecode of teamcode.
   token:
-    missingBearerToken: Kantajatunnus vaaditaan.
-    invalidBearerHeaderFormat: Verkkotunnuksen otsikon muoto on virheellinen.
-    invalidOrExpired: Tunnus on virheellinen tai vanhentunut.
-    gameAccessRequired: Token ei voi käyttää pyydettyä peliä.
+    missingBearerToken: Bearer-token is verplicht.
+    invalidBearerHeaderFormat: Bearer-token header-formaat is ongeldig.
+    invalidOrExpired: Token is ongeldig of verlopen.
+    gameAccessRequired: Token heeft geen toegang tot de gevraagde game.
   register:
-    emailAlreadyUsed: Tällä sähköpostiosoitteella on jo tili.
-    usernameAlreadyUsed: Tämä käyttäjätunnus on jo käytössä.
-    verifyEmailSent: Tili luotu. Tarkista sähköpostisi vahvistaaksesi osoitteesi.
-    emailSendFailed: Vahvistussähköpostia ei voitu lähettää.
-    mailerNotConfigured: Sähköpostipalvelua ei ole määritetty.
-    mailerUnsupportedScheme: Sähköpostipalvelun DSN-mallia ei tueta.
-    mailerFromMissing: Sähköpostin lähettäjän osoitetta ei ole määritetty.
+    emailAlreadyUsed: Er bestaat al een account met dit e-mailadres.
+    usernameAlreadyUsed: Deze gebruikersnaam is al in gebruik.
+    verifyEmailSent: Account aangemaakt. Controleer je e-mail om je adres te bevestigen.
+    emailSendFailed: Verificatie-e-mail kon niet worden verzonden.
+    mailerNotConfigured: E-mailservice is niet geconfigureerd.
+    mailerUnsupportedScheme: Het DSN-schema van de e-mailservice wordt niet ondersteund.
+    mailerFromMissing: Afzenderadres voor e-mail is niet geconfigureerd.
   verify:
-    invalidToken: Tämä todennustunnus on virheellinen tai vanhentunut.
-    success: Sähköpostiosoite on vahvistettu onnistuneesti.
-    pendingEmailConflict: Tätä odottavaa sähköpostiosoitetta ei voi enää käyttää,
-      koska se on jo käytössä.
-    tokenColumnMissing: Todennustunnuksen tallennustilaa ei ole määritetty oikein.
+    invalidToken: Deze verificatietoken is ongeldig of verlopen.
+    success: E-mailadres is succesvol bevestigd.
+    pendingEmailConflict: Dit wachtende e-mailadres kan niet meer worden toegepast
+      omdat het al in gebruik is.
+    tokenColumnMissing: Opslag voor verificatietokens is niet correct geconfigureerd.
   reset:
-    requestAccepted: Jos tili on olemassa ja se on vahvistettu, palautusviesti on
-      lähetetty.
-    tokenColumnsMissing: Salasanan palautustunnuksen tallennustilaa ei ole määritetty
-      oikein.
-    emailSendFailed: Salasanan palautusviestiä ei voitu lähettää.
+    requestAccepted: Als een account bestaat en bevestigd is, is een reset-e-mail
+      verzonden.
+    tokenColumnsMissing: Opslag voor wachtwoord-resettokens is niet correct geconfigureerd.
+    emailSendFailed: Wachtwoord reset-e-mail kon niet worden verzonden.
+  password:
+    currentIncorrect: Huidig wachtwoord is onjuist.
+    changeFailed: Wachtwoord wijzigen mislukt.
+    changed: Wachtwoord succesvol gewijzigd.
 mailer:
   verify:
-    subject: Vahvista sähköpostiosoitteesi
-    title: Vahvista sähköpostiosoitteesi
-    greeting: Hei %username%,
-    intro: Vahvista sähköpostiosoitteesi napsauttamalla alla olevaa painiketta.
-    cta: Vahvista sähköpostiosoite
-    outro: Jos et ole luonut tiliä, voit jättää tämän sähköpostin huomioimatta.
+    subject: Bevestig je e-mailadres
+    title: Bevestig je e-mailadres
+    greeting: Hoi %usernaam%,
+    intro: Bevestig je e-mailadres door op de knop hieronder te klikken.
+    cta: E-mailadres bevestigen
+    outro: Als je geen account hebt aangemaakt, kun je deze e-mail negeren.
   reset:
-    subject: Palauta salasana
-    title: Palauta salasana
-    greeting: Hei %username%,
-    intro: Tilisi salasanan vaihtoa on pyydetty. Valitse uusi salasana alla olevalla
-      painikkeella.
-    cta: Palauta salasana
-    outro: Jos et ole pyytänyt tätä, voit jättää tämän sähköpostin huomioimatta.
+    subject: Wachtwoord resetten
+    title: Wachtwoord resetten
+    greeting: Hoi %usernaam%,
+    intro: Er is een wachtwoordreset aangevraagd voor je account. Gebruik de knop
+      hieronder om een nieuw wachtwoord te kiezen.
+    cta: Wachtwoord resetten
+    outro: Als je dit niet hebt aangevraagd, kun je deze e-mail negeren.

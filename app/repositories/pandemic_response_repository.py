@@ -7,6 +7,19 @@ from app.repositories.game_logic_state_repository import GameLogicStateRepositor
 
 
 class PandemicResponseRepository(GameLogicStateRepository):
+    _CENTER_LAT_COLUMNS = ["pandemic_response_center_lat", "pandemicResponseCenterLat"]
+    _CENTER_LON_COLUMNS = ["pandemic_response_center_lon", "pandemicResponseCenterLon"]
+    _SPAWN_AREA_COLUMNS = [
+        "pandemic_response_spawn_area_geojson",
+        "pandemic_response_spawn_area_geo_json",
+        "pandemicResponseSpawnAreaGeoJson",
+        "pandemicResponseSpawnAreaGeoJSON",
+    ]
+    _SEVERITY_UPGRADE_COLUMNS = ["pandemic_response_severity_upgrade_seconds", "pandemicResponseSeverityUpgradeSeconds"]
+    _PENALTY_PERCENT_COLUMNS = ["pandemic_response_penalty_percent", "pandemicResponsePenaltyPercent"]
+    _TARGET_ACTIVE_HOTSPOTS_COLUMNS = ["pandemic_response_target_active_hotspots", "pandemicResponseTargetActiveHotspots"]
+    _PICKUP_POINT_COUNT_COLUMNS = ["pandemic_response_pickup_point_count", "pandemicResponsePickupPointCount"]
+
     @staticmethod
     def _first_present(row: Dict[str, Any], keys: list[str], default: Any = None) -> Any:
         """Return first existing key value from row with optional default."""
@@ -30,13 +43,13 @@ class PandemicResponseRepository(GameLogicStateRepository):
             return {}
 
         return {
-            "center_lat": self._first_present(game, ["pandemic_response_center_lat", "pandemicResponseCenterLat"], 51.05),
-            "center_lon": self._first_present(game, ["pandemic_response_center_lon", "pandemicResponseCenterLon"], 3.72),
-            "spawn_area_geojson": self._first_present(game, ["pandemic_response_spawn_area_geojson", "pandemicResponseSpawnAreaGeoJson"], ""),
-            "severity_upgrade_seconds": int(self._first_present(game, ["pandemic_response_severity_upgrade_seconds", "pandemicResponseSeverityUpgradeSeconds"], 180) or 180),
-            "penalty_percent": int(self._first_present(game, ["pandemic_response_penalty_percent", "pandemicResponsePenaltyPercent"], 10) or 10),
-            "target_active_hotspots": int(self._first_present(game, ["pandemic_response_target_active_hotspots", "pandemicResponseTargetActiveHotspots"], 15) or 15),
-            "pickup_point_count": int(self._first_present(game, ["pandemic_response_pickup_point_count", "pandemicResponsePickupPointCount"], 4) or 4),
+            "center_lat": self._first_present(game, self._CENTER_LAT_COLUMNS, 51.05),
+            "center_lon": self._first_present(game, self._CENTER_LON_COLUMNS, 3.72),
+            "spawn_area_geojson": self._first_present(game, self._SPAWN_AREA_COLUMNS, ""),
+            "severity_upgrade_seconds": int(self._first_present(game, self._SEVERITY_UPGRADE_COLUMNS, 180) or 180),
+            "penalty_percent": int(self._first_present(game, self._PENALTY_PERCENT_COLUMNS, 10) or 10),
+            "target_active_hotspots": int(self._first_present(game, self._TARGET_ACTIVE_HOTSPOTS_COLUMNS, 15) or 15),
+            "pickup_point_count": int(self._first_present(game, self._PICKUP_POINT_COUNT_COLUMNS, 4) or 4),
         }
 
     def update_configuration_without_commit(self, db: DbSession, game_id: str, values: Dict[str, Any]) -> None:
@@ -45,13 +58,13 @@ class PandemicResponseRepository(GameLogicStateRepository):
         updates: Dict[str, Any] = {}
 
         column_map = {
-            "center_lat": ["pandemic_response_center_lat", "pandemicResponseCenterLat"],
-            "center_lon": ["pandemic_response_center_lon", "pandemicResponseCenterLon"],
-            "spawn_area_geojson": ["pandemic_response_spawn_area_geojson", "pandemicResponseSpawnAreaGeoJson"],
-            "severity_upgrade_seconds": ["pandemic_response_severity_upgrade_seconds", "pandemicResponseSeverityUpgradeSeconds"],
-            "penalty_percent": ["pandemic_response_penalty_percent", "pandemicResponsePenaltyPercent"],
-            "target_active_hotspots": ["pandemic_response_target_active_hotspots", "pandemicResponseTargetActiveHotspots"],
-            "pickup_point_count": ["pandemic_response_pickup_point_count", "pandemicResponsePickupPointCount"],
+            "center_lat": self._CENTER_LAT_COLUMNS,
+            "center_lon": self._CENTER_LON_COLUMNS,
+            "spawn_area_geojson": self._SPAWN_AREA_COLUMNS,
+            "severity_upgrade_seconds": self._SEVERITY_UPGRADE_COLUMNS,
+            "penalty_percent": self._PENALTY_PERCENT_COLUMNS,
+            "target_active_hotspots": self._TARGET_ACTIVE_HOTSPOTS_COLUMNS,
+            "pickup_point_count": self._PICKUP_POINT_COUNT_COLUMNS,
         }
 
         for payload_key, candidates in column_map.items():
@@ -63,9 +76,10 @@ class PandemicResponseRepository(GameLogicStateRepository):
                     break
 
         if updates:
+            game_id_column = self._get_game_id_column(table)
             db.execute(
                 update(table)
-                .where(table.c["id"] == game_id)
+                .where(table.c[game_id_column] == game_id)
                 .values(**updates)
             )
 

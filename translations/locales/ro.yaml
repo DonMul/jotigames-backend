@@ -1,344 +1,363 @@
 validation:
-  invalidRequest: De aanvraaginhoud is ongeldig.
+  invalidRequest: Conținutul solicitării este nevalid.
 game:
   auth:
-    userRequired: Een gebruiker-principal is vereist voor gamebeheer-eindpunten.
-    viewAccessRequired: Je hebt geen leestoegang tot deze game.
-    manageAccessRequired: Je hebt geen schrijftoegang tot deze game.
+    userRequired: Este necesar un principal de utilizator pentru punctele finale de
+      gestionare a jocurilor.
+    viewAccessRequired: Nu aveți acces de citire la acest joc.
+    manageAccessRequired: Nu aveți acces de scriere la acest joc.
   teamMessage:
-    sent: Bericht succesvol naar team verstuurd.
-    sendFailed: Bericht kon niet naar team worden verstuurd.
+    sent: Mesaj trimis cu succes echipei.
+    sendFailed: Mesajul nu a putut fi trimis echipei.
   chat:
-    emptyMessage: Chatbericht mag niet leeg zijn.
-    sendFailed: Chatbericht kon niet worden verstuurd.
-  notFound: Game is niet gevonden.
+    emptyMessage: Mesajul de chat nu poate fi gol.
+    sendFailed: Mesajul de chat nu a putut fi trimis.
+  notFound: Jocul nu a fost găsit.
   member:
-    userNotFound: Gebruiker is niet gevonden.
-    emailNotFound: Er is geen gebruiker gevonden met dat e-mailadres.
+    userNotFound: Utilizatorul nu a fost găsit.
+    emailNotFound: Nu a fost găsit niciun utilizator cu acea adresă de e-mail.
   schema:
-    columnMissing: Het schema van de gametabel mist een verplichte kolom.
+    columnMissing: Din schema mesei de joc lipsește o coloană obligatorie.
   types:
-    columnMissing: Het schema van game type availability mist een verplichte kolom.
+    columnMissing: Din programul de disponibilitate a tipului de joc lipsește o coloană
+      obligatorie.
   validation:
-    requiredFieldsMissing: Verplichte gamevelden ontbreken.
-    startBeforeEndRequired: De starttijd van een game moet vóór de eindtijd liggen.
-    unknownSetting: Eén of meer game-instellingen-sleutels zijn onbekend.
+    requiredFieldsMissing: Câmpurile de joc obligatorii lipsesc.
+    startBeforeEndRequired: Ora de începere a unui joc trebuie să fie înaintea orei
+      de încheiere.
+    unknownSetting: Una sau mai multe taste pentru setările jocului sunt necunoscute.
   create:
-    failed: Game kon niet worden aangemaakt.
+    failed: Jocul nu a putut fi creat.
   update:
-    failed: Game kon niet worden bijgewerkt.
+    failed: Jocul nu a putut fi actualizat.
   delete:
-    failed: Game kon niet worden verwijderd.
-    success: Game succesvol verwijderd.
+    failed: Jocul nu a putut fi șters.
+    success: Jocul a fost șters cu succes.
   reset:
-    failed: Game kon niet worden gereset.
-    success: Game succesvol gereset.
+    failed: Jocul nu a putut fi resetat.
+    success: Jocul a fost resetat cu succes.
   admin:
     add:
-      failed: Game admin kon niet worden toegevoegd.
-      success: Game admin succesvol toegevoegd.
+      failed: Administratorul jocului nu a putut fi adăugat.
+      success: Administratorul jocului a fost adăugat cu succes.
     remove:
-      failed: Game admin kon niet worden verwijderd.
-      success: Game admin succesvol verwijderd.
-      ownerForbidden: De game-eigenaar kan niet als admin worden verwijderd.
-      selfForbidden: Je kunt jezelf niet uit game admins verwijderen.
+      failed: Administratorul jocului nu a putut fi eliminat.
+      success: Administratorul jocului a fost eliminat cu succes.
+      ownerForbidden: Proprietarul jocului nu poate fi eliminat ca administrator.
+      selfForbidden: Nu vă puteți elimina din administratorii jocului.
   gameMaster:
     add:
-      failed: Game master kon niet worden toegevoegd.
-      success: Game master succesvol toegevoegd.
+      failed: Game Master nu a putut fi adăugat.
+      success: Game Master a fost adăugat cu succes.
     remove:
-      failed: Game master kon niet worden verwijderd.
-      success: Game master succesvol verwijderd.
+      failed: Game Master nu a putut fi eliminat.
+      success: Game Master a fost eliminat cu succes.
 team:
-  notFound: Team is niet gevonden in deze game.
+  notFound: Echipa nu a fost găsită în acest joc.
   auth:
-    selfRequired: Teamtokens hebben alleen toegang tot hun eigen team.
+    selfRequired: Jetoanele de echipă au acces doar la propria echipă.
   validation:
-    codeAlreadyUsed: Teamcode is al in gebruik voor deze game.
+    codeAlreadyUsed: Teamcode este deja utilizat pentru acest joc.
   create:
-    failed: Team kon niet worden aangemaakt.
-    codeGenerationFailed: Er kon geen unieke teamcode worden gegenereerd.
+    failed: Echipa nu a putut fi creată.
+    codeGenerationFailed: Nu a putut fi generat un cod unic de echipă.
   update:
-    failed: Team kon niet worden bijgewerkt.
+    failed: Echipa nu a putut fi actualizată.
   delete:
-    failed: Team kon niet worden verwijderd.
-    success: Team succesvol verwijderd.
+    failed: Echipa nu a putut fi ștearsă.
+    success: Echipa a fost eliminată cu succes.
 explodingKittens:
-  gameTypeRequired: Dit eindpunt is alleen beschikbaar voor Exploding Kittens-games.
+  gameTypeRequired: Acest punct final este disponibil numai pentru jocurile Exploding
+    Kittens.
   lives:
-    invalidDelta: Leven-delta moet ongelijk aan nul zijn.
-    updated: Teamlevens succesvol bijgewerkt.
-    updateFailed: Teamlevens konden niet worden bijgewerkt.
+    invalidDelta: Leven-delta trebuie să fie diferit de zero.
+    updated: Viețile echipei au fost actualizate cu succes.
+    updateFailed: Viața echipei nu a putut fi actualizată.
   play:
-    failed: Kaart kon niet worden gespeeld.
-    cardNotInHand: Kaart zit niet in de hand van dit team.
-    cardNotPlayable: Deze kaart kan niet direct gespeeld worden.
-    needsTarget: Voor deze kaart is een doelteam vereist.
-    targetSelf: Een team kan zichzelf niet targeten.
-    targetInvalid: Doelteam is ongeldig voor deze game.
-    attackAlreadyPending: Er staat al een aanval in de wachtrij voor dit team.
-    peekAlreadyPending: See the future staat al in de wachtrij voor dit team.
-    skipAlreadyPending: Skip staat al in de wachtrij voor dit team.
-    attackReady: Attack-kaart succesvol gespeeld.
-    favorTargeted: Favor-kaart gespeeld en doelactie aangemaakt.
-    peekReady: See the future-kaart succesvol gespeeld.
-    shuffleDone: Shuffle-kaart succesvol gespeeld.
-    skipReady: Skip-kaart succesvol gespeeld.
+    failed: Cartea nu a putut fi jucată.
+    cardNotInHand: Cardul nu este în mâna acestei echipe.
+    cardNotPlayable: Această carte nu poate fi jucată direct.
+    needsTarget: Acest card necesită o echipă țintă.
+    targetSelf: O echipă nu se poate viza pe ea însăși.
+    targetInvalid: Echipa țintă este invalidă pentru acest joc.
+    attackAlreadyPending: Există deja un atac pregătit pentru această echipă.
+    peekAlreadyPending: Vezi că viitorul este deja în coadă pentru această echipă.
+    skipAlreadyPending: Skip este deja în coadă pentru această echipă.
+    attackReady: Cartea de atac a fost jucată cu succes.
+    favorTargeted: Cartea de favorizare jucată și acțiunea țintă creată.
+    peekReady: Vezi viitoarea carte jucată cu succes.
+    shuffleDone: Amestecă cartea cu succes.
+    skipReady: Omite cartea jucată cu succes.
   hand:
-    addFailed: Willekeurige handkaart kon niet worden toegevoegd.
-    removeFailed: Willekeurige handkaart kon niet worden verwijderd.
+    addFailed: Cartea de mână aleatorie nu a putut fi adăugată.
+    removeFailed: Cartea de mână aleatorie nu a putut fi eliminată.
   cards:
-    invalidType: Kaarttype is ongeldig voor Exploding Kittens.
-    notFound: Kaart is niet gevonden.
-    addFailed: Kaarten konden niet worden toegevoegd.
-    addSuccess: Kaarten succesvol toegevoegd.
-    createFailed: Kaart kon niet worden aangemaakt.
-    updateFailed: Kaart kon niet worden bijgewerkt.
-    deleteFailed: Kaart kon niet worden verwijderd.
-    deleteSuccess: Kaart succesvol verwijderd.
-    removeBlocked: Kaart kan niet worden verwijderd zolang deze in een hand zit of
-      vergrendeld is.
-    pdfDependenciesMissing: QR-PDF exportafhankelijkheden zijn niet beschikbaar op
-      de server.
-    pdfLogoInvalid: Middenlogo moet een afbeeldingsbestand zijn.
-    pdfLogoTooLarge: Middenlogo is te groot. Maximale grootte is 2 MB.
+    invalidType: Tipul cardului este nevalid pentru Pisicuțele care explodează.
+    notFound: Harta nu a fost găsită.
+    addFailed: Cardurile nu au putut fi adăugate.
+    addSuccess: Cărți adăugate cu succes.
+    createFailed: Harta nu a putut fi creată.
+    updateFailed: Harta nu a putut fi actualizată.
+    deleteFailed: Cardul nu a putut fi eliminat.
+    deleteSuccess: Cardul a fost eliminat cu succes.
+    removeBlocked: Cardul nu poate fi scos în timp ce este în mână sau blocat.
+    pdfDependenciesMissing: Dependențele de export QR-PDF nu sunt disponibile pe server.
+    pdfLogoInvalid: Logo-ul centrului trebuie să fie un fișier imagine.
+    pdfLogoTooLarge: Sigla din centru este prea mare. Dimensiunea maximă este de 2
+      MB.
   scan:
-    failed: Kaart scannen is mislukt.
-    cardNotFound: Kaart is niet gevonden voor deze game.
-    cardInHand: Kaart zit al in een teamhand.
-    cardLocked: Kaart is momenteel vergrendeld.
-    cardAdded: Kaart aan hand toegevoegd.
-    cardNoEffect: Kaart heeft geen effect.
-    felixGain: Felix-kaart gaf één leven erbij.
-    felixAlreadyUsed: Felix-kaart is al gebruikt door dit team.
-    explodingDefused: Exploding kitten is onschadelijk gemaakt.
-    explodingHit: Exploding kitten heeft het team geraakt.
-    attackTargeted: Aanval is gericht en wacht op afhandeling.
+    failed: Scanarea cardului a eșuat.
+    cardNotFound: Harta nu a fost găsită pentru acest joc.
+    cardInHand: Cardul este deja într-o mână de echipă.
+    cardLocked: Harta este în prezent blocată.
+    cardAdded: Card adăugat la mână.
+    cardNoEffect: Cardul nu are efect.
+    felixGain: Cartea Felix a dat o viață în plus.
+    felixAlreadyUsed: Cardul Felix a fost deja folosit de această echipă.
+    explodingDefused: Pisicuța care explodă a fost dezamorsată.
+    explodingHit: Pisicuta care exploda a lovit echipa.
+    attackTargeted: Atacul este vizat și așteaptă să fie tratat.
   state:
-    fetched: Teamstatus opgehaald.
-    resolveFailed: Status kon niet worden afgehandeld.
-    none: Geen wachtende status om af te handelen.
-    skipPending: Skip staat in wachtrij voor dit team.
-    skipResolved: Skip-status afgehandeld.
-    peekPending: See the future staat in wachtrij voor dit team.
-    peekNeedsConfirm: See the future vereist bevestiging om af te handelen.
-    peekResolved: See the future-status afgehandeld.
-    attackNeedsTarget: Attack vereist een doelteam en gescande kaart.
-    attackInvalidTarget: Doelteam voor attack is ongeldig.
+    fetched: Starea echipei a fost preluată.
+    resolveFailed: Starea nu a putut fi gestionată.
+    none: Nicio stare în așteptare de gestionat.
+    skipPending: Skip este la coadă pentru această echipă.
+    skipResolved: Omite starea gestionată.
+    peekPending: Vezi că viitorul este la coadă pentru această echipă.
+    peekNeedsConfirm: Vezi viitorul necesită confirmare pentru a finaliza.
+    peekResolved: Vedeți starea viitoare finalizată.
+    attackNeedsTarget: Atacul necesită o echipă țintă și o hartă scanată.
+    attackInvalidTarget: Echipa țintă pentru atac este invalidă.
   action:
-    invalid: Actie is ongeldig.
-    notAllowed: Actie kan niet door dit team worden afgehandeld.
-    nopeMissing: Nope-kaart is vereist om deze actie te annuleren.
-    nopeUsed: Actie geannuleerd met Nope.
-    favorNoCards: Doelteam heeft geen kaarten voor Favor.
-    favorTaken: Favor afgehandeld en een kaart is genomen.
-    resolveFailed: Actie kon niet worden afgehandeld.
+    invalid: Acțiunea este nevalidă.
+    notAllowed: Acțiunea nu poate fi gestionată de această echipă.
+    nopeMissing: Nu este necesar un card pentru a anula această promoție.
+    nopeUsed: Promoție anulată cu Nu.
+    favorNoCards: Echipa țintă nu are cărți pentru Favoare.
+    favorTaken: Favoarea a fost rezolvată și se ia un card.
+    resolveFailed: Acțiunea nu a putut fi finalizată.
   combo:
-    failed: Combo kon niet worden gebruikt.
-    invalid: Ongeldige combo-selectie.
-    cardNotInHand: Een of meer geselecteerde kaarten zitten niet in de hand.
-    needsTarget: Combo vereist een doelteam.
-    targetSelf: Team kan zichzelf niet als doel kiezen voor deze combo.
-    targetInvalid: Doelteam voor combo is ongeldig.
-    twoReady: 2-van-gelijke combo in wachtrij gezet.
-    twoNoCards: Doelteam heeft geen kaarten voor 2-van-gelijke combo.
-    twoTaken: 2-van-gelijke combo afgehandeld en een kaart is genomen.
-    threeNeedsType: 3-van-gelijke combo vereist gewenst kaarttype.
-    threeInvalidType: Gewenst kaarttype is ongeldig voor 3-van-gelijke combo.
-    threeReady: 3-van-gelijke combo in wachtrij gezet.
-    threeTaken: 3-van-gelijke combo afgehandeld en gewenste kaart is genomen.
-    threeNoMatch: Gewenst kaarttype niet gevonden in hand van doelteam.
-    fiveNeedsType: 5-verschillende combo vereist gewenst kaarttype.
-    fiveTaken: 5-verschillende combo afgehandeld en kaart uit deck genomen.
-    fiveNone: 5-verschillende combo afgehandeld maar gewenst kaarttype niet beschikbaar
-      in deck.
+    failed: Combo nu a putut fi folosit.
+    invalid: Selecție combinată nevalidă.
+    cardNotInHand: Una sau mai multe cărți selectate nu sunt în mână.
+    needsTarget: Combo necesită o echipă țintă.
+    targetSelf: Echipa nu se poate viza pentru acest combo.
+    targetInvalid: Echipa țintă pentru combo este nevalidă.
+    twoReady: 2-de-un fel combo în coadă.
+    twoNoCards: Echipa țintă nu are cărți pentru combo de două ori.
+    twoTaken: Combo-ul 2-a-un fel rezolvat și o carte luată.
+    threeNeedsType: Combo-ul 3 într-un fel necesită tipul de card dorit.
+    threeInvalidType: Tipul de card dorit nu este valid pentru combinația de trei
+      tipuri.
+    threeReady: Combo 3-de-un fel în coadă.
+    threeTaken: Combo 3-de-un fel rezolvat și cartea dorită a fost luată.
+    threeNoMatch: Tipul de carte dorit nu a fost găsit în mâna echipei țintă.
+    fiveNeedsType: Combo de 5 diferite necesită tipul de card dorit.
+    fiveTaken: 5 combo diferite rezolvate și cartea luată din pachet.
+    fiveNone: Combo de 5 diferite a fost rezolvat, dar tipul de carte dorit nu este
+      disponibil în pachet.
 geohunter:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Geohunter-games.
+  gameTypeRequired: Acest punct final este disponibil numai pentru jocurile Geohunter.
   validation:
-    missingPoiId: Point of interest-id is verplicht.
+    missingPoiId: ID-ul punctului de interes este necesar.
   answer:
-    recorded: Antwoord succesvol ingediend.
-    alreadySubmitted: Dit punt is al beantwoord door je team.
+    recorded: Răspunsul a fost trimis cu succes.
+    alreadySubmitted: La acest punct a fost deja răspuns de către echipa ta.
 blindhike:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Blindhike-games.
+  gameTypeRequired: Acest punct final este disponibil numai pentru jocurile Blindhike.
   validation:
-    missingMarkerId: Marker-id is verplicht.
+    missingMarkerId: ID-ul markerului este necesar.
   marker:
-    added: Marker succesvol toegevoegd.
-    alreadyAdded: Marker is al toegevoegd door je team.
-    finished: Je team is al gefinisht en kan geen extra markers plaatsen.
+    added: Marker adăugat cu succes.
+    alreadyAdded: Marcatorul a fost deja adăugat de echipa ta.
+    finished: Echipa ta a terminat deja și nu poate plasa marcaje suplimentare.
 resource_run:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Resource Run-games.
+  gameTypeRequired: Acest punct final este disponibil numai pentru jocurile Resource
+    Run.
   validation:
-    missingNodeId: Resource node-id is verplicht.
+    missingNodeId: ID-ul nodului de resurse este necesar.
   claim:
-    recorded: Resource succesvol geclaimd.
-    alreadyCollected: Resource is al verzameld door je team.
+    recorded: Resursa revendicată cu succes.
+    alreadyCollected: Resursa a fost deja colectată de echipa ta.
 territory_control:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Territory Control-games.
+  gameTypeRequired: Acest punct final este disponibil numai pentru jocurile Territory
+    Control.
   validation:
-    missingZoneId: Zone-id is verplicht.
+    missingZoneId: ID-ul zonei este necesar.
   claim:
-    recorded: Zone succesvol geclaimd.
-    alreadyOwned: Zone is al geclaimd door je team.
+    recorded: Zona revendicată cu succes.
+    alreadyOwned: Zona a fost deja revendicată de echipa ta.
 market_crash:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Market Crash-games.
+  gameTypeRequired: Acest punct final este disponibil numai pentru jocurile Market
+    Crash.
   validation:
-    missingTradeId: Trade-id is verplicht.
+    missingTradeId: Este necesar un ID comercial.
   resource:
-    invalidName: Resourcenaam is ongeldig.
-    exists: Resource bestaat al.
-    createFailed: Resource aanmaken mislukt.
-    notFound: Resource is niet gevonden.
-    updateFailed: Resource bijwerken mislukt.
-    deleteFailed: Resource verwijderen mislukt.
+    invalidName: Numele resursei este nevalid.
+    exists: Resursa există deja.
+    createFailed: Crearea resurselor a eșuat.
+    notFound: Resursa nu a fost găsită.
+    updateFailed: Actualizarea resurselor a eșuat.
+    deleteFailed: Ștergerea resurselor nu a reușit.
   point:
-    createFailed: Punt aanmaken mislukt.
-    notFound: Punt is niet gevonden.
-    updateFailed: Punt bijwerken mislukt.
-    deleteFailed: Punt verwijderen mislukt.
-    invalidTitle: Punttitel is ongeldig.
-    invalidColor: De kleur van de puntmarkering is ongeldig.
-    invalidResource: Punt bevat een ongeldige resourceverwijzing.
-    resourcesRequired: Minimaal één resource-instelling is verplicht voor een punt.
-    invalid: Puntcoördinaten zijn ongeldig.
+    createFailed: Crearea punctelor a eșuat.
+    notFound: Punctul nu a fost găsit.
+    updateFailed: Actualizarea punctului a eșuat.
+    deleteFailed: Ștergerea punctului nu a reușit.
+    invalidTitle: Titlul punctului este invalid.
+    invalidColor: Culoarea marcatorului de puncte este nevalidă.
+    invalidResource: Punctul conține o referință de resursă nevalidă.
+    resourcesRequired: Este necesară cel puțin o setare de resursă pentru un punct.
+    invalid: Coordonatele punctului sunt nevalide.
   location:
-    required: Locatie is verplicht voordat je kunt handelen.
-    invalid: Locatiecoördinaten zijn ongeldig.
-    updated: Locatie bijgewerkt.
+    required: Locația este necesară înainte de a putea tranzacționa.
+    invalid: Coordonatele locației sunt nevalide.
+    updated: Locația a fost actualizată.
   trade:
-    executed: Trade succesvol uitgevoerd.
-    invalidSide: Trade-richting is ongeldig.
-    invalidResource: Resource is niet verhandelbaar op dit punt.
-    outOfRange: Je bent buiten bereik van dit handelspunt.
-    invalidPrice: Trade-prijs is ongeldig.
-    insufficientCash: Onvoldoende cash voor deze trade.
-    insufficientInventory: Onvoldoende voorraad voor deze trade.
+    executed: Comerț executat cu succes.
+    invalidSide: Direcția comercială este invalidă.
+    invalidResource: Resursa nu este tranzacționabilă în acest moment.
+    outOfRange: Sunteți în afara razei acestui punct de tranzacționare.
+    invalidPrice: Prețul comercial este invalid.
+    insufficientCash: Numerar suficient pentru această tranzacție.
+    insufficientInventory: Stoc insuficient pentru această tranzacție.
 crazy88:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Crazy 88-games.
+  gameTypeRequired: Acest punct final este disponibil numai pentru jocurile Crazy
+    88.
   validation:
-    missingTaskId: Task-id is verplicht.
-    missingSubmissionId: Submission-id is verplicht.
+    missingTaskId: ID-ul sarcinii este necesar.
+    missingSubmissionId: ID-ul de trimitere este necesar.
   task:
-    submitted: Taak succesvol ingediend.
+    submitted: Job trimis cu succes.
   review:
-    judged: Inzending succesvol beoordeeld.
-    alreadyJudged: Inzending is al beoordeeld.
+    judged: Depunerea a fost judecată cu succes.
+    alreadyJudged: Depunerea a fost deja evaluată.
 courier_rush:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Courier Rush-games.
+  gameTypeRequired: Acest punct final este disponibil numai pentru jocurile Courier
+    Rush.
   validation:
-    missingPickupId: Pickup-id is verplicht.
-    missingDropoffId: Dropoff-id is verplicht.
+    missingPickupId: ID-ul de ridicare este necesar.
+    missingDropoffId: ID-ul de retragere este necesar.
   pickup:
-    confirmed: Pickup succesvol bevestigd.
-    alreadyConfirmed: Pickup is al bevestigd.
+    confirmed: Ridicarea a fost confirmată cu succes.
+    alreadyConfirmed: Ridicarea a fost deja confirmată.
   dropoff:
-    confirmed: Dropoff succesvol bevestigd.
+    confirmed: Retragerea a fost confirmată cu succes.
 echo_hunt:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Echo Hunt-games.
+  gameTypeRequired: Acest punct final este disponibil numai pentru jocurile Echo Hunt.
   validation:
-    missingBeaconId: Beacon-id is verplicht.
+    missingBeaconId: Este necesar un ID de baliză.
   beacon:
-    claimed: Beacon succesvol geclaimd.
-    alreadyClaimed: Beacon is al geclaimd door je team.
+    claimed: Beacon a revendicat cu succes.
+    alreadyClaimed: Beacon a fost deja revendicat de echipa ta.
 checkpoint_heist:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Checkpoint Heist-games.
+  gameTypeRequired: Acest punct final este disponibil numai pentru jocurile Checkpoint
+    Heist.
   validation:
-    missingCheckpointId: Checkpoint-id is verplicht.
+    missingCheckpointId: ID-ul punctului de control este necesar.
   capture:
-    recorded: Checkpoint succesvol veroverd.
-    alreadyCaptured: Checkpoint is al veroverd door je team.
+    recorded: Punctul de control a fost capturat.
+    alreadyCaptured: Punctul de control a fost deja capturat de echipa ta.
 pandemic_response:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Pandemic Response-games.
+  gameTypeRequired: Acest punct final este disponibil numai pentru jocurile Pandemic
+    Response.
   validation:
-    missingPickupId: Pickup-id is verplicht.
-    missingHotspotId: Hotspot-id is verplicht.
+    missingPickupId: ID-ul de ridicare este necesar.
+    missingHotspotId: ID-ul hotspot-ului este necesar.
   pickup:
-    collected: Pickup succesvol verzameld.
-    alreadyCollected: Pickup is al verzameld door je team.
+    collected: Ridicarea a fost colectată cu succes.
+    alreadyCollected: Ridicarea a fost deja colectată de echipa dvs.
   hotspot:
-    resolved: Hotspot succesvol opgelost.
-    alreadyResolved: Hotspot is al opgelost door je team.
+    resolved: Hotspot rezolvat cu succes.
+    alreadyResolved: Hotspot-ul a fost deja rezolvat de echipa ta.
 birds_of_prey:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Birds of Prey-games.
+  gameTypeRequired: Acest punct final este disponibil numai pentru jocurile Birds
+    of Prey.
   config:
-    updateFailed: Birds of Prey-instellingen opslaan mislukt.
+    updateFailed: Salvarea setărilor Birds of Prey nu a reușit.
   location:
-    required: Locatie is verplicht voordat je deze actie kunt uitvoeren.
-    invalid: Locatiecoördinaten zijn ongeldig.
-    updated: Locatie bijgewerkt.
+    required: Locația este necesară înainte de a putea efectua această acțiune.
+    invalid: Coordonatele locației sunt nevalide.
+    updated: Locația a fost actualizată.
   validation:
-    missingEggId: Egg-id is verplicht.
+    missingEggId: ID-ul oului este necesar.
   egg:
-    dropped: Egg succesvol geplaatst.
-    dropFailed: Egg kon niet worden opgeslagen.
-    alreadyDropped: Egg is al geplaatst.
-    persistFailed: Egg-drop is geaccepteerd, maar kon niet uit persistente game-state
-      worden geladen.
-    destroyed: Egg succesvol vernietigd.
-    alreadyDestroyed: Egg is al vernietigd.
-    notFound: Egg is niet gevonden.
-    cannotDestroyOwn: Je kunt je eigen egg niet vernietigen.
-    notVisible: Egg is niet zichtbaar binnen je bereik.
-    protected: Egg is beschermd omdat de eigenaar in de buurt is.
+    dropped: Oul a fost plasat cu succes.
+    dropFailed: Oul nu a putut fi salvat.
+    alreadyDropped: Oul a fost deja pus.
+    persistFailed: Picătura de ou a fost acceptată, dar nu a putut fi încărcată din
+      starea de joc persistentă.
+    destroyed: Oul a fost distrus cu succes.
+    alreadyDestroyed: Oul a fost deja distrus.
+    notFound: Oul nu a fost găsit.
+    cannotDestroyOwn: Nu-ți poți distruge propriul ou.
+    notVisible: Oul nu este vizibil la îndemâna ta.
+    protected: Oul este protejat deoarece proprietarul este în apropiere.
 code_conspiracy:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Code Conspiracy-games.
+  gameTypeRequired: Acest punct final este disponibil numai pentru jocurile Code Conspiracy.
   validation:
-    missingTargetTeamId: Doelteam-id is verplicht.
-    missingCode: Code is verplicht.
+    missingTargetTeamId: ID-ul echipei țintă este necesar.
+    missingCode: Codul este necesar.
   code:
-    submitted: Code-inzending ontvangen.
+    submitted: A primit codul trimis.
 auth:
   locale:
-    unsupported: Niet-ondersteunde taal. Toegestane waarden zijn en en nl.
+    unsupported: Limbă neacceptată. Valorile permise sunt en și nl.
   ws:
-    superAdminKeyRequired: WS super admin-sleutel is verplicht.
-    superAdminKeyInvalid: WS-superbeheerderssleutel is ongeldig.
-    superAdminKeyNotConfigured: WS super admin-sleutel is niet geconfigureerd op de
-      backend.
+    superAdminKeyRequired: Este necesară cheia super admin WS.
+    superAdminKeyInvalid: Cheia super admin WS este nevalidă.
+    superAdminKeyNotConfigured: Cheia super admin WS nu este configurată pe backend.
   user:
-    invalidEmailOrPassword: Ongeldig e-mailadres of wachtwoord.
-    disallowedRole: Dit account heeft geen toegang tot deze backend.
-    superAdminRequired: Super admin-toegang is vereist voor deze actie.
+    invalidEmailOrPassword: Adresă de e-mail sau parolă nevalidă.
+    disallowedRole: Acest cont nu are acces la acest backend.
+    superAdminRequired: Pentru această acțiune este necesar accesul super administrator.
+    notFound: Utilizatorul nu a fost găsit.
+    updateFailed: Actualizarea profilului a eșuat.
+    userRequired: Este necesar un cont de utilizator pentru această promoție.
   team:
-    invalidCodes: Ongeldige gamecode of teamcode.
+    invalidCodes: Cod de joc sau cod de echipă nevalid.
   token:
-    missingBearerToken: Bearer-token is verplicht.
-    invalidBearerHeaderFormat: Bearer-token header-formaat is ongeldig.
-    invalidOrExpired: Token is ongeldig of verlopen.
-    gameAccessRequired: Token heeft geen toegang tot de gevraagde game.
+    missingBearerToken: Este necesar un jeton de purtător.
+    invalidBearerHeaderFormat: Formatul antetului jetonului purtător este nevalid.
+    invalidOrExpired: Tokenul este invalid sau a expirat.
+    gameAccessRequired: Tokenul nu poate accesa jocul solicitat.
   register:
-    emailAlreadyUsed: Er bestaat al een account met dit e-mailadres.
-    usernameAlreadyUsed: Deze gebruikersnaam is al in gebruik.
-    verifyEmailSent: Account aangemaakt. Controleer je e-mail om je adres te bevestigen.
-    emailSendFailed: Verificatie-e-mail kon niet worden verzonden.
-    mailerNotConfigured: E-mailservice is niet geconfigureerd.
-    mailerUnsupportedScheme: Het DSN-schema van de e-mailservice wordt niet ondersteund.
-    mailerFromMissing: Afzenderadres voor e-mail is niet geconfigureerd.
+    emailAlreadyUsed: Există deja un cont cu această adresă de e-mail.
+    usernameAlreadyUsed: Acest nume de utilizator este deja utilizat.
+    verifyEmailSent: Cont creat. Verificați-vă e-mailul pentru a vă confirma adresa.
+    emailSendFailed: E-mailul de verificare nu a putut fi trimis.
+    mailerNotConfigured: Serviciul de e-mail nu este configurat.
+    mailerUnsupportedScheme: Schema DSN a serviciului de e-mail nu este acceptată.
+    mailerFromMissing: Adresa expeditorului de e-mail nu este configurată.
   verify:
-    invalidToken: Deze verificatietoken is ongeldig of verlopen.
-    success: E-mailadres is succesvol bevestigd.
-    pendingEmailConflict: Dit wachtende e-mailadres kan niet meer worden toegepast
-      omdat het al in gebruik is.
-    tokenColumnMissing: Opslag voor verificatietokens is niet correct geconfigureerd.
+    invalidToken: Acest simbol de autentificare este invalid sau a expirat.
+    success: Adresa de e-mail a fost confirmată cu succes.
+    pendingEmailConflict: Această adresă de e-mail în așteptare nu mai poate fi aplicată
+      deoarece este deja utilizată.
+    tokenColumnMissing: Stocarea jetonului de autentificare nu este configurată corect.
   reset:
-    requestAccepted: Als een account bestaat en bevestigd is, is een reset-e-mail
-      verzonden.
-    tokenColumnsMissing: Opslag voor wachtwoord-resettokens is niet correct geconfigureerd.
-    emailSendFailed: Wachtwoord reset-e-mail kon niet worden verzonden.
+    requestAccepted: Dacă există un cont și a fost confirmat, a fost trimis un e-mail
+      de resetare.
+    tokenColumnsMissing: Stocarea simbolului de resetare a parolei nu este configurată
+      corect.
+    emailSendFailed: E-mailul de resetare a parolei nu a putut fi trimis.
+  password:
+    currentIncorrect: Parola curentă este incorectă.
+    changeFailed: Schimbarea parolei a eșuat.
+    changed: Parola a fost schimbată cu succes.
 mailer:
   verify:
-    subject: Bevestig je e-mailadres
-    title: Bevestig je e-mailadres
-    greeting: Hoi %usernaam%,
-    intro: Bevestig je e-mailadres door op de knop hieronder te klikken.
-    cta: E-mailadres bevestigen
-    outro: Als je geen account hebt aangemaakt, kun je deze e-mail negeren.
+    subject: Confirmați adresa dvs. de e-mail
+    title: Confirmați adresa dvs. de e-mail
+    greeting: Bună %username%,
+    intro: Confirmați-vă adresa de e-mail făcând clic pe butonul de mai jos.
+    cta: Confirmați adresa de e-mail
+    outro: Dacă nu ați creat un cont, puteți ignora acest e-mail.
   reset:
-    subject: Wachtwoord resetten
-    title: Wachtwoord resetten
-    greeting: Hoi %usernaam%,
-    intro: Er is een wachtwoordreset aangevraagd voor je account. Gebruik de knop
-      hieronder om een nieuw wachtwoord te kiezen.
-    cta: Wachtwoord resetten
-    outro: Als je dit niet hebt aangevraagd, kun je deze e-mail negeren.
+    subject: Resetează parola
+    title: Resetează parola
+    greeting: Bună %username%,
+    intro: A fost solicitată o resetare a parolei pentru contul dvs. Utilizați butonul
+      de mai jos pentru a alege o nouă parolă.
+    cta: Resetează parola
+    outro: Dacă nu ați solicitat acest lucru, puteți ignora acest e-mail.

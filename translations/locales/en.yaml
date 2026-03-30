@@ -32,7 +32,7 @@ game:
     success: Game deleted successfully.
   reset:
     failed: Game could not be reset.
-    success: Game reset successfully.
+    success: Game successfully reset.
   admin:
     add:
       failed: Game admin could not be added.
@@ -62,7 +62,7 @@ team:
     failed: Team could not be updated.
   delete:
     failed: Team could not be deleted.
-    success: Team deleted successfully.
+    success: Team removed successfully.
 explodingKittens:
   gameTypeRequired: This ending point is only available for Exploding Kittens games.
   lives:
@@ -276,7 +276,7 @@ birds_of_prey:
     alreadyDestroyed: Egg has already been destroyed.
     notFound: Egg not found.
     cannotDestroyOwn: You can't destroy your own egg.
-    notVisible: Egg is not visible within your range.
+    notVisible: Egg is not visible within your reach.
     protected: Egg is protected because the owner is nearby.
 code_conspiracy:
   gameTypeRequired: This endpoint is only available for Code Conspiracy games.
@@ -297,8 +297,8 @@ auth:
     disallowedRole: This account does not have access to this backend.
     superAdminRequired: Super admin access is required for this action.
     notFound: User not found.
-    updateFailed: Failed to update profile.
-    userRequired: User account required for this action.
+    updateFailed: Profile update failed.
+    userRequired: User account required for this promotion.
   team:
     invalidCodes: Invalid game code or team code.
   token:
@@ -327,7 +327,7 @@ auth:
     emailSendFailed: Password reset email could not be sent.
   password:
     currentIncorrect: Current password is incorrect.
-    changeFailed: Failed to change password.
+    changeFailed: Change password failed.
     changed: Password changed successfully.
 mailer:
   verify:

@@ -9,6 +9,16 @@ from app.repositories.game_logic_state_repository import GameLogicStateRepositor
 class CourierRushRepository(GameLogicStateRepository):
     """Repository for Courier Rush configuration and point entities."""
 
+    _PICKUP_MODE_COLUMNS = ["courier_rush_pickup_randomized", "courierRushPickupRandomized"]
+    _DROPOFF_MODE_COLUMNS = ["courier_rush_dropoff_randomized", "courierRushDropoffRandomized"]
+    _MAX_ACTIVE_PICKUPS_COLUMNS = ["courier_rush_max_active_pickups", "courierRushMaxActivePickups"]
+    _PICKUP_SPAWN_AREA_COLUMNS = [
+        "courier_rush_pickup_spawn_area_geojson",
+        "courier_rush_pickup_spawn_area_geo_json",
+        "courierRushPickupSpawnAreaGeoJson",
+        "courierRushPickupSpawnAreaGeoJSON",
+    ]
+
     @staticmethod
     def _first_present(row: Dict[str, Any], keys: list[str], default: Any = None) -> Any:
         """Return the first matching key value from a row."""
@@ -32,10 +42,10 @@ class CourierRushRepository(GameLogicStateRepository):
             return {}
 
         return {
-            "pickup_mode": "random" if bool(self._first_present(game, ["courier_rush_pickup_randomized", "courierRushPickupRandomized"], False)) else "predefined",
-            "dropoff_mode": "random" if bool(self._first_present(game, ["courier_rush_dropoff_randomized", "courierRushDropoffRandomized"], True)) else "fixed",
-            "max_active_pickups": int(self._first_present(game, ["courier_rush_max_active_pickups", "courierRushMaxActivePickups"], 3) or 3),
-            "pickup_spawn_area_geojson": self._first_present(game, ["courier_rush_pickup_spawn_area_geojson", "courierRushPickupSpawnAreaGeoJson"]),
+            "pickup_mode": "random" if bool(self._first_present(game, self._PICKUP_MODE_COLUMNS, False)) else "predefined",
+            "dropoff_mode": "random" if bool(self._first_present(game, self._DROPOFF_MODE_COLUMNS, True)) else "fixed",
+            "max_active_pickups": int(self._first_present(game, self._MAX_ACTIVE_PICKUPS_COLUMNS, 3) or 3),
+            "pickup_spawn_area_geojson": self._first_present(game, self._PICKUP_SPAWN_AREA_COLUMNS),
         }
 
     def update_configuration_without_commit(self, db: DbSession, game_id: str, values: Dict[str, Any]) -> None:
@@ -44,10 +54,10 @@ class CourierRushRepository(GameLogicStateRepository):
         updates: Dict[str, Any] = {}
 
         column_map = {
-            "pickup_mode": ["courier_rush_pickup_randomized", "courierRushPickupRandomized"],
-            "dropoff_mode": ["courier_rush_dropoff_randomized", "courierRushDropoffRandomized"],
-            "max_active_pickups": ["courier_rush_max_active_pickups", "courierRushMaxActivePickups"],
-            "pickup_spawn_area_geojson": ["courier_rush_pickup_spawn_area_geojson", "courierRushPickupSpawnAreaGeoJson"],
+            "pickup_mode": self._PICKUP_MODE_COLUMNS,
+            "dropoff_mode": self._DROPOFF_MODE_COLUMNS,
+            "max_active_pickups": self._MAX_ACTIVE_PICKUPS_COLUMNS,
+            "pickup_spawn_area_geojson": self._PICKUP_SPAWN_AREA_COLUMNS,
         }
 
         for payload_key, candidates in column_map.items():
@@ -66,9 +76,10 @@ class CourierRushRepository(GameLogicStateRepository):
                     break
 
         if updates:
+            game_id_column = self._get_game_id_column(table)
             db.execute(
                 update(table)
-                .where(table.c["id"] == game_id)
+                .where(table.c[game_id_column] == game_id)
                 .values(**updates)
             )
 
@@ -96,6 +107,9 @@ class CourierRushRepository(GameLogicStateRepository):
     def create_pickup_without_commit(self, db: DbSession, values: Dict[str, Any]) -> str:
         """Insert a pickup point and return its identifier without commit."""
         table = self.get_pickup_table(db)
+        if "id" in values and values["id"]:
+            db.execute(insert(table).values(**values))
+            return str(values["id"])
         result = db.execute(insert(table).values(**values).returning(table.c["id"]))
         return str(result.scalar_one())
 
@@ -142,6 +156,9 @@ class CourierRushRepository(GameLogicStateRepository):
     def create_dropoff_without_commit(self, db: DbSession, values: Dict[str, Any]) -> str:
         """Insert a dropoff point and return its identifier without commit."""
         table = self.get_dropoff_table(db)
+        if "id" in values and values["id"]:
+            db.execute(insert(table).values(**values))
+            return str(values["id"])
         result = db.execute(insert(table).values(**values).returning(table.c["id"]))
         return str(result.scalar_one())
 

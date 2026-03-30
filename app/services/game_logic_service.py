@@ -66,6 +66,22 @@ class GameLogicService:
             team_state[team_id] = entry
         return entry
 
+    @staticmethod
+    def _safe_float(value: Any) -> Optional[float]:
+        """Convert a raw numeric-like value to float or `None`."""
+        try:
+            numeric = float(value)
+        except (TypeError, ValueError):
+            return None
+        return numeric if numeric == numeric else None
+
+    @staticmethod
+    def _to_iso(value: Any) -> str:
+        """Normalize datetime-like values into string representation."""
+        if isinstance(value, datetime):
+            return value.isoformat()
+        return str(value or "")
+
     def get_team_bootstrap(self, db: DbSession, game_id: str, team_id: str) -> Dict[str, Any]:
         """Build default team bootstrap payload using action-log aggregates."""
         settings = self._load_game_state(db, game_id)
@@ -97,6 +113,10 @@ class GameLogicService:
                     "team_id": str(team.get("id")),
                     "name": str(team.get("name") or ""),
                     "score": int(team.get("geo_score") or 0),
+                    "logo_path": str(team.get("logo_path") or ""),
+                    "lat": self._safe_float(team.get("geo_latitude", team.get("geoLatitude", team.get("latitude")))),
+                    "lon": self._safe_float(team.get("geo_longitude", team.get("geoLongitude", team.get("longitude")))),
+                    "location_updated_at": self._to_iso(team.get("geo_updated_at", team.get("geoUpdatedAt", team.get("updated_at", team.get("updatedAt"))))),
                 }
                 for team in teams
             ],

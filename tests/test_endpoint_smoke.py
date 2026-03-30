@@ -49,6 +49,12 @@ def _request_with_method(client: TestClient, method: str, path: str):
 
 
 def _ensure_minimal_schema() -> None:
+    backend_name = engine.url.get_backend_name()
+    if backend_name != 'sqlite':
+        raise RuntimeError(
+            f"Refusing destructive test schema reset on non-sqlite backend: {backend_name}"
+        )
+
     # Drop + recreate all ORM-defined tables so new columns are always present
     Base.metadata.drop_all(engine)
     Base.metadata.create_all(engine)

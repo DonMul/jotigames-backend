@@ -1,344 +1,343 @@
 validation:
-  invalidRequest: De aanvraaginhoud is ongeldig.
+  invalidRequest: 请求内容无效。
 game:
   auth:
-    userRequired: Een gebruiker-principal is vereist voor gamebeheer-eindpunten.
-    viewAccessRequired: Je hebt geen leestoegang tot deze game.
-    manageAccessRequired: Je hebt geen schrijftoegang tot deze game.
+    userRequired: 游戏管理端点需要用户主体。
+    viewAccessRequired: 您没有此游戏的读取权限。
+    manageAccessRequired: 您没有此游戏的写入权限。
   teamMessage:
-    sent: Bericht succesvol naar team verstuurd.
-    sendFailed: Bericht kon niet naar team worden verstuurd.
+    sent: 消息已成功发送至团队。
+    sendFailed: 消息无法发送给团队。
   chat:
-    emptyMessage: Chatbericht mag niet leeg zijn.
-    sendFailed: Chatbericht kon niet worden verstuurd.
-  notFound: Game is niet gevonden.
+    emptyMessage: 聊天消息不能为空。
+    sendFailed: 无法发送聊天消息。
+  notFound: 找不到游戏。
   member:
-    userNotFound: Gebruiker is niet gevonden.
-    emailNotFound: Er is geen gebruiker gevonden met dat e-mailadres.
+    userNotFound: 未找到用户。
+    emailNotFound: 未找到使用该电子邮件地址的用户。
   schema:
-    columnMissing: Het schema van de gametabel mist een verplichte kolom.
+    columnMissing: 游戏表架构缺少必填列。
   types:
-    columnMissing: Het schema van game type availability mist een verplichte kolom.
+    columnMissing: 游戏类型可用性计划缺少必填栏。
   validation:
-    requiredFieldsMissing: Verplichte gamevelden ontbreken.
-    startBeforeEndRequired: De starttijd van een game moet vóór de eindtijd liggen.
-    unknownSetting: Eén of meer game-instellingen-sleutels zijn onbekend.
+    requiredFieldsMissing: 缺少强制性游戏字段。
+    startBeforeEndRequired: 比赛的开始时间必须早于结束时间。
+    unknownSetting: 一个或多个游戏设置键未知。
   create:
-    failed: Game kon niet worden aangemaakt.
+    failed: 无法创建游戏。
   update:
-    failed: Game kon niet worden bijgewerkt.
+    failed: 游戏无法更新。
   delete:
-    failed: Game kon niet worden verwijderd.
-    success: Game succesvol verwijderd.
+    failed: 游戏无法删除。
+    success: 游戏删除成功。
   reset:
-    failed: Game kon niet worden gereset.
-    success: Game succesvol gereset.
+    failed: 游戏无法重置。
+    success: 游戏重置成功。
   admin:
     add:
-      failed: Game admin kon niet worden toegevoegd.
-      success: Game admin succesvol toegevoegd.
+      failed: 无法添加游戏管理员。
+      success: 游戏管理员添加成功。
     remove:
-      failed: Game admin kon niet worden verwijderd.
-      success: Game admin succesvol verwijderd.
-      ownerForbidden: De game-eigenaar kan niet als admin worden verwijderd.
-      selfForbidden: Je kunt jezelf niet uit game admins verwijderen.
+      failed: 游戏管理员无法删除。
+      success: 游戏管理员删除成功。
+      ownerForbidden: 游戏所有者的管理员身份无法被删除。
+      selfForbidden: 您无法将自己从游戏管理员中删除。
   gameMaster:
     add:
-      failed: Game master kon niet worden toegevoegd.
-      success: Game master succesvol toegevoegd.
+      failed: 无法添加游戏大师。
+      success: 游戏大师添加成功。
     remove:
-      failed: Game master kon niet worden verwijderd.
-      success: Game master succesvol verwijderd.
+      failed: 游戏大师无法删除。
+      success: 游戏大师删除成功。
 team:
-  notFound: Team is niet gevonden in deze game.
+  notFound: 本场比赛未找到球队。
   auth:
-    selfRequired: Teamtokens hebben alleen toegang tot hun eigen team.
+    selfRequired: 团队代币只能访问自己的团队。
   validation:
-    codeAlreadyUsed: Teamcode is al in gebruik voor deze game.
+    codeAlreadyUsed: Teamcode 已用于此游戏。
   create:
-    failed: Team kon niet worden aangemaakt.
-    codeGenerationFailed: Er kon geen unieke teamcode worden gegenereerd.
+    failed: 无法创建团队。
+    codeGenerationFailed: 无法生成唯一的团队代码。
   update:
-    failed: Team kon niet worden bijgewerkt.
+    failed: 团队无法更新。
   delete:
-    failed: Team kon niet worden verwijderd.
-    success: Team succesvol verwijderd.
+    failed: 无法删除团队。
+    success: 团队移除成功。
 explodingKittens:
-  gameTypeRequired: Dit eindpunt is alleen beschikbaar voor Exploding Kittens-games.
+  gameTypeRequired: 此结局仅适用于 Exploding Kittens 游戏。
   lives:
-    invalidDelta: Leven-delta moet ongelijk aan nul zijn.
-    updated: Teamlevens succesvol bijgewerkt.
-    updateFailed: Teamlevens konden niet worden bijgewerkt.
+    invalidDelta: Leven-delta 必须非零。
+    updated: 团队生活更新成功。
+    updateFailed: 团队生活无法更新。
   play:
-    failed: Kaart kon niet worden gespeeld.
-    cardNotInHand: Kaart zit niet in de hand van dit team.
-    cardNotPlayable: Deze kaart kan niet direct gespeeld worden.
-    needsTarget: Voor deze kaart is een doelteam vereist.
-    targetSelf: Een team kan zichzelf niet targeten.
-    targetInvalid: Doelteam is ongeldig voor deze game.
-    attackAlreadyPending: Er staat al een aanval in de wachtrij voor dit team.
-    peekAlreadyPending: See the future staat al in de wachtrij voor dit team.
-    skipAlreadyPending: Skip staat al in de wachtrij voor dit team.
-    attackReady: Attack-kaart succesvol gespeeld.
-    favorTargeted: Favor-kaart gespeeld en doelactie aangemaakt.
-    peekReady: See the future-kaart succesvol gespeeld.
-    shuffleDone: Shuffle-kaart succesvol gespeeld.
-    skipReady: Skip-kaart succesvol gespeeld.
+    failed: 卡无法打出。
+    cardNotInHand: 牌不在本队手中。
+    cardNotPlayable: 这张卡不能直接打出。
+    needsTarget: 这张卡需要一个目标团队。
+    targetSelf: 一个团队不能以自己为目标。
+    targetInvalid: 本场比赛目标球队无效。
+    attackAlreadyPending: 这支球队已经做好了进攻准备。
+    peekAlreadyPending: 看到未来已经在这支球队的队列中了。
+    skipAlreadyPending: Skip 已经在该团队的队列中。
+    attackReady: 攻击卡打出成功。
+    favorTargeted: 打出喜好卡并创建目标动作。
+    peekReady: 查看未来牌是否打出成功。
+    shuffleDone: 洗牌成功。
+    skipReady: 跳过卡播放成功。
   hand:
-    addFailed: Willekeurige handkaart kon niet worden toegevoegd.
-    removeFailed: Willekeurige handkaart kon niet worden verwijderd.
+    addFailed: 无法添加随机手牌。
+    removeFailed: 随机手牌无法移除。
   cards:
-    invalidType: Kaarttype is ongeldig voor Exploding Kittens.
-    notFound: Kaart is niet gevonden.
-    addFailed: Kaarten konden niet worden toegevoegd.
-    addSuccess: Kaarten succesvol toegevoegd.
-    createFailed: Kaart kon niet worden aangemaakt.
-    updateFailed: Kaart kon niet worden bijgewerkt.
-    deleteFailed: Kaart kon niet worden verwijderd.
-    deleteSuccess: Kaart succesvol verwijderd.
-    removeBlocked: Kaart kan niet worden verwijderd zolang deze in een hand zit of
-      vergrendeld is.
-    pdfDependenciesMissing: QR-PDF exportafhankelijkheden zijn niet beschikbaar op
-      de server.
-    pdfLogoInvalid: Middenlogo moet een afbeeldingsbestand zijn.
-    pdfLogoTooLarge: Middenlogo is te groot. Maximale grootte is 2 MB.
+    invalidType: 卡牌类型对爆炸小猫无效。
+    notFound: 未找到地图。
+    addFailed: 无法添加卡。
+    addSuccess: 卡添加成功。
+    createFailed: 无法创建地图。
+    updateFailed: 地图无法更新。
+    deleteFailed: 卡无法移除。
+    deleteSuccess: 卡取出成功。
+    removeBlocked: 卡在手中或锁定时无法取出。
+    pdfDependenciesMissing: QR-PDF 导出依赖项在服务器上不可用。
+    pdfLogoInvalid: 中心徽标必须是图像文件。
+    pdfLogoTooLarge: 中心标志太大。最大大小为 2 MB。
   scan:
-    failed: Kaart scannen is mislukt.
-    cardNotFound: Kaart is niet gevonden voor deze game.
-    cardInHand: Kaart zit al in een teamhand.
-    cardLocked: Kaart is momenteel vergrendeld.
-    cardAdded: Kaart aan hand toegevoegd.
-    cardNoEffect: Kaart heeft geen effect.
-    felixGain: Felix-kaart gaf één leven erbij.
-    felixAlreadyUsed: Felix-kaart is al gebruikt door dit team.
-    explodingDefused: Exploding kitten is onschadelijk gemaakt.
-    explodingHit: Exploding kitten heeft het team geraakt.
-    attackTargeted: Aanval is gericht en wacht op afhandeling.
+    failed: 卡片扫描失败。
+    cardNotFound: 找不到该游戏的地图。
+    cardInHand: 卡已在团队手中。
+    cardLocked: 地图目前已锁定。
+    cardAdded: 卡已添加至手牌。
+    cardNoEffect: 卡没有效果。
+    felixGain: 菲利克斯卡多了一条生命。
+    felixAlreadyUsed: 菲利克斯卡已经被该团队使用。
+    explodingDefused: 爆炸的小猫已被引信。
+    explodingHit: 爆炸的小猫袭击了团队。
+    attackTargeted: 攻击是有针对性的，等待处理。
   state:
-    fetched: Teamstatus opgehaald.
-    resolveFailed: Status kon niet worden afgehandeld.
-    none: Geen wachtende status om af te handelen.
-    skipPending: Skip staat in wachtrij voor dit team.
-    skipResolved: Skip-status afgehandeld.
-    peekPending: See the future staat in wachtrij voor dit team.
-    peekNeedsConfirm: See the future vereist bevestiging om af te handelen.
-    peekResolved: See the future-status afgehandeld.
-    attackNeedsTarget: Attack vereist een doelteam en gescande kaart.
-    attackInvalidTarget: Doelteam voor attack is ongeldig.
+    fetched: 已检索团队状态。
+    resolveFailed: 无法处理状态。
+    none: 没有待处理的状态。
+    skipPending: Skip 正在为该团队排队。
+    skipResolved: 跳过状态已处理。
+    peekPending: 看到这支球队的未来在等待着。
+    peekNeedsConfirm: 看到未来需要确认才能完成。
+    peekResolved: 查看未来状态已完成。
+    attackNeedsTarget: 攻击需要目标团队和扫描的地图。
+    attackInvalidTarget: 攻击目标队伍无效。
   action:
-    invalid: Actie is ongeldig.
-    notAllowed: Actie kan niet door dit team worden afgehandeld.
-    nopeMissing: Nope-kaart is vereist om deze actie te annuleren.
-    nopeUsed: Actie geannuleerd met Nope.
-    favorNoCards: Doelteam heeft geen kaarten voor Favor.
-    favorTaken: Favor afgehandeld en een kaart is genomen.
-    resolveFailed: Actie kon niet worden afgehandeld.
+    invalid: 动作无效。
+    notAllowed: 该团队无法处理该操作。
+    nopeMissing: 取消此促销活动不需要任何卡。
+    nopeUsed: 促销因“不”而取消。
+    favorNoCards: 目标队没有支持卡。
+    favorTaken: 恩惠得到解决并获得一张牌。
+    resolveFailed: 操作无法完成。
   combo:
-    failed: Combo kon niet worden gebruikt.
-    invalid: Ongeldige combo-selectie.
-    cardNotInHand: Een of meer geselecteerde kaarten zitten niet in de hand.
-    needsTarget: Combo vereist een doelteam.
-    targetSelf: Team kan zichzelf niet als doel kiezen voor deze combo.
-    targetInvalid: Doelteam voor combo is ongeldig.
-    twoReady: 2-van-gelijke combo in wachtrij gezet.
-    twoNoCards: Doelteam heeft geen kaarten voor 2-van-gelijke combo.
-    twoTaken: 2-van-gelijke combo afgehandeld en een kaart is genomen.
-    threeNeedsType: 3-van-gelijke combo vereist gewenst kaarttype.
-    threeInvalidType: Gewenst kaarttype is ongeldig voor 3-van-gelijke combo.
-    threeReady: 3-van-gelijke combo in wachtrij gezet.
-    threeTaken: 3-van-gelijke combo afgehandeld en gewenste kaart is genomen.
-    threeNoMatch: Gewenst kaarttype niet gevonden in hand van doelteam.
-    fiveNeedsType: 5-verschillende combo vereist gewenst kaarttype.
-    fiveTaken: 5-verschillende combo afgehandeld en kaart uit deck genomen.
-    fiveNone: 5-verschillende combo afgehandeld maar gewenst kaarttype niet beschikbaar
-      in deck.
+    failed: 无法使用组合。
+    invalid: 组合选择无效。
+    cardNotInHand: 一张或多张选定的牌不在手牌中。
+    needsTarget: 组合需要一个目标团队。
+    targetSelf: 团队不能以该组合为目标。
+    targetInvalid: 组合的目标队伍无效。
+    twoReady: 2 个同类组合排队。
+    twoNoCards: 目标队没有 2 个同类组合的牌。
+    twoTaken: 解决了 2 个同类组合并拿走了一张牌。
+    threeNeedsType: 3 个同类组合需要所需的卡牌类型。
+    threeInvalidType: 所需的卡牌类型对于 3 个同类组合无效。
+    threeReady: 3 个同类组合排队。
+    threeTaken: 解决了 3 个同类组合并拿走了所需的牌。
+    threeNoMatch: 在目标队伍的手牌中找不到所需的牌类型。
+    fiveNeedsType: 5 种不同的组合需要所需的卡类型。
+    fiveTaken: 解决了 5 个不同的组合并从牌组中取出卡牌。
+    fiveNone: 已解决 5 个不同的组合，但套牌中没有所需的卡牌类型。
 geohunter:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Geohunter-games.
+  gameTypeRequired: 此端点仅适用于 Geohunter 游戏。
   validation:
-    missingPoiId: Point of interest-id is verplicht.
+    missingPoiId: 需要兴趣点 ID。
   answer:
-    recorded: Antwoord succesvol ingediend.
-    alreadySubmitted: Dit punt is al beantwoord door je team.
+    recorded: 答案提交成功。
+    alreadySubmitted: 您的团队已经回答了这一点。
 blindhike:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Blindhike-games.
+  gameTypeRequired: 此端点仅适用于 Blindhike 游戏。
   validation:
-    missingMarkerId: Marker-id is verplicht.
+    missingMarkerId: 需要标记 ID。
   marker:
-    added: Marker succesvol toegevoegd.
-    alreadyAdded: Marker is al toegevoegd door je team.
-    finished: Je team is al gefinisht en kan geen extra markers plaatsen.
+    added: 标记添加成功。
+    alreadyAdded: 您的团队已添加标记。
+    finished: 您的团队已经完成，无法放置额外的标记。
 resource_run:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Resource Run-games.
+  gameTypeRequired: 此端点仅适用于 Resource Run 游戏。
   validation:
-    missingNodeId: Resource node-id is verplicht.
+    missingNodeId: 需要资源节点 ID。
   claim:
-    recorded: Resource succesvol geclaimd.
-    alreadyCollected: Resource is al verzameld door je team.
+    recorded: 资源已成功领取。
+    alreadyCollected: 您的团队已经收集了资源。
 territory_control:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Territory Control-games.
+  gameTypeRequired: 此端点仅适用于领土控制游戏。
   validation:
-    missingZoneId: Zone-id is verplicht.
+    missingZoneId: 需要区域 ID。
   claim:
-    recorded: Zone succesvol geclaimd.
-    alreadyOwned: Zone is al geclaimd door je team.
+    recorded: 区域已成功认领。
+    alreadyOwned: 您的团队已认领该区域。
 market_crash:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Market Crash-games.
+  gameTypeRequired: 此端点仅适用于市场崩盘游戏。
   validation:
-    missingTradeId: Trade-id is verplicht.
+    missingTradeId: 需要交易 ID。
   resource:
-    invalidName: Resourcenaam is ongeldig.
-    exists: Resource bestaat al.
-    createFailed: Resource aanmaken mislukt.
-    notFound: Resource is niet gevonden.
-    updateFailed: Resource bijwerken mislukt.
-    deleteFailed: Resource verwijderen mislukt.
+    invalidName: 资源名称无效。
+    exists: 资源已经存在。
+    createFailed: 资源创建失败。
+    notFound: 未找到资源。
+    updateFailed: 资源更新失败。
+    deleteFailed: 资源删除失败。
   point:
-    createFailed: Punt aanmaken mislukt.
-    notFound: Punt is niet gevonden.
-    updateFailed: Punt bijwerken mislukt.
-    deleteFailed: Punt verwijderen mislukt.
-    invalidTitle: Punttitel is ongeldig.
-    invalidColor: De kleur van de puntmarkering is ongeldig.
-    invalidResource: Punt bevat een ongeldige resourceverwijzing.
-    resourcesRequired: Minimaal één resource-instelling is verplicht voor een punt.
-    invalid: Puntcoördinaten zijn ongeldig.
+    createFailed: 点创建失败。
+    notFound: 未找到点。
+    updateFailed: 点更新失败。
+    deleteFailed: 删除点失败。
+    invalidTitle: 点标题无效。
+    invalidColor: 点标记颜色无效。
+    invalidResource: 点包含无效的资源引用。
+    resourcesRequired: 一个点至少需要一个资源设置。
+    invalid: 点坐标无效。
   location:
-    required: Locatie is verplicht voordat je kunt handelen.
-    invalid: Locatiecoördinaten zijn ongeldig.
-    updated: Locatie bijgewerkt.
+    required: 在您进行交易之前，需要先了解位置。
+    invalid: 位置坐标无效。
+    updated: 位置已更新。
   trade:
-    executed: Trade succesvol uitgevoerd.
-    invalidSide: Trade-richting is ongeldig.
-    invalidResource: Resource is niet verhandelbaar op dit punt.
-    outOfRange: Je bent buiten bereik van dit handelspunt.
-    invalidPrice: Trade-prijs is ongeldig.
-    insufficientCash: Onvoldoende cash voor deze trade.
-    insufficientInventory: Onvoldoende voorraad voor deze trade.
+    executed: 交易成功执行。
+    invalidSide: 交易方向无效。
+    invalidResource: 此时资源不可交易。
+    outOfRange: 您超出了该交易点的范围。
+    invalidPrice: 交易价格无效。
+    insufficientCash: 这笔交易的现金不足。
+    insufficientInventory: 本次交易库存不足。
 crazy88:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Crazy 88-games.
+  gameTypeRequired: 此端点仅适用于 Crazy 88 游戏。
   validation:
-    missingTaskId: Task-id is verplicht.
-    missingSubmissionId: Submission-id is verplicht.
+    missingTaskId: 需要任务 ID。
+    missingSubmissionId: 需要提交 ID。
   task:
-    submitted: Taak succesvol ingediend.
+    submitted: 作业提交成功。
   review:
-    judged: Inzending succesvol beoordeeld.
-    alreadyJudged: Inzending is al beoordeeld.
+    judged: 提交判断成功。
+    alreadyJudged: 提交的内容已经经过评估。
 courier_rush:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Courier Rush-games.
+  gameTypeRequired: 此端点仅适用于 Courier Rush 游戏。
   validation:
-    missingPickupId: Pickup-id is verplicht.
-    missingDropoffId: Dropoff-id is verplicht.
+    missingPickupId: 需要取货 ID。
+    missingDropoffId: 需要还车 ID。
   pickup:
-    confirmed: Pickup succesvol bevestigd.
-    alreadyConfirmed: Pickup is al bevestigd.
+    confirmed: 确认提货成功。
+    alreadyConfirmed: 提货已经确认。
   dropoff:
-    confirmed: Dropoff succesvol bevestigd.
+    confirmed: 已成功确认下车。
 echo_hunt:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Echo Hunt-games.
+  gameTypeRequired: 此端点仅适用于 Echo Hunt 游戏。
   validation:
-    missingBeaconId: Beacon-id is verplicht.
+    missingBeaconId: 需要信标 ID。
   beacon:
-    claimed: Beacon succesvol geclaimd.
-    alreadyClaimed: Beacon is al geclaimd door je team.
+    claimed: 信标成功领取。
+    alreadyClaimed: 信标已被你的团队认领。
 checkpoint_heist:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Checkpoint Heist-games.
+  gameTypeRequired: 此端点仅适用于 Checkpoint Heist 游戏。
   validation:
-    missingCheckpointId: Checkpoint-id is verplicht.
+    missingCheckpointId: 需要检查点 ID。
   capture:
-    recorded: Checkpoint succesvol veroverd.
-    alreadyCaptured: Checkpoint is al veroverd door je team.
+    recorded: 检查点成功捕获。
+    alreadyCaptured: 检查点已被你的团队占领。
 pandemic_response:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Pandemic Response-games.
+  gameTypeRequired: 此端点仅适用于流行病应对游戏。
   validation:
-    missingPickupId: Pickup-id is verplicht.
-    missingHotspotId: Hotspot-id is verplicht.
+    missingPickupId: 需要取货 ID。
+    missingHotspotId: 需要热点 ID。
   pickup:
-    collected: Pickup succesvol verzameld.
-    alreadyCollected: Pickup is al verzameld door je team.
+    collected: 取货成功。
+    alreadyCollected: 您的团队已收集取件。
   hotspot:
-    resolved: Hotspot succesvol opgelost.
-    alreadyResolved: Hotspot is al opgelost door je team.
+    resolved: 热点成功解决。
+    alreadyResolved: 您的团队已经解决了热点问题。
 birds_of_prey:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Birds of Prey-games.
+  gameTypeRequired: 此端点仅适用于 Birds of Prey 游戏。
   config:
-    updateFailed: Birds of Prey-instellingen opslaan mislukt.
+    updateFailed: 猛禽小队设置保存失败。
   location:
-    required: Locatie is verplicht voordat je deze actie kunt uitvoeren.
-    invalid: Locatiecoördinaten zijn ongeldig.
-    updated: Locatie bijgewerkt.
+    required: 执行此操作之前需要先确定位置。
+    invalid: 位置坐标无效。
+    updated: 位置已更新。
   validation:
-    missingEggId: Egg-id is verplicht.
+    missingEggId: 需要鸡蛋 ID。
   egg:
-    dropped: Egg succesvol geplaatst.
-    dropFailed: Egg kon niet worden opgeslagen.
-    alreadyDropped: Egg is al geplaatst.
-    persistFailed: Egg-drop is geaccepteerd, maar kon niet uit persistente game-state
-      worden geladen.
-    destroyed: Egg succesvol vernietigd.
-    alreadyDestroyed: Egg is al vernietigd.
-    notFound: Egg is niet gevonden.
-    cannotDestroyOwn: Je kunt je eigen egg niet vernietigen.
-    notVisible: Egg is niet zichtbaar binnen je bereik.
-    protected: Egg is beschermd omdat de eigenaar in de buurt is.
+    dropped: 鸡蛋成功放置。
+    dropFailed: 鸡蛋无法保存。
+    alreadyDropped: 鸡蛋已经放置好了。
+    persistFailed: 鸡蛋掉落已被接受，但无法从持久游戏状态加载。
+    destroyed: 蛋成功被摧毁。
+    alreadyDestroyed: 蛋已经被破坏了。
+    notFound: 未找到彩蛋。
+    cannotDestroyOwn: 你不能毁掉自己的蛋。
+    notVisible: 鸡蛋在你的范围内不可见。
+    protected: 鸡蛋受到保护，因为主人就在附近。
 code_conspiracy:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Code Conspiracy-games.
+  gameTypeRequired: 此端点仅适用于 Code Conspiracy 游戏。
   validation:
-    missingTargetTeamId: Doelteam-id is verplicht.
-    missingCode: Code is verplicht.
+    missingTargetTeamId: 需要目标团队 ID。
+    missingCode: 需要代码。
   code:
-    submitted: Code-inzending ontvangen.
+    submitted: 收到代码提交。
 auth:
   locale:
-    unsupported: Niet-ondersteunde taal. Toegestane waarden zijn en en nl.
+    unsupported: 不支持的语言。允许的值为 en 和 nl。
   ws:
-    superAdminKeyRequired: WS super admin-sleutel is verplicht.
-    superAdminKeyInvalid: WS-superbeheerderssleutel is ongeldig.
-    superAdminKeyNotConfigured: WS super admin-sleutel is niet geconfigureerd op de
-      backend.
+    superAdminKeyRequired: 需要 WS 超级管理员密钥。
+    superAdminKeyInvalid: WS 超级管理员密钥无效。
+    superAdminKeyNotConfigured: 后端未配置 WS 超级管理密钥。
   user:
-    invalidEmailOrPassword: Ongeldig e-mailadres of wachtwoord.
-    disallowedRole: Dit account heeft geen toegang tot deze backend.
-    superAdminRequired: Super admin-toegang is vereist voor deze actie.
+    invalidEmailOrPassword: 电子邮件地址或密码无效。
+    disallowedRole: 该帐户无权访问该后端。
+    superAdminRequired: 此操作需要超级管理员权限。
+    notFound: 未找到用户。
+    updateFailed: 个人资料更新失败。
+    userRequired: 此促销活动需要用户帐户。
   team:
-    invalidCodes: Ongeldige gamecode of teamcode.
+    invalidCodes: 游戏代码或团队代码无效。
   token:
-    missingBearerToken: Bearer-token is verplicht.
-    invalidBearerHeaderFormat: Bearer-token header-formaat is ongeldig.
-    invalidOrExpired: Token is ongeldig of verlopen.
-    gameAccessRequired: Token heeft geen toegang tot de gevraagde game.
+    missingBearerToken: 需要不记名令牌。
+    invalidBearerHeaderFormat: 承载令牌标头格式无效。
+    invalidOrExpired: 令牌无效或已过期。
+    gameAccessRequired: 令牌无法访问请求的游戏。
   register:
-    emailAlreadyUsed: Er bestaat al een account met dit e-mailadres.
-    usernameAlreadyUsed: Deze gebruikersnaam is al in gebruik.
-    verifyEmailSent: Account aangemaakt. Controleer je e-mail om je adres te bevestigen.
-    emailSendFailed: Verificatie-e-mail kon niet worden verzonden.
-    mailerNotConfigured: E-mailservice is niet geconfigureerd.
-    mailerUnsupportedScheme: Het DSN-schema van de e-mailservice wordt niet ondersteund.
-    mailerFromMissing: Afzenderadres voor e-mail is niet geconfigureerd.
+    emailAlreadyUsed: 已存在使用此电子邮件地址的帐户。
+    usernameAlreadyUsed: 该用户名已被使用。
+    verifyEmailSent: 帐户已创建。检查您的电子邮件以确认您的地址。
+    emailSendFailed: 无法发送验证电子邮件。
+    mailerNotConfigured: 未配置电子邮件服务。
+    mailerUnsupportedScheme: 不支持电子邮件服务 DSN 方案。
+    mailerFromMissing: 未配置电子邮件发件人地址。
   verify:
-    invalidToken: Deze verificatietoken is ongeldig of verlopen.
-    success: E-mailadres is succesvol bevestigd.
-    pendingEmailConflict: Dit wachtende e-mailadres kan niet meer worden toegepast
-      omdat het al in gebruik is.
-    tokenColumnMissing: Opslag voor verificatietokens is niet correct geconfigureerd.
+    invalidToken: 此身份验证令牌无效或已过期。
+    success: 电子邮件地址已成功确认。
+    pendingEmailConflict: 该待处理电子邮件地址无法再应用，因为它已被使用。
+    tokenColumnMissing: 身份验证令牌存储配置不正确。
   reset:
-    requestAccepted: Als een account bestaat en bevestigd is, is een reset-e-mail
-      verzonden.
-    tokenColumnsMissing: Opslag voor wachtwoord-resettokens is niet correct geconfigureerd.
-    emailSendFailed: Wachtwoord reset-e-mail kon niet worden verzonden.
+    requestAccepted: 如果帐户存在并且已得到确认，则会发送重置电子邮件。
+    tokenColumnsMissing: 密码重置令牌存储配置不正确。
+    emailSendFailed: 无法发送密码重置电子邮件。
+  password:
+    currentIncorrect: 当前密码不正确。
+    changeFailed: 更改密码失败。
+    changed: 密码更改成功。
 mailer:
   verify:
-    subject: Bevestig je e-mailadres
-    title: Bevestig je e-mailadres
-    greeting: Hoi %usernaam%,
-    intro: Bevestig je e-mailadres door op de knop hieronder te klikken.
-    cta: E-mailadres bevestigen
-    outro: Als je geen account hebt aangemaakt, kun je deze e-mail negeren.
+    subject: 确认您的电子邮件地址
+    title: 确认您的电子邮件地址
+    greeting: 您好 %username%，
+    intro: 单击下面的按钮确认您的电子邮件地址。
+    cta: 确认电邮地址
+    outro: 如果您尚未创建帐户，则可以忽略此电子邮件。
   reset:
-    subject: Wachtwoord resetten
-    title: Wachtwoord resetten
-    greeting: Hoi %usernaam%,
-    intro: Er is een wachtwoordreset aangevraagd voor je account. Gebruik de knop
-      hieronder om een nieuw wachtwoord te kiezen.
-    cta: Wachtwoord resetten
-    outro: Als je dit niet hebt aangevraagd, kun je deze e-mail negeren.
+    subject: 重置密码
+    title: 重置密码
+    greeting: 您好 %username%，
+    intro: 已请求为您的帐户重置密码。使用下面的按钮选择新密码。
+    cta: 重置密码
+    outro: 如果您没有要求这样做，您可以忽略这封电子邮件。

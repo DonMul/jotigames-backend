@@ -17,6 +17,8 @@ class Crazy88Service(GameLogicService):
         base = super().get_team_bootstrap(db, game_id, team_id)
         tasks = self._repository.fetch_tasks_by_game_id(db, game_id)
         teams = self._repository.fetch_teams_by_game_id(db, game_id)
+        config = self._repository.get_configuration(db, game_id)
+        show_highscore = bool(config.get("show_highscore", True))
         base["tasks"] = [
             {
                 "id": str(task.get("id", "")),
@@ -24,7 +26,7 @@ class Crazy88Service(GameLogicService):
                 "description": str(task.get("description") or ""),
                 "points": int(task.get("points") or 0),
                 "category": str(task.get("category") or ""),
-                "is_active": bool(task.get("is_active", True)),
+                "is_active": False if task.get("is_active") is False else True,
             }
             for task in tasks
         ]
@@ -36,7 +38,8 @@ class Crazy88Service(GameLogicService):
                 "score": int(t.get("geo_score") or 0),
             }
             for t in teams
-        ]
+        ] if show_highscore else []
+        base["show_highscore"] = show_highscore
         return base
 
     def submit_task(self, db: DbSession, *, game_id: str, team_id: str, task_id: str) -> GameActionResult:

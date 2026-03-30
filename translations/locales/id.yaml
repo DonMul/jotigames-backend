@@ -1,344 +1,350 @@
 validation:
-  invalidRequest: De aanvraaginhoud is ongeldig.
+  invalidRequest: Konten permintaan tidak valid.
 game:
   auth:
-    userRequired: Een gebruiker-principal is vereist voor gamebeheer-eindpunten.
-    viewAccessRequired: Je hebt geen leestoegang tot deze game.
-    manageAccessRequired: Je hebt geen schrijftoegang tot deze game.
+    userRequired: Perwakilan pengguna diperlukan untuk titik akhir manajemen game.
+    viewAccessRequired: Anda tidak memiliki akses baca ke game ini.
+    manageAccessRequired: Anda tidak memiliki akses tulis ke game ini.
   teamMessage:
-    sent: Bericht succesvol naar team verstuurd.
-    sendFailed: Bericht kon niet naar team worden verstuurd.
+    sent: Pesan berhasil dikirim ke tim.
+    sendFailed: Pesan tidak dapat dikirim ke tim.
   chat:
-    emptyMessage: Chatbericht mag niet leeg zijn.
-    sendFailed: Chatbericht kon niet worden verstuurd.
-  notFound: Game is niet gevonden.
+    emptyMessage: Pesan obrolan tidak boleh kosong.
+    sendFailed: Pesan obrolan tidak dapat dikirim.
+  notFound: Permainan tidak ditemukan.
   member:
-    userNotFound: Gebruiker is niet gevonden.
-    emailNotFound: Er is geen gebruiker gevonden met dat e-mailadres.
+    userNotFound: Pengguna tidak ditemukan.
+    emailNotFound: Tidak ada pengguna yang ditemukan dengan alamat email itu.
   schema:
-    columnMissing: Het schema van de gametabel mist een verplichte kolom.
+    columnMissing: Skema meja permainan tidak memiliki kolom wajib.
   types:
-    columnMissing: Het schema van game type availability mist een verplichte kolom.
+    columnMissing: Jadwal ketersediaan jenis permainan tidak memiliki kolom wajib.
   validation:
-    requiredFieldsMissing: Verplichte gamevelden ontbreken.
-    startBeforeEndRequired: De starttijd van een game moet vóór de eindtijd liggen.
-    unknownSetting: Eén of meer game-instellingen-sleutels zijn onbekend.
+    requiredFieldsMissing: Bidang permainan wajib tidak ada.
+    startBeforeEndRequired: Waktu mulai suatu permainan harus sebelum waktu berakhir.
+    unknownSetting: Satu atau lebih tombol pengaturan game tidak diketahui.
   create:
-    failed: Game kon niet worden aangemaakt.
+    failed: Game tidak dapat dibuat.
   update:
-    failed: Game kon niet worden bijgewerkt.
+    failed: Permainan tidak dapat diperbarui.
   delete:
-    failed: Game kon niet worden verwijderd.
-    success: Game succesvol verwijderd.
+    failed: Permainan tidak dapat dihapus.
+    success: Game berhasil dihapus.
   reset:
-    failed: Game kon niet worden gereset.
-    success: Game succesvol gereset.
+    failed: Permainan tidak dapat diatur ulang.
+    success: Permainan berhasil direset.
   admin:
     add:
-      failed: Game admin kon niet worden toegevoegd.
-      success: Game admin succesvol toegevoegd.
+      failed: Admin permainan tidak dapat ditambahkan.
+      success: Admin game berhasil ditambahkan.
     remove:
-      failed: Game admin kon niet worden verwijderd.
-      success: Game admin succesvol verwijderd.
-      ownerForbidden: De game-eigenaar kan niet als admin worden verwijderd.
-      selfForbidden: Je kunt jezelf niet uit game admins verwijderen.
+      failed: Admin game tidak dapat dihapus.
+      success: Admin game berhasil dihapus.
+      ownerForbidden: Pemilik game tidak dapat dihapus sebagai admin.
+      selfForbidden: Anda tidak dapat menghapus diri Anda sendiri dari admin game.
   gameMaster:
     add:
-      failed: Game master kon niet worden toegevoegd.
-      success: Game master succesvol toegevoegd.
+      failed: Master permainan tidak dapat ditambahkan.
+      success: Game master berhasil ditambahkan.
     remove:
-      failed: Game master kon niet worden verwijderd.
-      success: Game master succesvol verwijderd.
+      failed: Master permainan tidak dapat dihapus.
+      success: Game master berhasil dihapus.
 team:
-  notFound: Team is niet gevonden in deze game.
+  notFound: Tim tidak ditemukan dalam permainan ini.
   auth:
-    selfRequired: Teamtokens hebben alleen toegang tot hun eigen team.
+    selfRequired: Token tim hanya memiliki akses ke timnya sendiri.
   validation:
-    codeAlreadyUsed: Teamcode is al in gebruik voor deze game.
+    codeAlreadyUsed: Kode tim sudah digunakan untuk game ini.
   create:
-    failed: Team kon niet worden aangemaakt.
-    codeGenerationFailed: Er kon geen unieke teamcode worden gegenereerd.
+    failed: Tim tidak dapat dibuat.
+    codeGenerationFailed: Kode tim unik tidak dapat dibuat.
   update:
-    failed: Team kon niet worden bijgewerkt.
+    failed: Tim tidak dapat diperbarui.
   delete:
-    failed: Team kon niet worden verwijderd.
-    success: Team succesvol verwijderd.
+    failed: Tim tidak dapat dihapus.
+    success: Tim berhasil dihapus.
 explodingKittens:
-  gameTypeRequired: Dit eindpunt is alleen beschikbaar voor Exploding Kittens-games.
+  gameTypeRequired: Titik akhir ini hanya tersedia untuk game Exploding Kittens.
   lives:
-    invalidDelta: Leven-delta moet ongelijk aan nul zijn.
-    updated: Teamlevens succesvol bijgewerkt.
-    updateFailed: Teamlevens konden niet worden bijgewerkt.
+    invalidDelta: Leven-delta harus bukan nol.
+    updated: Kehidupan tim berhasil diperbarui.
+    updateFailed: Kehidupan tim tidak dapat diperbarui.
   play:
-    failed: Kaart kon niet worden gespeeld.
-    cardNotInHand: Kaart zit niet in de hand van dit team.
-    cardNotPlayable: Deze kaart kan niet direct gespeeld worden.
-    needsTarget: Voor deze kaart is een doelteam vereist.
-    targetSelf: Een team kan zichzelf niet targeten.
-    targetInvalid: Doelteam is ongeldig voor deze game.
-    attackAlreadyPending: Er staat al een aanval in de wachtrij voor dit team.
-    peekAlreadyPending: See the future staat al in de wachtrij voor dit team.
-    skipAlreadyPending: Skip staat al in de wachtrij voor dit team.
-    attackReady: Attack-kaart succesvol gespeeld.
-    favorTargeted: Favor-kaart gespeeld en doelactie aangemaakt.
-    peekReady: See the future-kaart succesvol gespeeld.
-    shuffleDone: Shuffle-kaart succesvol gespeeld.
-    skipReady: Skip-kaart succesvol gespeeld.
+    failed: Kartu tidak dapat dimainkan.
+    cardNotInHand: Kartu tidak ada di tangan tim ini.
+    cardNotPlayable: Kartu ini tidak dapat dimainkan secara langsung.
+    needsTarget: Kartu ini membutuhkan tim sasaran.
+    targetSelf: Sebuah tim tidak bisa menargetkan dirinya sendiri.
+    targetInvalid: Tim target tidak valid untuk permainan ini.
+    attackAlreadyPending: Sudah ada serangan yang disiapkan untuk tim ini.
+    peekAlreadyPending: Lihat masa depan sudah dalam antrian untuk tim ini.
+    skipAlreadyPending: Skip sudah ada dalam antrean untuk tim ini.
+    attackReady: Kartu serangan berhasil dimainkan.
+    favorTargeted: Kartu favorit dimainkan dan tindakan target dibuat.
+    peekReady: Lihat kartu masa depan yang berhasil dimainkan.
+    shuffleDone: Kartu acak berhasil dimainkan.
+    skipReady: Lewati kartu yang berhasil dimainkan.
   hand:
-    addFailed: Willekeurige handkaart kon niet worden toegevoegd.
-    removeFailed: Willekeurige handkaart kon niet worden verwijderd.
+    addFailed: Kartu tangan acak tidak dapat ditambahkan.
+    removeFailed: Kartu tangan acak tidak dapat dihapus.
   cards:
-    invalidType: Kaarttype is ongeldig voor Exploding Kittens.
-    notFound: Kaart is niet gevonden.
-    addFailed: Kaarten konden niet worden toegevoegd.
-    addSuccess: Kaarten succesvol toegevoegd.
-    createFailed: Kaart kon niet worden aangemaakt.
-    updateFailed: Kaart kon niet worden bijgewerkt.
-    deleteFailed: Kaart kon niet worden verwijderd.
-    deleteSuccess: Kaart succesvol verwijderd.
-    removeBlocked: Kaart kan niet worden verwijderd zolang deze in een hand zit of
-      vergrendeld is.
-    pdfDependenciesMissing: QR-PDF exportafhankelijkheden zijn niet beschikbaar op
-      de server.
-    pdfLogoInvalid: Middenlogo moet een afbeeldingsbestand zijn.
-    pdfLogoTooLarge: Middenlogo is te groot. Maximale grootte is 2 MB.
+    invalidType: Jenis kartu tidak valid untuk Exploding Kittens.
+    notFound: Peta tidak ditemukan.
+    addFailed: Kartu tidak dapat ditambahkan.
+    addSuccess: Kartu berhasil ditambahkan.
+    createFailed: Peta tidak dapat dibuat.
+    updateFailed: Peta tidak dapat diperbarui.
+    deleteFailed: Kartu tidak dapat dikeluarkan.
+    deleteSuccess: Kartu berhasil dihapus.
+    removeBlocked: Kartu tidak dapat dikeluarkan saat berada di tangan atau terkunci.
+    pdfDependenciesMissing: Ketergantungan ekspor QR-PDF tidak tersedia di server.
+    pdfLogoInvalid: Logo tengah harus berupa file gambar.
+    pdfLogoTooLarge: Logo tengah terlalu besar. Ukuran maksimumnya adalah 2 MB.
   scan:
-    failed: Kaart scannen is mislukt.
-    cardNotFound: Kaart is niet gevonden voor deze game.
-    cardInHand: Kaart zit al in een teamhand.
-    cardLocked: Kaart is momenteel vergrendeld.
-    cardAdded: Kaart aan hand toegevoegd.
-    cardNoEffect: Kaart heeft geen effect.
-    felixGain: Felix-kaart gaf één leven erbij.
-    felixAlreadyUsed: Felix-kaart is al gebruikt door dit team.
-    explodingDefused: Exploding kitten is onschadelijk gemaakt.
-    explodingHit: Exploding kitten heeft het team geraakt.
-    attackTargeted: Aanval is gericht en wacht op afhandeling.
+    failed: Pemindaian kartu gagal.
+    cardNotFound: Peta tidak ditemukan untuk game ini.
+    cardInHand: Kartu sudah ada di tangan tim.
+    cardLocked: Peta saat ini terkunci.
+    cardAdded: Kartu ditambahkan ke tangan.
+    cardNoEffect: Kartu tidak berpengaruh.
+    felixGain: Kartu Felix memberi satu kehidupan tambahan.
+    felixAlreadyUsed: Kartu Felix sudah digunakan oleh tim ini.
+    explodingDefused: Anak kucing yang meledak telah dijinakkan.
+    explodingHit: Anak kucing yang meledak menghantam tim.
+    attackTargeted: Serangan ditargetkan dan menunggu untuk ditangani.
   state:
-    fetched: Teamstatus opgehaald.
-    resolveFailed: Status kon niet worden afgehandeld.
-    none: Geen wachtende status om af te handelen.
-    skipPending: Skip staat in wachtrij voor dit team.
-    skipResolved: Skip-status afgehandeld.
-    peekPending: See the future staat in wachtrij voor dit team.
-    peekNeedsConfirm: See the future vereist bevestiging om af te handelen.
-    peekResolved: See the future-status afgehandeld.
-    attackNeedsTarget: Attack vereist een doelteam en gescande kaart.
-    attackInvalidTarget: Doelteam voor attack is ongeldig.
+    fetched: Status tim diambil.
+    resolveFailed: Status tidak dapat ditangani.
+    none: Tidak ada status menunggu untuk ditangani.
+    skipPending: Skip sedang mengantri untuk tim ini.
+    skipResolved: Lewati status ditangani.
+    peekPending: Lihat masa depan sedang mengantri untuk tim ini.
+    peekNeedsConfirm: Lihat masa depan memerlukan konfirmasi untuk menyelesaikannya.
+    peekResolved: Lihat status masa depan selesai.
+    attackNeedsTarget: Serangan membutuhkan tim target dan peta yang dipindai.
+    attackInvalidTarget: Tim sasaran serangan tidak valid.
   action:
-    invalid: Actie is ongeldig.
-    notAllowed: Actie kan niet door dit team worden afgehandeld.
-    nopeMissing: Nope-kaart is vereist om deze actie te annuleren.
-    nopeUsed: Actie geannuleerd met Nope.
-    favorNoCards: Doelteam heeft geen kaarten voor Favor.
-    favorTaken: Favor afgehandeld en een kaart is genomen.
-    resolveFailed: Actie kon niet worden afgehandeld.
+    invalid: Tindakan tidak valid.
+    notAllowed: Tindakan tidak dapat ditangani oleh tim ini.
+    nopeMissing: Tidak diperlukan kartu untuk membatalkan promosi ini.
+    nopeUsed: Promosi dibatalkan dengan Tidak.
+    favorNoCards: Tim Target tidak memiliki kartu untuk Didukung.
+    favorTaken: Bantuan diselesaikan dan kartu diambil.
+    resolveFailed: Tindakan tidak dapat diselesaikan.
   combo:
-    failed: Combo kon niet worden gebruikt.
-    invalid: Ongeldige combo-selectie.
-    cardNotInHand: Een of meer geselecteerde kaarten zitten niet in de hand.
-    needsTarget: Combo vereist een doelteam.
-    targetSelf: Team kan zichzelf niet als doel kiezen voor deze combo.
-    targetInvalid: Doelteam voor combo is ongeldig.
-    twoReady: 2-van-gelijke combo in wachtrij gezet.
-    twoNoCards: Doelteam heeft geen kaarten voor 2-van-gelijke combo.
-    twoTaken: 2-van-gelijke combo afgehandeld en een kaart is genomen.
-    threeNeedsType: 3-van-gelijke combo vereist gewenst kaarttype.
-    threeInvalidType: Gewenst kaarttype is ongeldig voor 3-van-gelijke combo.
-    threeReady: 3-van-gelijke combo in wachtrij gezet.
-    threeTaken: 3-van-gelijke combo afgehandeld en gewenste kaart is genomen.
-    threeNoMatch: Gewenst kaarttype niet gevonden in hand van doelteam.
-    fiveNeedsType: 5-verschillende combo vereist gewenst kaarttype.
-    fiveTaken: 5-verschillende combo afgehandeld en kaart uit deck genomen.
-    fiveNone: 5-verschillende combo afgehandeld maar gewenst kaarttype niet beschikbaar
-      in deck.
+    failed: Kombo tidak dapat digunakan.
+    invalid: Pilihan kombo tidak valid.
+    cardNotInHand: Satu atau lebih kartu yang dipilih tidak ada di tangan.
+    needsTarget: Combo memerlukan tim sasaran.
+    targetSelf: Tim tidak dapat menargetkan dirinya sendiri untuk kombo ini.
+    targetInvalid: Tim target untuk kombo tidak valid.
+    twoReady: Kombo 2 jenis yang mengantri.
+    twoNoCards: Tim target tidak memiliki kartu untuk kombo 2 jenis.
+    twoTaken: Kombo 2 jenis diselesaikan dan satu kartu diambil.
+    threeNeedsType: Kombo 3 jenis memerlukan jenis kartu yang diinginkan.
+    threeInvalidType: Jenis kartu yang diinginkan tidak valid untuk kombo 3 jenis.
+    threeReady: Kombo 3 jenis yang mengantri.
+    threeTaken: Kombo 3 jenis diselesaikan dan kartu yang diinginkan diambil.
+    threeNoMatch: Jenis kartu yang diinginkan tidak ditemukan di tangan tim target.
+    fiveNeedsType: Kombo 5 berbeda memerlukan jenis kartu yang diinginkan.
+    fiveTaken: 5 kombo berbeda diselesaikan dan kartu diambil dari dek.
+    fiveNone: 5 kombo berbeda terselesaikan tetapi jenis kartu yang diinginkan tidak
+      tersedia di dek.
 geohunter:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Geohunter-games.
+  gameTypeRequired: Titik akhir ini hanya tersedia untuk game Geohunter.
   validation:
-    missingPoiId: Point of interest-id is verplicht.
+    missingPoiId: ID tempat tujuan diperlukan.
   answer:
-    recorded: Antwoord succesvol ingediend.
-    alreadySubmitted: Dit punt is al beantwoord door je team.
+    recorded: Jawaban berhasil dikirimkan.
+    alreadySubmitted: Poin ini sudah dijawab oleh tim Anda.
 blindhike:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Blindhike-games.
+  gameTypeRequired: Titik akhir ini hanya tersedia untuk game Blindhike.
   validation:
-    missingMarkerId: Marker-id is verplicht.
+    missingMarkerId: ID penanda diperlukan.
   marker:
-    added: Marker succesvol toegevoegd.
-    alreadyAdded: Marker is al toegevoegd door je team.
-    finished: Je team is al gefinisht en kan geen extra markers plaatsen.
+    added: Penanda berhasil ditambahkan.
+    alreadyAdded: Penanda telah ditambahkan oleh tim Anda.
+    finished: Tim Anda telah selesai dan tidak dapat memasang penanda tambahan.
 resource_run:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Resource Run-games.
+  gameTypeRequired: Titik akhir ini hanya tersedia untuk game Resource Run.
   validation:
-    missingNodeId: Resource node-id is verplicht.
+    missingNodeId: ID simpul sumber daya diperlukan.
   claim:
-    recorded: Resource succesvol geclaimd.
-    alreadyCollected: Resource is al verzameld door je team.
+    recorded: Sumber daya berhasil diklaim.
+    alreadyCollected: Sumber daya telah dikumpulkan oleh tim Anda.
 territory_control:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Territory Control-games.
+  gameTypeRequired: Titik akhir ini hanya tersedia untuk game Kontrol Wilayah.
   validation:
-    missingZoneId: Zone-id is verplicht.
+    missingZoneId: ID Zona diperlukan.
   claim:
-    recorded: Zone succesvol geclaimd.
-    alreadyOwned: Zone is al geclaimd door je team.
+    recorded: Zona berhasil diklaim.
+    alreadyOwned: Zona telah diklaim oleh tim Anda.
 market_crash:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Market Crash-games.
+  gameTypeRequired: Titik akhir ini hanya tersedia untuk game Market Crash.
   validation:
-    missingTradeId: Trade-id is verplicht.
+    missingTradeId: ID Perdagangan diperlukan.
   resource:
-    invalidName: Resourcenaam is ongeldig.
-    exists: Resource bestaat al.
-    createFailed: Resource aanmaken mislukt.
-    notFound: Resource is niet gevonden.
-    updateFailed: Resource bijwerken mislukt.
-    deleteFailed: Resource verwijderen mislukt.
+    invalidName: Nama sumber daya tidak valid.
+    exists: Sumber daya sudah ada.
+    createFailed: Pembuatan sumber daya gagal.
+    notFound: Sumber daya tidak ditemukan.
+    updateFailed: Pembaruan sumber daya gagal.
+    deleteFailed: Penghapusan sumber daya gagal.
   point:
-    createFailed: Punt aanmaken mislukt.
-    notFound: Punt is niet gevonden.
-    updateFailed: Punt bijwerken mislukt.
-    deleteFailed: Punt verwijderen mislukt.
-    invalidTitle: Punttitel is ongeldig.
-    invalidColor: De kleur van de puntmarkering is ongeldig.
-    invalidResource: Punt bevat een ongeldige resourceverwijzing.
-    resourcesRequired: Minimaal één resource-instelling is verplicht voor een punt.
-    invalid: Puntcoördinaten zijn ongeldig.
+    createFailed: Pembuatan poin gagal.
+    notFound: Poin tidak ditemukan.
+    updateFailed: Pembaruan poin gagal.
+    deleteFailed: Gagal menghapus titik.
+    invalidTitle: Judul poin tidak valid.
+    invalidColor: Warna penanda titik tidak valid.
+    invalidResource: Poin berisi referensi sumber daya yang tidak valid.
+    resourcesRequired: Setidaknya satu pengaturan sumber daya diperlukan untuk suatu
+      titik.
+    invalid: Koordinat titik tidak valid.
   location:
-    required: Locatie is verplicht voordat je kunt handelen.
-    invalid: Locatiecoördinaten zijn ongeldig.
-    updated: Locatie bijgewerkt.
+    required: Lokasi diperlukan sebelum Anda dapat berdagang.
+    invalid: Koordinat lokasi tidak valid.
+    updated: Lokasi diperbarui.
   trade:
-    executed: Trade succesvol uitgevoerd.
-    invalidSide: Trade-richting is ongeldig.
-    invalidResource: Resource is niet verhandelbaar op dit punt.
-    outOfRange: Je bent buiten bereik van dit handelspunt.
-    invalidPrice: Trade-prijs is ongeldig.
-    insufficientCash: Onvoldoende cash voor deze trade.
-    insufficientInventory: Onvoldoende voorraad voor deze trade.
+    executed: Perdagangan berhasil dieksekusi.
+    invalidSide: Arah perdagangan tidak valid.
+    invalidResource: Sumber daya tidak dapat diperdagangkan pada saat ini.
+    outOfRange: Anda berada di luar jangkauan titik perdagangan ini.
+    invalidPrice: Harga perdagangan tidak valid.
+    insufficientCash: Uang tunai tidak cukup untuk perdagangan ini.
+    insufficientInventory: Stok tidak mencukupi untuk perdagangan ini.
 crazy88:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Crazy 88-games.
+  gameTypeRequired: Titik akhir ini hanya tersedia untuk game Crazy 88.
   validation:
-    missingTaskId: Task-id is verplicht.
-    missingSubmissionId: Submission-id is verplicht.
+    missingTaskId: ID Tugas diperlukan.
+    missingSubmissionId: ID pengiriman diperlukan.
   task:
-    submitted: Taak succesvol ingediend.
+    submitted: Pekerjaan berhasil dikirimkan.
   review:
-    judged: Inzending succesvol beoordeeld.
-    alreadyJudged: Inzending is al beoordeeld.
+    judged: Penyerahan dinilai berhasil.
+    alreadyJudged: Pengiriman sudah dinilai.
 courier_rush:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Courier Rush-games.
+  gameTypeRequired: Titik akhir ini hanya tersedia untuk game Courier Rush.
   validation:
-    missingPickupId: Pickup-id is verplicht.
-    missingDropoffId: Dropoff-id is verplicht.
+    missingPickupId: ID pengambilan diperlukan.
+    missingDropoffId: ID pengantaran diperlukan.
   pickup:
-    confirmed: Pickup succesvol bevestigd.
-    alreadyConfirmed: Pickup is al bevestigd.
+    confirmed: Penjemputan berhasil dikonfirmasi.
+    alreadyConfirmed: Penjemputan sudah dikonfirmasi.
   dropoff:
-    confirmed: Dropoff succesvol bevestigd.
+    confirmed: Pengantaran berhasil dikonfirmasi.
 echo_hunt:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Echo Hunt-games.
+  gameTypeRequired: Titik akhir ini hanya tersedia untuk game Echo Hunt.
   validation:
-    missingBeaconId: Beacon-id is verplicht.
+    missingBeaconId: ID suar diperlukan.
   beacon:
-    claimed: Beacon succesvol geclaimd.
-    alreadyClaimed: Beacon is al geclaimd door je team.
+    claimed: Beacon berhasil diklaim.
+    alreadyClaimed: Beacon telah diklaim oleh tim Anda.
 checkpoint_heist:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Checkpoint Heist-games.
+  gameTypeRequired: Titik akhir ini hanya tersedia untuk game Checkpoint Heist.
   validation:
-    missingCheckpointId: Checkpoint-id is verplicht.
+    missingCheckpointId: ID pos pemeriksaan diperlukan.
   capture:
-    recorded: Checkpoint succesvol veroverd.
-    alreadyCaptured: Checkpoint is al veroverd door je team.
+    recorded: Pos pemeriksaan berhasil ditangkap.
+    alreadyCaptured: Pos pemeriksaan telah ditangkap oleh tim Anda.
 pandemic_response:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Pandemic Response-games.
+  gameTypeRequired: Titik akhir ini hanya tersedia untuk game Respons Pandemi.
   validation:
-    missingPickupId: Pickup-id is verplicht.
-    missingHotspotId: Hotspot-id is verplicht.
+    missingPickupId: ID pengambilan diperlukan.
+    missingHotspotId: ID hotspot diperlukan.
   pickup:
-    collected: Pickup succesvol verzameld.
-    alreadyCollected: Pickup is al verzameld door je team.
+    collected: Penjemputan berhasil dikumpulkan.
+    alreadyCollected: Pickup telah dikumpulkan oleh tim Anda.
   hotspot:
-    resolved: Hotspot succesvol opgelost.
-    alreadyResolved: Hotspot is al opgelost door je team.
+    resolved: Hotspot berhasil diatasi.
+    alreadyResolved: Hotspot telah dipecahkan oleh tim Anda.
 birds_of_prey:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Birds of Prey-games.
+  gameTypeRequired: Titik akhir ini hanya tersedia untuk game Birds of Prey.
   config:
-    updateFailed: Birds of Prey-instellingen opslaan mislukt.
+    updateFailed: Penyimpanan pengaturan Birds of Prey gagal.
   location:
-    required: Locatie is verplicht voordat je deze actie kunt uitvoeren.
-    invalid: Locatiecoördinaten zijn ongeldig.
-    updated: Locatie bijgewerkt.
+    required: Lokasi diperlukan sebelum Anda dapat melakukan tindakan ini.
+    invalid: Koordinat lokasi tidak valid.
+    updated: Lokasi diperbarui.
   validation:
-    missingEggId: Egg-id is verplicht.
+    missingEggId: ID Telur diperlukan.
   egg:
-    dropped: Egg succesvol geplaatst.
-    dropFailed: Egg kon niet worden opgeslagen.
-    alreadyDropped: Egg is al geplaatst.
-    persistFailed: Egg-drop is geaccepteerd, maar kon niet uit persistente game-state
-      worden geladen.
-    destroyed: Egg succesvol vernietigd.
-    alreadyDestroyed: Egg is al vernietigd.
-    notFound: Egg is niet gevonden.
-    cannotDestroyOwn: Je kunt je eigen egg niet vernietigen.
-    notVisible: Egg is niet zichtbaar binnen je bereik.
-    protected: Egg is beschermd omdat de eigenaar in de buurt is.
+    dropped: Telur berhasil ditempatkan.
+    dropFailed: Telur tidak dapat diselamatkan.
+    alreadyDropped: Telur sudah ditempatkan.
+    persistFailed: Tetesan telur diterima, tetapi tidak dapat dimuat dari status permainan
+      persisten.
+    destroyed: Telur berhasil dihancurkan.
+    alreadyDestroyed: Telur sudah hancur.
+    notFound: Telur tidak ditemukan.
+    cannotDestroyOwn: Anda tidak dapat menghancurkan telur Anda sendiri.
+    notVisible: Telur tidak terlihat dalam jangkauan Anda.
+    protected: Telur terlindungi karena pemiliknya ada di dekatnya.
 code_conspiracy:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Code Conspiracy-games.
+  gameTypeRequired: Titik akhir ini hanya tersedia untuk game Konspirasi Kode.
   validation:
-    missingTargetTeamId: Doelteam-id is verplicht.
-    missingCode: Code is verplicht.
+    missingTargetTeamId: ID tim target diperlukan.
+    missingCode: Kode diperlukan.
   code:
-    submitted: Code-inzending ontvangen.
+    submitted: Menerima pengiriman kode.
 auth:
   locale:
-    unsupported: Niet-ondersteunde taal. Toegestane waarden zijn en en nl.
+    unsupported: Bahasa tidak didukung. Nilai yang diperbolehkan adalah en dan nl.
   ws:
-    superAdminKeyRequired: WS super admin-sleutel is verplicht.
-    superAdminKeyInvalid: WS-superbeheerderssleutel is ongeldig.
-    superAdminKeyNotConfigured: WS super admin-sleutel is niet geconfigureerd op de
-      backend.
+    superAdminKeyRequired: Kunci admin super WS diperlukan.
+    superAdminKeyInvalid: Kunci admin super WS tidak valid.
+    superAdminKeyNotConfigured: Kunci admin super WS tidak dikonfigurasi di backend.
   user:
-    invalidEmailOrPassword: Ongeldig e-mailadres of wachtwoord.
-    disallowedRole: Dit account heeft geen toegang tot deze backend.
-    superAdminRequired: Super admin-toegang is vereist voor deze actie.
+    invalidEmailOrPassword: Alamat email atau kata sandi tidak valid.
+    disallowedRole: Akun ini tidak memiliki akses ke backend ini.
+    superAdminRequired: Akses admin super diperlukan untuk tindakan ini.
+    notFound: Pengguna tidak ditemukan.
+    updateFailed: Pembaruan profil gagal.
+    userRequired: Akun pengguna diperlukan untuk promosi ini.
   team:
-    invalidCodes: Ongeldige gamecode of teamcode.
+    invalidCodes: Kode permainan atau kode tim tidak valid.
   token:
-    missingBearerToken: Bearer-token is verplicht.
-    invalidBearerHeaderFormat: Bearer-token header-formaat is ongeldig.
-    invalidOrExpired: Token is ongeldig of verlopen.
-    gameAccessRequired: Token heeft geen toegang tot de gevraagde game.
+    missingBearerToken: Token pembawa diperlukan.
+    invalidBearerHeaderFormat: Format header token pembawa tidak valid.
+    invalidOrExpired: Token tidak valid atau kedaluwarsa.
+    gameAccessRequired: Token tidak dapat mengakses game yang diminta.
   register:
-    emailAlreadyUsed: Er bestaat al een account met dit e-mailadres.
-    usernameAlreadyUsed: Deze gebruikersnaam is al in gebruik.
-    verifyEmailSent: Account aangemaakt. Controleer je e-mail om je adres te bevestigen.
-    emailSendFailed: Verificatie-e-mail kon niet worden verzonden.
-    mailerNotConfigured: E-mailservice is niet geconfigureerd.
-    mailerUnsupportedScheme: Het DSN-schema van de e-mailservice wordt niet ondersteund.
-    mailerFromMissing: Afzenderadres voor e-mail is niet geconfigureerd.
+    emailAlreadyUsed: Akun sudah ada dengan alamat email ini.
+    usernameAlreadyUsed: Nama pengguna ini sudah digunakan.
+    verifyEmailSent: Akun dibuat. Periksa email Anda untuk mengonfirmasi alamat Anda.
+    emailSendFailed: Email verifikasi tidak dapat dikirim.
+    mailerNotConfigured: Layanan email tidak dikonfigurasi.
+    mailerUnsupportedScheme: Skema DSN layanan email tidak didukung.
+    mailerFromMissing: Alamat pengirim email tidak dikonfigurasi.
   verify:
-    invalidToken: Deze verificatietoken is ongeldig of verlopen.
-    success: E-mailadres is succesvol bevestigd.
-    pendingEmailConflict: Dit wachtende e-mailadres kan niet meer worden toegepast
-      omdat het al in gebruik is.
-    tokenColumnMissing: Opslag voor verificatietokens is niet correct geconfigureerd.
+    invalidToken: Token autentikasi ini tidak valid atau kedaluwarsa.
+    success: Alamat email telah berhasil dikonfirmasi.
+    pendingEmailConflict: Alamat email yang tertunda ini tidak dapat diterapkan lagi
+      karena sudah digunakan.
+    tokenColumnMissing: Penyimpanan token autentikasi tidak dikonfigurasi dengan benar.
   reset:
-    requestAccepted: Als een account bestaat en bevestigd is, is een reset-e-mail
-      verzonden.
-    tokenColumnsMissing: Opslag voor wachtwoord-resettokens is niet correct geconfigureerd.
-    emailSendFailed: Wachtwoord reset-e-mail kon niet worden verzonden.
+    requestAccepted: Jika akun sudah ada dan sudah terkonfirmasi maka email reset
+      telah dikirimkan.
+    tokenColumnsMissing: Penyimpanan token pengaturan ulang kata sandi tidak dikonfigurasi
+      dengan benar.
+    emailSendFailed: Email pengaturan ulang kata sandi tidak dapat dikirim.
+  password:
+    currentIncorrect: Kata sandi saat ini salah.
+    changeFailed: Gagal mengubah kata sandi.
+    changed: Kata sandi berhasil diubah.
 mailer:
   verify:
-    subject: Bevestig je e-mailadres
-    title: Bevestig je e-mailadres
-    greeting: Hoi %usernaam%,
-    intro: Bevestig je e-mailadres door op de knop hieronder te klikken.
-    cta: E-mailadres bevestigen
-    outro: Als je geen account hebt aangemaakt, kun je deze e-mail negeren.
+    subject: Konfirmasikan alamat email Anda
+    title: Konfirmasikan alamat email Anda
+    greeting: Hai %unama pengguna%,
+    intro: Konfirmasikan alamat email Anda dengan mengklik tombol di bawah.
+    cta: Konfirmasi alamat email
+    outro: Jika Anda belum membuat akun, Anda dapat mengabaikan email ini.
   reset:
-    subject: Wachtwoord resetten
-    title: Wachtwoord resetten
-    greeting: Hoi %usernaam%,
-    intro: Er is een wachtwoordreset aangevraagd voor je account. Gebruik de knop
-      hieronder om een nieuw wachtwoord te kiezen.
-    cta: Wachtwoord resetten
-    outro: Als je dit niet hebt aangevraagd, kun je deze e-mail negeren.
+    subject: Setel ulang kata sandi
+    title: Setel ulang kata sandi
+    greeting: Hai %unama pengguna%,
+    intro: Penyetelan ulang kata sandi telah diminta untuk akun Anda. Gunakan tombol
+      di bawah untuk memilih kata sandi baru.
+    cta: Setel ulang kata sandi
+    outro: Jika Anda belum memintanya, Anda dapat mengabaikan email ini.

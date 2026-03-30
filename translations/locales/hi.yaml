@@ -1,344 +1,354 @@
 validation:
-  invalidRequest: De aanvraaginhoud is ongeldig.
+  invalidRequest: अनुरोध सामग्री अमान्य है.
 game:
   auth:
-    userRequired: Een gebruiker-principal is vereist voor gamebeheer-eindpunten.
-    viewAccessRequired: Je hebt geen leestoegang tot deze game.
-    manageAccessRequired: Je hebt geen schrijftoegang tot deze game.
+    userRequired: गेम प्रबंधन समापन बिंदुओं के लिए एक उपयोगकर्ता प्रिंसिपल की आवश्यकता
+      होती है।
+    viewAccessRequired: आपके पास इस गेम तक पढ़ने की पहुंच नहीं है.
+    manageAccessRequired: आपके पास इस गेम तक लिखने की पहुंच नहीं है.
   teamMessage:
-    sent: Bericht succesvol naar team verstuurd.
-    sendFailed: Bericht kon niet naar team worden verstuurd.
+    sent: संदेश टीम को सफलतापूर्वक भेजा गया.
+    sendFailed: टीम को संदेश नहीं भेजा जा सका.
   chat:
-    emptyMessage: Chatbericht mag niet leeg zijn.
-    sendFailed: Chatbericht kon niet worden verstuurd.
-  notFound: Game is niet gevonden.
+    emptyMessage: चैट संदेश खाली नहीं हो सकता.
+    sendFailed: चैट संदेश नहीं भेजा जा सका.
+  notFound: खेल नहीं मिला।
   member:
-    userNotFound: Gebruiker is niet gevonden.
-    emailNotFound: Er is geen gebruiker gevonden met dat e-mailadres.
+    userNotFound: उपयोगकर्ता नहीं मिला.
+    emailNotFound: उस ईमेल पते वाला कोई उपयोगकर्ता नहीं मिला.
   schema:
-    columnMissing: Het schema van de gametabel mist een verplichte kolom.
+    columnMissing: गेम टेबल स्कीमा में एक अनिवार्य कॉलम गायब है।
   types:
-    columnMissing: Het schema van game type availability mist een verplichte kolom.
+    columnMissing: गेम प्रकार की उपलब्धता शेड्यूल में एक अनिवार्य कॉलम गायब है।
   validation:
-    requiredFieldsMissing: Verplichte gamevelden ontbreken.
-    startBeforeEndRequired: De starttijd van een game moet vóór de eindtijd liggen.
-    unknownSetting: Eén of meer game-instellingen-sleutels zijn onbekend.
+    requiredFieldsMissing: अनिवार्य खेल मैदान गायब हैं.
+    startBeforeEndRequired: खेल का प्रारंभ समय समाप्ति समय से पहले होना चाहिए।
+    unknownSetting: एक या अधिक गेम सेटिंग कुंजियाँ अज्ञात हैं.
   create:
-    failed: Game kon niet worden aangemaakt.
+    failed: गेम नहीं बनाया जा सका.
   update:
-    failed: Game kon niet worden bijgewerkt.
+    failed: गेम अपडेट नहीं किया जा सका.
   delete:
-    failed: Game kon niet worden verwijderd.
-    success: Game succesvol verwijderd.
+    failed: गेम को हटाया नहीं जा सका.
+    success: गेम सफलतापूर्वक हटा दिया गया.
   reset:
-    failed: Game kon niet worden gereset.
-    success: Game succesvol gereset.
+    failed: गेम रीसेट नहीं किया जा सका.
+    success: गेम सफलतापूर्वक रीसेट हो गया.
   admin:
     add:
-      failed: Game admin kon niet worden toegevoegd.
-      success: Game admin succesvol toegevoegd.
+      failed: गेम एडमिन जोड़ा नहीं जा सका.
+      success: गेम व्यवस्थापक सफलतापूर्वक जोड़ा गया.
     remove:
-      failed: Game admin kon niet worden verwijderd.
-      success: Game admin succesvol verwijderd.
-      ownerForbidden: De game-eigenaar kan niet als admin worden verwijderd.
-      selfForbidden: Je kunt jezelf niet uit game admins verwijderen.
+      failed: गेम एडमिन को हटाया नहीं जा सका.
+      success: गेम एडमिन सफलतापूर्वक हटा दिया गया.
+      ownerForbidden: गेम स्वामी को व्यवस्थापक के रूप में नहीं हटाया जा सकता.
+      selfForbidden: आप स्वयं को गेम व्यवस्थापकों से नहीं हटा सकते.
   gameMaster:
     add:
-      failed: Game master kon niet worden toegevoegd.
-      success: Game master succesvol toegevoegd.
+      failed: गेम मास्टर जोड़ा नहीं जा सका.
+      success: गेम मास्टर सफलतापूर्वक जोड़ा गया.
     remove:
-      failed: Game master kon niet worden verwijderd.
-      success: Game master succesvol verwijderd.
+      failed: गेम मास्टर को हटाया नहीं जा सका.
+      success: गेम मास्टर सफलतापूर्वक हटा दिया गया.
 team:
-  notFound: Team is niet gevonden in deze game.
+  notFound: इस खेल में टीम नहीं मिली.
   auth:
-    selfRequired: Teamtokens hebben alleen toegang tot hun eigen team.
+    selfRequired: टीम टोकन की पहुंच केवल उनकी अपनी टीम तक होती है।
   validation:
-    codeAlreadyUsed: Teamcode is al in gebruik voor deze game.
+    codeAlreadyUsed: इस गेम के लिए टीमकोड पहले से ही उपयोग में है।
   create:
-    failed: Team kon niet worden aangemaakt.
-    codeGenerationFailed: Er kon geen unieke teamcode worden gegenereerd.
+    failed: टीम नहीं बनाई जा सकी.
+    codeGenerationFailed: एक अद्वितीय टीम कोड उत्पन्न नहीं किया जा सका.
   update:
-    failed: Team kon niet worden bijgewerkt.
+    failed: टीम को अपडेट नहीं किया जा सका.
   delete:
-    failed: Team kon niet worden verwijderd.
-    success: Team succesvol verwijderd.
+    failed: टीम को हटाया नहीं जा सका.
+    success: टीम सफलतापूर्वक हटा दी गई.
 explodingKittens:
-  gameTypeRequired: Dit eindpunt is alleen beschikbaar voor Exploding Kittens-games.
+  gameTypeRequired: यह अंतिम बिंदु केवल एक्सप्लोडिंग किटन्स गेम के लिए उपलब्ध है।
   lives:
-    invalidDelta: Leven-delta moet ongelijk aan nul zijn.
-    updated: Teamlevens succesvol bijgewerkt.
-    updateFailed: Teamlevens konden niet worden bijgewerkt.
+    invalidDelta: लेवेन-डेल्टा गैर-शून्य होना चाहिए।
+    updated: टीम जीवन सफलतापूर्वक अपडेट किया गया.
+    updateFailed: टीम जीवन अद्यतन नहीं किया जा सका.
   play:
-    failed: Kaart kon niet worden gespeeld.
-    cardNotInHand: Kaart zit niet in de hand van dit team.
-    cardNotPlayable: Deze kaart kan niet direct gespeeld worden.
-    needsTarget: Voor deze kaart is een doelteam vereist.
-    targetSelf: Een team kan zichzelf niet targeten.
-    targetInvalid: Doelteam is ongeldig voor deze game.
-    attackAlreadyPending: Er staat al een aanval in de wachtrij voor dit team.
-    peekAlreadyPending: See the future staat al in de wachtrij voor dit team.
-    skipAlreadyPending: Skip staat al in de wachtrij voor dit team.
-    attackReady: Attack-kaart succesvol gespeeld.
-    favorTargeted: Favor-kaart gespeeld en doelactie aangemaakt.
-    peekReady: See the future-kaart succesvol gespeeld.
-    shuffleDone: Shuffle-kaart succesvol gespeeld.
-    skipReady: Skip-kaart succesvol gespeeld.
+    failed: कार्ड नहीं खेला जा सका.
+    cardNotInHand: कार्ड इस टीम के हाथ में नहीं है.
+    cardNotPlayable: यह कार्ड सीधे नहीं खेला जा सकता.
+    needsTarget: इस कार्ड के लिए एक लक्ष्य टीम की आवश्यकता है.
+    targetSelf: कोई टीम खुद को निशाना नहीं बना सकती.
+    targetInvalid: लक्ष्य टीम इस खेल के लिए अमान्य है.
+    attackAlreadyPending: इस टीम के लिए पहले से ही एक आक्रमण तैयार है।
+    peekAlreadyPending: देखिये इस टीम का भविष्य पहले से ही कतार में है।
+    skipAlreadyPending: इस टीम के लिए स्किप पहले से ही कतार में है।
+    attackReady: आक्रमण कार्ड सफलतापूर्वक खेला गया.
+    favorTargeted: फेवर कार्ड खेला गया और लक्ष्य कार्रवाई बनाई गई।
+    peekReady: भविष्य का कार्ड सफलतापूर्वक खेला हुआ देखें।
+    shuffleDone: शफ़ल कार्ड सफलतापूर्वक खेला गया.
+    skipReady: स्किप कार्ड सफलतापूर्वक खेला गया।
   hand:
-    addFailed: Willekeurige handkaart kon niet worden toegevoegd.
-    removeFailed: Willekeurige handkaart kon niet worden verwijderd.
+    addFailed: रैंडम हैंड कार्ड नहीं जोड़ा जा सका.
+    removeFailed: रैंडम हैंड कार्ड को हटाया नहीं जा सका.
   cards:
-    invalidType: Kaarttype is ongeldig voor Exploding Kittens.
-    notFound: Kaart is niet gevonden.
-    addFailed: Kaarten konden niet worden toegevoegd.
-    addSuccess: Kaarten succesvol toegevoegd.
-    createFailed: Kaart kon niet worden aangemaakt.
-    updateFailed: Kaart kon niet worden bijgewerkt.
-    deleteFailed: Kaart kon niet worden verwijderd.
-    deleteSuccess: Kaart succesvol verwijderd.
-    removeBlocked: Kaart kan niet worden verwijderd zolang deze in een hand zit of
-      vergrendeld is.
-    pdfDependenciesMissing: QR-PDF exportafhankelijkheden zijn niet beschikbaar op
-      de server.
-    pdfLogoInvalid: Middenlogo moet een afbeeldingsbestand zijn.
-    pdfLogoTooLarge: Middenlogo is te groot. Maximale grootte is 2 MB.
+    invalidType: एक्सप्लोडिंग किटन्स के लिए कार्ड का प्रकार अमान्य है।
+    notFound: मानचित्र नहीं मिला.
+    addFailed: कार्ड नहीं जोड़े जा सके.
+    addSuccess: कार्ड सफलतापूर्वक जोड़े गए.
+    createFailed: मानचित्र नहीं बनाया जा सका.
+    updateFailed: मानचित्र अद्यतन नहीं किया जा सका.
+    deleteFailed: कार्ड हटाया नहीं जा सका.
+    deleteSuccess: कार्ड सफलतापूर्वक निकाला गया.
+    removeBlocked: जब कार्ड हाथ में हो या लॉक हो तो उसे हटाया नहीं जा सकता।
+    pdfDependenciesMissing: क्यूआर-पीडीएफ निर्यात निर्भरताएँ सर्वर पर उपलब्ध नहीं
+      हैं।
+    pdfLogoInvalid: मध्य लोगो एक छवि फ़ाइल होनी चाहिए.
+    pdfLogoTooLarge: केंद्र का लोगो बहुत बड़ा है. अधिकतम आकार 2 एमबी है.
   scan:
-    failed: Kaart scannen is mislukt.
-    cardNotFound: Kaart is niet gevonden voor deze game.
-    cardInHand: Kaart zit al in een teamhand.
-    cardLocked: Kaart is momenteel vergrendeld.
-    cardAdded: Kaart aan hand toegevoegd.
-    cardNoEffect: Kaart heeft geen effect.
-    felixGain: Felix-kaart gaf één leven erbij.
-    felixAlreadyUsed: Felix-kaart is al gebruikt door dit team.
-    explodingDefused: Exploding kitten is onschadelijk gemaakt.
-    explodingHit: Exploding kitten heeft het team geraakt.
-    attackTargeted: Aanval is gericht en wacht op afhandeling.
+    failed: कार्ड स्कैनिंग विफल.
+    cardNotFound: इस गेम के लिए मानचित्र नहीं मिला.
+    cardInHand: कार्ड पहले से ही एक टीम के हाथ में है.
+    cardLocked: मानचित्र फिलहाल लॉक है.
+    cardAdded: कार्ड हाथ में जोड़ा गया.
+    cardNoEffect: कार्ड का कोई प्रभाव नहीं पड़ता.
+    felixGain: फ़ेलिक्स कार्ड ने एक अतिरिक्त जीवनदान दिया.
+    felixAlreadyUsed: फेलिक्स कार्ड का उपयोग इस टीम द्वारा पहले ही किया जा चुका है।
+    explodingDefused: विस्फोटित बिल्ली के बच्चे को निष्क्रिय कर दिया गया है।
+    explodingHit: विस्फोटित बिल्ली के बच्चे ने टीम को टक्कर मार दी।
+    attackTargeted: हमला लक्षित है और निपटने का इंतजार किया जा रहा है।
   state:
-    fetched: Teamstatus opgehaald.
-    resolveFailed: Status kon niet worden afgehandeld.
-    none: Geen wachtende status om af te handelen.
-    skipPending: Skip staat in wachtrij voor dit team.
-    skipResolved: Skip-status afgehandeld.
-    peekPending: See the future staat in wachtrij voor dit team.
-    peekNeedsConfirm: See the future vereist bevestiging om af te handelen.
-    peekResolved: See the future-status afgehandeld.
-    attackNeedsTarget: Attack vereist een doelteam en gescande kaart.
-    attackInvalidTarget: Doelteam voor attack is ongeldig.
+    fetched: टीम की स्थिति पुनः प्राप्त की गई.
+    resolveFailed: स्थिति संभाली नहीं जा सकी.
+    none: संभालने के लिए कोई लंबित स्थिति नहीं.
+    skipPending: इस टीम के लिए स्किप कतार में है.
+    skipResolved: स्थिति प्रबंधित छोड़ें.
+    peekPending: देखिये इस टीम का भविष्य कतार में है।
+    peekNeedsConfirm: देखें भविष्य को पूरा करने के लिए पुष्टि की आवश्यकता है।
+    peekResolved: भविष्य की स्थिति पूर्ण देखें.
+    attackNeedsTarget: हमले के लिए एक लक्ष्य टीम और स्कैन किए गए मानचित्र की आवश्यकता
+      होती है।
+    attackInvalidTarget: हमले के लिए लक्षित टीम अमान्य है.
   action:
-    invalid: Actie is ongeldig.
-    notAllowed: Actie kan niet door dit team worden afgehandeld.
-    nopeMissing: Nope-kaart is vereist om deze actie te annuleren.
-    nopeUsed: Actie geannuleerd met Nope.
-    favorNoCards: Doelteam heeft geen kaarten voor Favor.
-    favorTaken: Favor afgehandeld en een kaart is genomen.
-    resolveFailed: Actie kon niet worden afgehandeld.
+    invalid: कार्रवाई अमान्य है.
+    notAllowed: कार्रवाई इस टीम द्वारा नियंत्रित नहीं की जा सकती.
+    nopeMissing: नहीं, इस प्रमोशन को रद्द करने के लिए कार्ड की आवश्यकता है।
+    nopeUsed: नहीं के साथ पदोन्नति रद्द कर दी गई।
+    favorNoCards: टारगेट टीम के पास फ़ेवर के लिए कोई कार्ड नहीं है।
+    favorTaken: पक्ष का समाधान किया गया और एक कार्ड लिया गया।
+    resolveFailed: कार्रवाई पूरी नहीं हो सकी.
   combo:
-    failed: Combo kon niet worden gebruikt.
-    invalid: Ongeldige combo-selectie.
-    cardNotInHand: Een of meer geselecteerde kaarten zitten niet in de hand.
-    needsTarget: Combo vereist een doelteam.
-    targetSelf: Team kan zichzelf niet als doel kiezen voor deze combo.
-    targetInvalid: Doelteam voor combo is ongeldig.
-    twoReady: 2-van-gelijke combo in wachtrij gezet.
-    twoNoCards: Doelteam heeft geen kaarten voor 2-van-gelijke combo.
-    twoTaken: 2-van-gelijke combo afgehandeld en een kaart is genomen.
-    threeNeedsType: 3-van-gelijke combo vereist gewenst kaarttype.
-    threeInvalidType: Gewenst kaarttype is ongeldig voor 3-van-gelijke combo.
-    threeReady: 3-van-gelijke combo in wachtrij gezet.
-    threeTaken: 3-van-gelijke combo afgehandeld en gewenste kaart is genomen.
-    threeNoMatch: Gewenst kaarttype niet gevonden in hand van doelteam.
-    fiveNeedsType: 5-verschillende combo vereist gewenst kaarttype.
-    fiveTaken: 5-verschillende combo afgehandeld en kaart uit deck genomen.
-    fiveNone: 5-verschillende combo afgehandeld maar gewenst kaarttype niet beschikbaar
-      in deck.
+    failed: कॉम्बो का उपयोग नहीं किया जा सका.
+    invalid: अमान्य कॉम्बो चयन.
+    cardNotInHand: एक या अधिक चयनित कार्ड हाथ में नहीं हैं.
+    needsTarget: कॉम्बो के लिए एक लक्ष्य टीम की आवश्यकता होती है।
+    targetSelf: टीम इस कॉम्बो के लिए स्वयं को लक्षित नहीं कर सकती.
+    targetInvalid: कॉम्बो के लिए लक्ष्य टीम अमान्य है.
+    twoReady: 2-एक तरह का कॉम्बो कतारबद्ध।
+    twoNoCards: लक्ष्य टीम के पास दो तरह के कॉम्बो के लिए कोई कार्ड नहीं है।
+    twoTaken: 2 तरह के कॉम्बो का समाधान किया गया और एक कार्ड लिया गया।
+    threeNeedsType: 3-एक-प्रकार के कॉम्बो के लिए वांछित कार्ड प्रकार की आवश्यकता होती
+      है।
+    threeInvalidType: वांछित कार्ड प्रकार 3-प्रकार के कॉम्बो के लिए अमान्य है।
+    threeReady: 3-एक तरह का कॉम्बो कतारबद्ध।
+    threeTaken: 3 तरह के कॉम्बो का समाधान किया गया और वांछित कार्ड लिया गया।
+    threeNoMatch: लक्षित टीम के हाथ में वांछित कार्ड प्रकार नहीं मिला।
+    fiveNeedsType: 5-अलग-अलग कॉम्बो के लिए वांछित कार्ड प्रकार की आवश्यकता होती है।
+    fiveTaken: 5 अलग-अलग कॉम्बो को हल किया गया और डेक से कार्ड लिया गया।
+    fiveNone: 5-अलग-अलग कॉम्बो का समाधान हो गया है लेकिन वांछित कार्ड प्रकार डेक में
+      उपलब्ध नहीं है।
 geohunter:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Geohunter-games.
+  gameTypeRequired: यह समापन बिंदु केवल जियोहंटर गेम के लिए उपलब्ध है।
   validation:
-    missingPoiId: Point of interest-id is verplicht.
+    missingPoiId: रुचि बिंदु आईडी आवश्यक है.
   answer:
-    recorded: Antwoord succesvol ingediend.
-    alreadySubmitted: Dit punt is al beantwoord door je team.
+    recorded: उत्तर सफलतापूर्वक प्रस्तुत किया गया.
+    alreadySubmitted: इस बिंदु का उत्तर आपकी टीम द्वारा पहले ही दिया जा चुका है।
 blindhike:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Blindhike-games.
+  gameTypeRequired: यह समापन बिंदु केवल ब्लाइंडहाइक गेम के लिए उपलब्ध है।
   validation:
-    missingMarkerId: Marker-id is verplicht.
+    missingMarkerId: मार्कर आईडी आवश्यक है.
   marker:
-    added: Marker succesvol toegevoegd.
-    alreadyAdded: Marker is al toegevoegd door je team.
-    finished: Je team is al gefinisht en kan geen extra markers plaatsen.
+    added: मार्कर सफलतापूर्वक जोड़ा गया.
+    alreadyAdded: आपकी टीम द्वारा मार्कर पहले ही जोड़ा जा चुका है.
+    finished: आपकी टीम पहले ही काम पूरा कर चुकी है और अतिरिक्त मार्कर नहीं लगा सकती।
 resource_run:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Resource Run-games.
+  gameTypeRequired: यह समापन बिंदु केवल रिसोर्स रन गेम्स के लिए उपलब्ध है।
   validation:
-    missingNodeId: Resource node-id is verplicht.
+    missingNodeId: संसाधन नोड आईडी आवश्यक है.
   claim:
-    recorded: Resource succesvol geclaimd.
-    alreadyCollected: Resource is al verzameld door je team.
+    recorded: संसाधन पर सफलतापूर्वक दावा किया गया.
+    alreadyCollected: आपकी टीम द्वारा संसाधन पहले ही एकत्र कर लिया गया है।
 territory_control:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Territory Control-games.
+  gameTypeRequired: यह समापन बिंदु केवल टेरिटरी कंट्रोल गेम्स के लिए उपलब्ध है।
   validation:
-    missingZoneId: Zone-id is verplicht.
+    missingZoneId: ज़ोन आईडी आवश्यक है.
   claim:
-    recorded: Zone succesvol geclaimd.
-    alreadyOwned: Zone is al geclaimd door je team.
+    recorded: ज़ोन पर सफलतापूर्वक दावा किया गया.
+    alreadyOwned: आपकी टीम द्वारा जोन पर पहले ही दावा किया जा चुका है।
 market_crash:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Market Crash-games.
+  gameTypeRequired: यह समापन बिंदु केवल मार्केट क्रैश गेम्स के लिए उपलब्ध है।
   validation:
-    missingTradeId: Trade-id is verplicht.
+    missingTradeId: ट्रेड आईडी आवश्यक है.
   resource:
-    invalidName: Resourcenaam is ongeldig.
-    exists: Resource bestaat al.
-    createFailed: Resource aanmaken mislukt.
-    notFound: Resource is niet gevonden.
-    updateFailed: Resource bijwerken mislukt.
-    deleteFailed: Resource verwijderen mislukt.
+    invalidName: संसाधन का नाम अमान्य है.
+    exists: संसाधन पहले से मौजूद है.
+    createFailed: संसाधन निर्माण विफल रहा.
+    notFound: संसाधन नहीं मिला.
+    updateFailed: संसाधन अद्यतन विफल रहा.
+    deleteFailed: संसाधन विलोपन विफल रहा.
   point:
-    createFailed: Punt aanmaken mislukt.
-    notFound: Punt is niet gevonden.
-    updateFailed: Punt bijwerken mislukt.
-    deleteFailed: Punt verwijderen mislukt.
-    invalidTitle: Punttitel is ongeldig.
-    invalidColor: De kleur van de puntmarkering is ongeldig.
-    invalidResource: Punt bevat een ongeldige resourceverwijzing.
-    resourcesRequired: Minimaal één resource-instelling is verplicht voor een punt.
-    invalid: Puntcoördinaten zijn ongeldig.
+    createFailed: बिंदु निर्माण विफल.
+    notFound: बिंदु नहीं मिला.
+    updateFailed: बिंदु अद्यतन विफल रहा.
+    deleteFailed: बिंदु मिटाना विफल रहा.
+    invalidTitle: बिंदु शीर्षक अमान्य है.
+    invalidColor: बिंदु मार्कर का रंग अमान्य है.
+    invalidResource: प्वाइंट में एक अमान्य संसाधन संदर्भ है।
+    resourcesRequired: एक बिंदु के लिए कम से कम एक संसाधन सेटिंग आवश्यक है।
+    invalid: बिंदु निर्देशांक अमान्य हैं.
   location:
-    required: Locatie is verplicht voordat je kunt handelen.
-    invalid: Locatiecoördinaten zijn ongeldig.
-    updated: Locatie bijgewerkt.
+    required: व्यापार करने से पहले स्थान की आवश्यकता होती है।
+    invalid: स्थान निर्देशांक अमान्य हैं.
+    updated: स्थान अपडेट किया गया.
   trade:
-    executed: Trade succesvol uitgevoerd.
-    invalidSide: Trade-richting is ongeldig.
-    invalidResource: Resource is niet verhandelbaar op dit punt.
-    outOfRange: Je bent buiten bereik van dit handelspunt.
-    invalidPrice: Trade-prijs is ongeldig.
-    insufficientCash: Onvoldoende cash voor deze trade.
-    insufficientInventory: Onvoldoende voorraad voor deze trade.
+    executed: व्यापार सफलतापूर्वक निष्पादित हुआ।
+    invalidSide: व्यापार दिशा अमान्य है.
+    invalidResource: इस बिंदु पर संसाधन व्यापार योग्य नहीं है।
+    outOfRange: आप इस ट्रेडिंग पॉइंट की सीमा से बाहर हैं।
+    invalidPrice: व्यापार मूल्य अमान्य है.
+    insufficientCash: इस व्यापार के लिए अपर्याप्त नकदी.
+    insufficientInventory: इस व्यापार के लिए अपर्याप्त स्टॉक.
 crazy88:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Crazy 88-games.
+  gameTypeRequired: यह समापन बिंदु केवल क्रेज़ी 88 गेम के लिए उपलब्ध है।
   validation:
-    missingTaskId: Task-id is verplicht.
-    missingSubmissionId: Submission-id is verplicht.
+    missingTaskId: कार्य आईडी आवश्यक है.
+    missingSubmissionId: सबमिशन आईडी आवश्यक है.
   task:
-    submitted: Taak succesvol ingediend.
+    submitted: कार्य सफलतापूर्वक प्रस्तुत किया गया.
   review:
-    judged: Inzending succesvol beoordeeld.
-    alreadyJudged: Inzending is al beoordeeld.
+    judged: सबमिशन सफल माना गया।
+    alreadyJudged: सबमिशन का मूल्यांकन पहले ही किया जा चुका है.
 courier_rush:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Courier Rush-games.
+  gameTypeRequired: यह समापन बिंदु केवल कूरियर रश गेम के लिए उपलब्ध है।
   validation:
-    missingPickupId: Pickup-id is verplicht.
-    missingDropoffId: Dropoff-id is verplicht.
+    missingPickupId: पिकअप आईडी आवश्यक है.
+    missingDropoffId: ड्रॉपऑफ़ आईडी आवश्यक है.
   pickup:
-    confirmed: Pickup succesvol bevestigd.
-    alreadyConfirmed: Pickup is al bevestigd.
+    confirmed: पिकअप की सफलतापूर्वक पुष्टि हो गई.
+    alreadyConfirmed: पिकअप की पुष्टि पहले ही हो चुकी है.
   dropoff:
-    confirmed: Dropoff succesvol bevestigd.
+    confirmed: ड्रॉपऑफ़ की सफलतापूर्वक पुष्टि हो गई.
 echo_hunt:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Echo Hunt-games.
+  gameTypeRequired: यह समापन बिंदु केवल इको हंट गेम्स के लिए उपलब्ध है।
   validation:
-    missingBeaconId: Beacon-id is verplicht.
+    missingBeaconId: बीकन आईडी आवश्यक है.
   beacon:
-    claimed: Beacon succesvol geclaimd.
-    alreadyClaimed: Beacon is al geclaimd door je team.
+    claimed: बीकन ने सफलतापूर्वक दावा किया।
+    alreadyClaimed: बीकन पर आपकी टीम द्वारा पहले ही दावा किया जा चुका है।
 checkpoint_heist:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Checkpoint Heist-games.
+  gameTypeRequired: यह एंडपॉइंट केवल चेकपॉइंट हीस्ट गेम्स के लिए उपलब्ध है।
   validation:
-    missingCheckpointId: Checkpoint-id is verplicht.
+    missingCheckpointId: चेकप्वाइंट आईडी आवश्यक है.
   capture:
-    recorded: Checkpoint succesvol veroverd.
-    alreadyCaptured: Checkpoint is al veroverd door je team.
+    recorded: चेकपॉइंट पर सफलतापूर्वक कब्ज़ा कर लिया गया।
+    alreadyCaptured: चेकप्वाइंट पर आपकी टीम ने पहले ही कब्जा कर लिया है।
 pandemic_response:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Pandemic Response-games.
+  gameTypeRequired: यह समापन बिंदु केवल महामारी प्रतिक्रिया खेलों के लिए उपलब्ध है।
   validation:
-    missingPickupId: Pickup-id is verplicht.
-    missingHotspotId: Hotspot-id is verplicht.
+    missingPickupId: पिकअप आईडी आवश्यक है.
+    missingHotspotId: हॉटस्पॉट आईडी आवश्यक है.
   pickup:
-    collected: Pickup succesvol verzameld.
-    alreadyCollected: Pickup is al verzameld door je team.
+    collected: पिकअप सफलतापूर्वक एकत्र किया गया.
+    alreadyCollected: आपकी टीम द्वारा पिकअप पहले ही एकत्र कर लिया गया है।
   hotspot:
-    resolved: Hotspot succesvol opgelost.
-    alreadyResolved: Hotspot is al opgelost door je team.
+    resolved: हॉटस्पॉट का सफलतापूर्वक समाधान किया गया.
+    alreadyResolved: आपकी टीम द्वारा हॉटस्पॉट का समाधान पहले ही कर लिया गया है।
 birds_of_prey:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Birds of Prey-games.
+  gameTypeRequired: यह समापन बिंदु केवल बर्ड्स ऑफ प्री गेम्स के लिए उपलब्ध है।
   config:
-    updateFailed: Birds of Prey-instellingen opslaan mislukt.
+    updateFailed: शिकार के पक्षी सेटिंग सहेजने में विफल रहा।
   location:
-    required: Locatie is verplicht voordat je deze actie kunt uitvoeren.
-    invalid: Locatiecoördinaten zijn ongeldig.
-    updated: Locatie bijgewerkt.
+    required: यह क्रिया निष्पादित करने से पहले स्थान की आवश्यकता है.
+    invalid: स्थान निर्देशांक अमान्य हैं.
+    updated: स्थान अपडेट किया गया.
   validation:
-    missingEggId: Egg-id is verplicht.
+    missingEggId: अंडा आईडी आवश्यक है.
   egg:
-    dropped: Egg succesvol geplaatst.
-    dropFailed: Egg kon niet worden opgeslagen.
-    alreadyDropped: Egg is al geplaatst.
-    persistFailed: Egg-drop is geaccepteerd, maar kon niet uit persistente game-state
-      worden geladen.
-    destroyed: Egg succesvol vernietigd.
-    alreadyDestroyed: Egg is al vernietigd.
-    notFound: Egg is niet gevonden.
-    cannotDestroyOwn: Je kunt je eigen egg niet vernietigen.
-    notVisible: Egg is niet zichtbaar binnen je bereik.
-    protected: Egg is beschermd omdat de eigenaar in de buurt is.
+    dropped: अंडा सफलतापूर्वक रखा गया.
+    dropFailed: अंडा बचाया नहीं जा सका.
+    alreadyDropped: अंडा पहले ही रखा जा चुका है.
+    persistFailed: एग ड्रॉप स्वीकार कर लिया गया था, लेकिन लगातार गेम स्थिति से लोड
+      नहीं किया जा सका।
+    destroyed: अंडा सफलतापूर्वक नष्ट हो गया.
+    alreadyDestroyed: अंडा पहले ही नष्ट हो चुका है.
+    notFound: अंडा नहीं मिला.
+    cannotDestroyOwn: आप अपना अंडा स्वयं नष्ट नहीं कर सकते.
+    notVisible: अंडा आपकी पहुंच में नहीं दिख रहा.
+    protected: अंडा सुरक्षित है क्योंकि मालिक पास में है।
 code_conspiracy:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Code Conspiracy-games.
+  gameTypeRequired: यह समापन बिंदु केवल कोड कॉन्सपिरेसी गेम्स के लिए उपलब्ध है।
   validation:
-    missingTargetTeamId: Doelteam-id is verplicht.
-    missingCode: Code is verplicht.
+    missingTargetTeamId: लक्ष्य टीम आईडी आवश्यक है.
+    missingCode: कोड आवश्यक है.
   code:
-    submitted: Code-inzending ontvangen.
+    submitted: कोड सबमिशन प्राप्त हुआ.
 auth:
   locale:
-    unsupported: Niet-ondersteunde taal. Toegestane waarden zijn en en nl.
+    unsupported: असमर्थित भाषा. अनुमत मान en और nl हैं।
   ws:
-    superAdminKeyRequired: WS super admin-sleutel is verplicht.
-    superAdminKeyInvalid: WS-superbeheerderssleutel is ongeldig.
-    superAdminKeyNotConfigured: WS super admin-sleutel is niet geconfigureerd op de
-      backend.
+    superAdminKeyRequired: WS सुपर एडमिन कुंजी आवश्यक है.
+    superAdminKeyInvalid: WS सुपर एडमिन कुंजी अमान्य है.
+    superAdminKeyNotConfigured: WS सुपर एडमिन कुंजी बैकएंड पर कॉन्फ़िगर नहीं है।
   user:
-    invalidEmailOrPassword: Ongeldig e-mailadres of wachtwoord.
-    disallowedRole: Dit account heeft geen toegang tot deze backend.
-    superAdminRequired: Super admin-toegang is vereist voor deze actie.
+    invalidEmailOrPassword: अमान्य ई - मेल पता अथवा पासवर्ड।
+    disallowedRole: इस खाते की इस बैकएंड तक पहुंच नहीं है.
+    superAdminRequired: इस कार्रवाई के लिए सुपर एडमिन एक्सेस आवश्यक है.
+    notFound: उपयोगकर्ता नहीं मिला.
+    updateFailed: प्रोफ़ाइल अद्यतन विफल रहा.
+    userRequired: इस प्रचार के लिए उपयोगकर्ता खाता आवश्यक है.
   team:
-    invalidCodes: Ongeldige gamecode of teamcode.
+    invalidCodes: अमान्य गेम कोड या टीम कोड.
   token:
-    missingBearerToken: Bearer-token is verplicht.
-    invalidBearerHeaderFormat: Bearer-token header-formaat is ongeldig.
-    invalidOrExpired: Token is ongeldig of verlopen.
-    gameAccessRequired: Token heeft geen toegang tot de gevraagde game.
+    missingBearerToken: वाहक टोकन आवश्यक है.
+    invalidBearerHeaderFormat: बियरर टोकन हेडर प्रारूप अमान्य है.
+    invalidOrExpired: टोकन अमान्य है या समाप्त हो गया है.
+    gameAccessRequired: टोकन अनुरोधित गेम तक नहीं पहुंच सकता.
   register:
-    emailAlreadyUsed: Er bestaat al een account met dit e-mailadres.
-    usernameAlreadyUsed: Deze gebruikersnaam is al in gebruik.
-    verifyEmailSent: Account aangemaakt. Controleer je e-mail om je adres te bevestigen.
-    emailSendFailed: Verificatie-e-mail kon niet worden verzonden.
-    mailerNotConfigured: E-mailservice is niet geconfigureerd.
-    mailerUnsupportedScheme: Het DSN-schema van de e-mailservice wordt niet ondersteund.
-    mailerFromMissing: Afzenderadres voor e-mail is niet geconfigureerd.
+    emailAlreadyUsed: इस ईमेल पते के साथ एक खाता पहले से मौजूद है।
+    usernameAlreadyUsed: यह उपयोगकर्ता नाम पहले से प्रयोग में है।
+    verifyEmailSent: खाता बनाया गया. अपने पते की पुष्टि के लिए अपना ईमेल जांचें।
+    emailSendFailed: सत्यापन ईमेल नहीं भेजा जा सका.
+    mailerNotConfigured: ईमेल सेवा कॉन्फ़िगर नहीं है.
+    mailerUnsupportedScheme: ईमेल सेवा DSN योजना समर्थित नहीं है.
+    mailerFromMissing: ईमेल भेजने वाले का पता कॉन्फ़िगर नहीं किया गया है.
   verify:
-    invalidToken: Deze verificatietoken is ongeldig of verlopen.
-    success: E-mailadres is succesvol bevestigd.
-    pendingEmailConflict: Dit wachtende e-mailadres kan niet meer worden toegepast
-      omdat het al in gebruik is.
-    tokenColumnMissing: Opslag voor verificatietokens is niet correct geconfigureerd.
+    invalidToken: यह प्रमाणीकरण टोकन अमान्य या समाप्त हो गया है.
+    success: ईमेल पते की सफलतापूर्वक पुष्टि कर दी गई है.
+    pendingEmailConflict: यह लंबित ईमेल पता अब लागू नहीं किया जा सकता क्योंकि यह पहले
+      से ही उपयोग में है।
+    tokenColumnMissing: प्रमाणीकरण टोकन भंडारण सही ढंग से कॉन्फ़िगर नहीं किया गया
+      है।
   reset:
-    requestAccepted: Als een account bestaat en bevestigd is, is een reset-e-mail
-      verzonden.
-    tokenColumnsMissing: Opslag voor wachtwoord-resettokens is niet correct geconfigureerd.
-    emailSendFailed: Wachtwoord reset-e-mail kon niet worden verzonden.
+    requestAccepted: यदि कोई खाता मौजूद है और इसकी पुष्टि हो चुकी है, तो एक रीसेट
+      ईमेल भेजा गया है।
+    tokenColumnsMissing: पासवर्ड रीसेट टोकन संग्रहण सही ढंग से कॉन्फ़िगर नहीं किया
+      गया है।
+    emailSendFailed: पासवर्ड रीसेट ईमेल नहीं भेजा जा सका.
+  password:
+    currentIncorrect: मौजूदा पासवर्ड गलत है।
+    changeFailed: पासवर्ड बदलना विफल रहा.
+    changed: पासवर्ड सफलतापूर्वक बदला गया।
 mailer:
   verify:
-    subject: Bevestig je e-mailadres
-    title: Bevestig je e-mailadres
-    greeting: Hoi %usernaam%,
-    intro: Bevestig je e-mailadres door op de knop hieronder te klikken.
-    cta: E-mailadres bevestigen
-    outro: Als je geen account hebt aangemaakt, kun je deze e-mail negeren.
+    subject: आपका ईमेल पते की पुष्टि करें
+    title: आपका ईमेल पते की पुष्टि करें
+    greeting: नमस्ते %uउपनाम%,
+    intro: नीचे दिए गए बटन पर क्लिक करके अपने ईमेल पते की पुष्टि करें।
+    cta: ईमेल पते की पुष्टि करें
+    outro: यदि आपने खाता नहीं बनाया है, तो आप इस ईमेल को अनदेखा कर सकते हैं।
   reset:
-    subject: Wachtwoord resetten
-    title: Wachtwoord resetten
-    greeting: Hoi %usernaam%,
-    intro: Er is een wachtwoordreset aangevraagd voor je account. Gebruik de knop
-      hieronder om een nieuw wachtwoord te kiezen.
-    cta: Wachtwoord resetten
-    outro: Als je dit niet hebt aangevraagd, kun je deze e-mail negeren.
+    subject: पासवर्ड रीसेट
+    title: पासवर्ड रीसेट
+    greeting: नमस्ते %uउपनाम%,
+    intro: आपके खाते के लिए पासवर्ड रीसेट का अनुरोध किया गया है। नया पासवर्ड चुनने
+      के लिए नीचे दिए गए बटन का उपयोग करें।
+    cta: पासवर्ड रीसेट
+    outro: यदि आपने इसका अनुरोध नहीं किया है, तो आप इस ईमेल को अनदेखा कर सकते हैं।

@@ -32,6 +32,19 @@ class ActionResponse(BaseModel):
     state_version: int
 
 
+class TeamLocationUpdateRequest(BaseModel):
+    latitude: float
+    longitude: float
+
+
+class TeamLocationUpdateResponse(BaseModel):
+    success: bool
+    message_key: str
+    location: Dict[str, Any]
+    nearby_zones: list[Dict[str, Any]]
+    nearby_zone_ids: list[str]
+
+
 class TerritoryZoneCreateRequest(BaseModel):
     title: str = Field(min_length=1, max_length=120)
     latitude: float
@@ -107,6 +120,69 @@ class TerritoryControlModule(ApiModule, SharedModuleBase):
             self._require_game(db, game_id)
             self._require_user_manage_access(db, game_id, principal)
             return AdminOverviewResponse(overview=self._service.get_admin_overview(db, game_id))
+
+        @router.post(
+            "/{game_id}/teams/{team_id}/location/update",
+            response_model=TeamLocationUpdateResponse,
+            summary=f"{ACCESS_BOTH_LABEL} Update team location",
+        )
+        def update_location(
+            game_id: str,
+            team_id: str,
+            body: TeamLocationUpdateRequest,
+            principal: CurrentPrincipal,
+            db: DbSession,
+            locale: CurrentLocale,
+        ) -> TeamLocationUpdateResponse:
+            """Update team location and return currently nearby zones."""
+            self._require_game(db, game_id)
+            self._require_team_self_or_manage_access(db, game_id, team_id, principal)
+
+            try:
+                location = self._service.update_team_location(
+                    db,
+                    game_id=game_id,
+                    team_id=team_id,
+                    latitude=float(body.latitude),
+                    longitude=float(body.longitude),
+                )
+            except ValueError as error:
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(error)) from error
+
+            nearby_zones = self._service.get_nearby_zones_for_team(db, game_id, team_id)
+            nearby_zone_ids = [str(zone.get("id") or "") for zone in nearby_zones]
+            should_publish = self._service.should_publish_location_event(db, game_id=game_id, team_id=team_id, min_interval_seconds=10)
+
+            if should_publish:
+                self._ws_publisher.publish(
+                    "admin.territory_control.team.location.updated",
+                    {
+                        "game_id": game_id,
+                        "team_id": team_id,
+                        "lat": location.get("lat"),
+                        "lon": location.get("lon"),
+                        "updated_at": location.get("updated_at"),
+                    },
+                    channels=[f"channel:{game_id}:admin"],
+                )
+                self._ws_publisher.publish(
+                    "team.territory_control.nearby.updated",
+                    {
+                        "game_id": game_id,
+                        "team_id": team_id,
+                        "nearby_zone_ids": nearby_zone_ids,
+                        "nearby_zones": nearby_zones,
+                    },
+                    channels=[f"channel:{game_id}:{team_id}"],
+                )
+
+            return TeamLocationUpdateResponse(
+                success=True,
+                message_key=self._localize_message_key("territory_control.location.updated", locale),
+                location=location,
+                nearby_zones=nearby_zones,
+                nearby_zone_ids=nearby_zone_ids,
+            )
 
         @router.get(
             "/{game_id}/zones",

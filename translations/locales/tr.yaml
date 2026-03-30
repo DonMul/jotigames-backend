@@ -1,344 +1,347 @@
 validation:
-  invalidRequest: De aanvraaginhoud is ongeldig.
+  invalidRequest: İstek içeriği geçersiz.
 game:
   auth:
-    userRequired: Een gebruiker-principal is vereist voor gamebeheer-eindpunten.
-    viewAccessRequired: Je hebt geen leestoegang tot deze game.
-    manageAccessRequired: Je hebt geen schrijftoegang tot deze game.
+    userRequired: Oyun yönetimi uç noktaları için bir kullanıcı sorumlusu gereklidir.
+    viewAccessRequired: Bu oyuna okuma erişiminiz yok.
+    manageAccessRequired: Bu oyuna yazma erişiminiz yok.
   teamMessage:
-    sent: Bericht succesvol naar team verstuurd.
-    sendFailed: Bericht kon niet naar team worden verstuurd.
+    sent: Mesaj başarıyla ekibe gönderildi.
+    sendFailed: Mesaj ekibe gönderilemedi.
   chat:
-    emptyMessage: Chatbericht mag niet leeg zijn.
-    sendFailed: Chatbericht kon niet worden verstuurd.
-  notFound: Game is niet gevonden.
+    emptyMessage: Sohbet mesajı boş olamaz.
+    sendFailed: Sohbet mesajı gönderilemedi.
+  notFound: Oyun bulunamadı.
   member:
-    userNotFound: Gebruiker is niet gevonden.
-    emailNotFound: Er is geen gebruiker gevonden met dat e-mailadres.
+    userNotFound: Kullanıcı bulunamadı.
+    emailNotFound: Bu e-posta adresine sahip hiçbir kullanıcı bulunamadı.
   schema:
-    columnMissing: Het schema van de gametabel mist een verplichte kolom.
+    columnMissing: Oyun masası şemasında zorunlu bir sütun eksik.
   types:
-    columnMissing: Het schema van game type availability mist een verplichte kolom.
+    columnMissing: Oyun türü kullanılabilirlik programında zorunlu bir sütun eksik.
   validation:
-    requiredFieldsMissing: Verplichte gamevelden ontbreken.
-    startBeforeEndRequired: De starttijd van een game moet vóór de eindtijd liggen.
-    unknownSetting: Eén of meer game-instellingen-sleutels zijn onbekend.
+    requiredFieldsMissing: Zorunlu oyun alanları eksik.
+    startBeforeEndRequired: Bir oyunun başlama saati bitiş saatinden önce olmalıdır.
+    unknownSetting: Bir veya daha fazla oyun ayarı anahtarı bilinmiyor.
   create:
-    failed: Game kon niet worden aangemaakt.
+    failed: Oyun oluşturulamadı.
   update:
-    failed: Game kon niet worden bijgewerkt.
+    failed: Oyun güncellenemedi.
   delete:
-    failed: Game kon niet worden verwijderd.
-    success: Game succesvol verwijderd.
+    failed: Oyun silinemedi.
+    success: Oyun başarıyla silindi.
   reset:
-    failed: Game kon niet worden gereset.
-    success: Game succesvol gereset.
+    failed: Oyun sıfırlanamadı.
+    success: Oyun başarıyla sıfırlandı.
   admin:
     add:
-      failed: Game admin kon niet worden toegevoegd.
-      success: Game admin succesvol toegevoegd.
+      failed: Oyun yöneticisi eklenemedi.
+      success: Oyun yöneticisi başarıyla eklendi.
     remove:
-      failed: Game admin kon niet worden verwijderd.
-      success: Game admin succesvol verwijderd.
-      ownerForbidden: De game-eigenaar kan niet als admin worden verwijderd.
-      selfForbidden: Je kunt jezelf niet uit game admins verwijderen.
+      failed: Oyun yöneticisi kaldırılamadı.
+      success: Oyun yöneticisi başarıyla kaldırıldı.
+      ownerForbidden: Oyunun sahibi yöneticilikten çıkarılamaz.
+      selfForbidden: Kendinizi oyun yöneticilerinden kaldıramazsınız.
   gameMaster:
     add:
-      failed: Game master kon niet worden toegevoegd.
-      success: Game master succesvol toegevoegd.
+      failed: Oyun yöneticisi eklenemedi.
+      success: Oyun yöneticisi başarıyla eklendi.
     remove:
-      failed: Game master kon niet worden verwijderd.
-      success: Game master succesvol verwijderd.
+      failed: Oyun yöneticisi kaldırılamadı.
+      success: Oyun yöneticisi başarıyla kaldırıldı.
 team:
-  notFound: Team is niet gevonden in deze game.
+  notFound: Bu oyunda takım bulunamadı.
   auth:
-    selfRequired: Teamtokens hebben alleen toegang tot hun eigen team.
+    selfRequired: Takım jetonları yalnızca kendi takımlarına erişebilir.
   validation:
-    codeAlreadyUsed: Teamcode is al in gebruik voor deze game.
+    codeAlreadyUsed: Teamcode bu oyun için zaten kullanılıyor.
   create:
-    failed: Team kon niet worden aangemaakt.
-    codeGenerationFailed: Er kon geen unieke teamcode worden gegenereerd.
+    failed: Ekip oluşturulamadı.
+    codeGenerationFailed: Benzersiz bir ekip kodu oluşturulamadı.
   update:
-    failed: Team kon niet worden bijgewerkt.
+    failed: Ekip güncellenemedi.
   delete:
-    failed: Team kon niet worden verwijderd.
-    success: Team succesvol verwijderd.
+    failed: Ekip silinemedi.
+    success: Ekip başarıyla kaldırıldı.
 explodingKittens:
-  gameTypeRequired: Dit eindpunt is alleen beschikbaar voor Exploding Kittens-games.
+  gameTypeRequired: Bu bitiş noktası yalnızca Exploding Kittens oyunları için geçerlidir.
   lives:
-    invalidDelta: Leven-delta moet ongelijk aan nul zijn.
-    updated: Teamlevens succesvol bijgewerkt.
-    updateFailed: Teamlevens konden niet worden bijgewerkt.
+    invalidDelta: Leven-delta sıfırdan farklı olmalıdır.
+    updated: Ekip yaşamları başarıyla güncellendi.
+    updateFailed: Takım yaşamları güncellenemedi.
   play:
-    failed: Kaart kon niet worden gespeeld.
-    cardNotInHand: Kaart zit niet in de hand van dit team.
-    cardNotPlayable: Deze kaart kan niet direct gespeeld worden.
-    needsTarget: Voor deze kaart is een doelteam vereist.
-    targetSelf: Een team kan zichzelf niet targeten.
-    targetInvalid: Doelteam is ongeldig voor deze game.
-    attackAlreadyPending: Er staat al een aanval in de wachtrij voor dit team.
-    peekAlreadyPending: See the future staat al in de wachtrij voor dit team.
-    skipAlreadyPending: Skip staat al in de wachtrij voor dit team.
-    attackReady: Attack-kaart succesvol gespeeld.
-    favorTargeted: Favor-kaart gespeeld en doelactie aangemaakt.
-    peekReady: See the future-kaart succesvol gespeeld.
-    shuffleDone: Shuffle-kaart succesvol gespeeld.
-    skipReady: Skip-kaart succesvol gespeeld.
+    failed: Kart oynatılamadı.
+    cardNotInHand: Kart bu takımın elinde değil.
+    cardNotPlayable: Bu kart doğrudan oynanamaz.
+    needsTarget: Bu kart bir hedef takım gerektirir.
+    targetSelf: Bir takım kendini hedef alamaz.
+    targetInvalid: Hedef takım bu oyun için geçersizdir.
+    attackAlreadyPending: Bu takım için zaten bir atak planlanmış durumda.
+    peekAlreadyPending: Bakın bu takım için gelecek zaten kuyrukta.
+    skipAlreadyPending: Skip zaten bu takımın kuyruğunda.
+    attackReady: Saldırı kartı başarıyla oynandı.
+    favorTargeted: Favori kartı oynanır ve hedef eylem oluşturulur.
+    peekReady: Başarıyla oynanan gelecekteki kartı görün.
+    shuffleDone: Karışık kart başarıyla oynatıldı.
+    skipReady: Kart başarıyla oynandı.
   hand:
-    addFailed: Willekeurige handkaart kon niet worden toegevoegd.
-    removeFailed: Willekeurige handkaart kon niet worden verwijderd.
+    addFailed: Rastgele el kartı eklenemedi.
+    removeFailed: Rastgele el kartı kaldırılamadı.
   cards:
-    invalidType: Kaarttype is ongeldig voor Exploding Kittens.
-    notFound: Kaart is niet gevonden.
-    addFailed: Kaarten konden niet worden toegevoegd.
-    addSuccess: Kaarten succesvol toegevoegd.
-    createFailed: Kaart kon niet worden aangemaakt.
-    updateFailed: Kaart kon niet worden bijgewerkt.
-    deleteFailed: Kaart kon niet worden verwijderd.
-    deleteSuccess: Kaart succesvol verwijderd.
-    removeBlocked: Kaart kan niet worden verwijderd zolang deze in een hand zit of
-      vergrendeld is.
-    pdfDependenciesMissing: QR-PDF exportafhankelijkheden zijn niet beschikbaar op
-      de server.
-    pdfLogoInvalid: Middenlogo moet een afbeeldingsbestand zijn.
-    pdfLogoTooLarge: Middenlogo is te groot. Maximale grootte is 2 MB.
+    invalidType: Exploding Kittens için kart türü geçersiz.
+    notFound: Harita bulunamadı.
+    addFailed: Kartlar eklenemedi.
+    addSuccess: Kartlar başarıyla eklendi.
+    createFailed: Harita oluşturulamadı.
+    updateFailed: Harita güncellenemedi.
+    deleteFailed: Kart çıkarılamadı.
+    deleteSuccess: Kart başarıyla kaldırıldı.
+    removeBlocked: Kart eldeyken veya kilitliyken çıkarılamaz.
+    pdfDependenciesMissing: QR-PDF dışa aktarma bağımlılıkları sunucuda mevcut değildir.
+    pdfLogoInvalid: Merkez logosu bir resim dosyası olmalıdır.
+    pdfLogoTooLarge: Merkez logosu çok büyük. Maksimum boyut 2 MB'tır.
   scan:
-    failed: Kaart scannen is mislukt.
-    cardNotFound: Kaart is niet gevonden voor deze game.
-    cardInHand: Kaart zit al in een teamhand.
-    cardLocked: Kaart is momenteel vergrendeld.
-    cardAdded: Kaart aan hand toegevoegd.
-    cardNoEffect: Kaart heeft geen effect.
-    felixGain: Felix-kaart gaf één leven erbij.
-    felixAlreadyUsed: Felix-kaart is al gebruikt door dit team.
-    explodingDefused: Exploding kitten is onschadelijk gemaakt.
-    explodingHit: Exploding kitten heeft het team geraakt.
-    attackTargeted: Aanval is gericht en wacht op afhandeling.
+    failed: Kart tarama başarısız oldu.
+    cardNotFound: Bu oyun için harita bulunamadı.
+    cardInHand: Kart zaten takımın elinde.
+    cardLocked: Harita şu anda kilitli.
+    cardAdded: Kart elinize eklendi.
+    cardNoEffect: Kartın hiçbir etkisi yoktur.
+    felixGain: Felix kartı bir hayat daha verdi.
+    felixAlreadyUsed: Felix kartı bu ekip tarafından zaten kullanıldı.
+    explodingDefused: Patlayan yavru kedi etkisiz hale getirildi.
+    explodingHit: Patlayan kedi yavrusu takıma çarptı.
+    attackTargeted: Saldırı hedeflenmiştir ve ele alınmayı beklemektedir.
   state:
-    fetched: Teamstatus opgehaald.
-    resolveFailed: Status kon niet worden afgehandeld.
-    none: Geen wachtende status om af te handelen.
-    skipPending: Skip staat in wachtrij voor dit team.
-    skipResolved: Skip-status afgehandeld.
-    peekPending: See the future staat in wachtrij voor dit team.
-    peekNeedsConfirm: See the future vereist bevestiging om af te handelen.
-    peekResolved: See the future-status afgehandeld.
-    attackNeedsTarget: Attack vereist een doelteam en gescande kaart.
-    attackInvalidTarget: Doelteam voor attack is ongeldig.
+    fetched: Takım durumu alındı.
+    resolveFailed: Durum işlenemedi.
+    none: İşlenecek bekleme durumu yok.
+    skipPending: Skip bu takım için sırada.
+    skipResolved: Durum atlandı.
+    peekPending: Bakın bu takım için gelecek sırada.
+    peekNeedsConfirm: Geleceğe bakın, tamamlanması için onay gerekiyor.
+    peekResolved: Tamamlanan gelecekteki durumu görün.
+    attackNeedsTarget: Saldırı, bir hedef ekip ve taranmış harita gerektirir.
+    attackInvalidTarget: Saldırı için hedef takım geçersiz.
   action:
-    invalid: Actie is ongeldig.
-    notAllowed: Actie kan niet door dit team worden afgehandeld.
-    nopeMissing: Nope-kaart is vereist om deze actie te annuleren.
-    nopeUsed: Actie geannuleerd met Nope.
-    favorNoCards: Doelteam heeft geen kaarten voor Favor.
-    favorTaken: Favor afgehandeld en een kaart is genomen.
-    resolveFailed: Actie kon niet worden afgehandeld.
+    invalid: İşlem geçersiz.
+    notAllowed: Eylem bu ekip tarafından gerçekleştirilemez.
+    nopeMissing: Bu promosyonu iptal etmek için karta gerek yoktur.
+    nopeUsed: Promosyon Nope ile iptal edildi.
+    favorNoCards: Hedef Takımın İyilik için kartı yok.
+    favorTaken: İyilik çözülür ve bir kart alınır.
+    resolveFailed: İşlem tamamlanamadı.
   combo:
-    failed: Combo kon niet worden gebruikt.
-    invalid: Ongeldige combo-selectie.
-    cardNotInHand: Een of meer geselecteerde kaarten zitten niet in de hand.
-    needsTarget: Combo vereist een doelteam.
-    targetSelf: Team kan zichzelf niet als doel kiezen voor deze combo.
-    targetInvalid: Doelteam voor combo is ongeldig.
-    twoReady: 2-van-gelijke combo in wachtrij gezet.
-    twoNoCards: Doelteam heeft geen kaarten voor 2-van-gelijke combo.
-    twoTaken: 2-van-gelijke combo afgehandeld en een kaart is genomen.
-    threeNeedsType: 3-van-gelijke combo vereist gewenst kaarttype.
-    threeInvalidType: Gewenst kaarttype is ongeldig voor 3-van-gelijke combo.
-    threeReady: 3-van-gelijke combo in wachtrij gezet.
-    threeTaken: 3-van-gelijke combo afgehandeld en gewenste kaart is genomen.
-    threeNoMatch: Gewenst kaarttype niet gevonden in hand van doelteam.
-    fiveNeedsType: 5-verschillende combo vereist gewenst kaarttype.
-    fiveTaken: 5-verschillende combo afgehandeld en kaart uit deck genomen.
-    fiveNone: 5-verschillende combo afgehandeld maar gewenst kaarttype niet beschikbaar
-      in deck.
+    failed: Kombi kullanılamadı.
+    invalid: Geçersiz kombo seçimi.
+    cardNotInHand: Seçilen kartlardan bir veya daha fazlası elinizde değil.
+    needsTarget: Combo bir hedef ekip gerektirir.
+    targetSelf: Takım bu kombo için kendisini hedefleyemez.
+    targetInvalid: Kombo için hedef takım geçersiz.
+    twoReady: Türünün 2'si olan kombo sıraya alındı.
+    twoNoCards: Hedef takımın türünün tek örneği olan kombo için kartı yok.
+    twoTaken: Türünün 2'li kombinasyonu çözüldü ve bir kart alındı.
+    threeNeedsType: Türünün tek örneği olan kombo, istenilen kart tipini gerektirir.
+    threeInvalidType: İstenilen kart türü 3'lü kombinasyon için geçersiz.
+    threeReady: Türünün tek örneği olan kombo sıraya konuldu.
+    threeTaken: Türünün tek örneği olan kombo çözüldü ve istenen kart alındı.
+    threeNoMatch: İstenilen kart türü hedef takımın elinde bulunamadı.
+    fiveNeedsType: 5 farklı kombo istenilen kart tipini gerektirir.
+    fiveTaken: 5 farklı kombo çözüldü ve kart desteden alındı.
+    fiveNone: 5 farklı kombo çözüldü ancak istenilen kart tipi destede mevcut değil.
 geohunter:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Geohunter-games.
+  gameTypeRequired: Bu uç nokta yalnızca Geohunter oyunları için geçerlidir.
   validation:
-    missingPoiId: Point of interest-id is verplicht.
+    missingPoiId: İlgi çekici yer kimliği gereklidir.
   answer:
-    recorded: Antwoord succesvol ingediend.
-    alreadySubmitted: Dit punt is al beantwoord door je team.
+    recorded: Yanıt başarıyla gönderildi.
+    alreadySubmitted: Bu nokta zaten ekibiniz tarafından yanıtlandı.
 blindhike:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Blindhike-games.
+  gameTypeRequired: Bu uç nokta yalnızca Blindhike oyunlarında kullanılabilir.
   validation:
-    missingMarkerId: Marker-id is verplicht.
+    missingMarkerId: İşaretçi kimliği gerekli.
   marker:
-    added: Marker succesvol toegevoegd.
-    alreadyAdded: Marker is al toegevoegd door je team.
-    finished: Je team is al gefinisht en kan geen extra markers plaatsen.
+    added: İşaretçi başarıyla eklendi.
+    alreadyAdded: İşaretçi zaten ekibiniz tarafından eklendi.
+    finished: Ekibiniz işi zaten tamamladı ve ek işaretçi yerleştiremez.
 resource_run:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Resource Run-games.
+  gameTypeRequired: Bu uç nokta yalnızca Kaynak Çalıştırma oyunlarında kullanılabilir.
   validation:
-    missingNodeId: Resource node-id is verplicht.
+    missingNodeId: Kaynak düğümü kimliği gerekli.
   claim:
-    recorded: Resource succesvol geclaimd.
-    alreadyCollected: Resource is al verzameld door je team.
+    recorded: Kaynak başarıyla talep edildi.
+    alreadyCollected: Kaynak zaten ekibiniz tarafından toplandı.
 territory_control:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Territory Control-games.
+  gameTypeRequired: Bu uç nokta yalnızca Bölge Kontrolü oyunlarında kullanılabilir.
   validation:
-    missingZoneId: Zone-id is verplicht.
+    missingZoneId: Bölge Kimliği gerekli.
   claim:
-    recorded: Zone succesvol geclaimd.
-    alreadyOwned: Zone is al geclaimd door je team.
+    recorded: Bölge başarıyla talep edildi.
+    alreadyOwned: Bölge zaten ekibiniz tarafından ele geçirildi.
 market_crash:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Market Crash-games.
+  gameTypeRequired: Bu uç nokta yalnızca Market Crash oyunlarında kullanılabilir.
   validation:
-    missingTradeId: Trade-id is verplicht.
+    missingTradeId: Ticari kimlik gereklidir.
   resource:
-    invalidName: Resourcenaam is ongeldig.
-    exists: Resource bestaat al.
-    createFailed: Resource aanmaken mislukt.
-    notFound: Resource is niet gevonden.
-    updateFailed: Resource bijwerken mislukt.
-    deleteFailed: Resource verwijderen mislukt.
+    invalidName: Kaynak adı geçersiz.
+    exists: Kaynak zaten mevcut.
+    createFailed: Kaynak oluşturma başarısız oldu.
+    notFound: Kaynak bulunamadı.
+    updateFailed: Kaynak güncellemesi başarısız oldu.
+    deleteFailed: Kaynak silinemedi.
   point:
-    createFailed: Punt aanmaken mislukt.
-    notFound: Punt is niet gevonden.
-    updateFailed: Punt bijwerken mislukt.
-    deleteFailed: Punt verwijderen mislukt.
-    invalidTitle: Punttitel is ongeldig.
-    invalidColor: De kleur van de puntmarkering is ongeldig.
-    invalidResource: Punt bevat een ongeldige resourceverwijzing.
-    resourcesRequired: Minimaal één resource-instelling is verplicht voor een punt.
-    invalid: Puntcoördinaten zijn ongeldig.
+    createFailed: Nokta oluşturma başarısız oldu.
+    notFound: Nokta bulunamadı.
+    updateFailed: Nokta güncellemesi başarısız oldu.
+    deleteFailed: Nokta silinemedi.
+    invalidTitle: Puan başlığı geçersiz.
+    invalidColor: Nokta işaretleyici rengi geçersiz.
+    invalidResource: Nokta geçersiz bir kaynak referansı içeriyor.
+    resourcesRequired: Bir nokta için en az bir kaynak ayarı gereklidir.
+    invalid: Nokta koordinatları geçersiz.
   location:
-    required: Locatie is verplicht voordat je kunt handelen.
-    invalid: Locatiecoördinaten zijn ongeldig.
-    updated: Locatie bijgewerkt.
+    required: Ticaret yapmadan önce konum gereklidir.
+    invalid: Konum koordinatları geçersiz.
+    updated: Konum güncellendi.
   trade:
-    executed: Trade succesvol uitgevoerd.
-    invalidSide: Trade-richting is ongeldig.
-    invalidResource: Resource is niet verhandelbaar op dit punt.
-    outOfRange: Je bent buiten bereik van dit handelspunt.
-    invalidPrice: Trade-prijs is ongeldig.
-    insufficientCash: Onvoldoende cash voor deze trade.
-    insufficientInventory: Onvoldoende voorraad voor deze trade.
+    executed: Ticaret başarıyla gerçekleştirildi.
+    invalidSide: Ticaret yönü geçersiz.
+    invalidResource: Kaynak bu noktada takas edilemez.
+    outOfRange: Bu ticaret noktasının menzilinin dışındasınız.
+    invalidPrice: Ticaret fiyatı geçersiz.
+    insufficientCash: Bu ticaret için yeterli nakit yok.
+    insufficientInventory: Bu ticaret için yeterli stok yok.
 crazy88:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Crazy 88-games.
+  gameTypeRequired: Bu uç nokta yalnızca Crazy 88 oyunları için geçerlidir.
   validation:
-    missingTaskId: Task-id is verplicht.
-    missingSubmissionId: Submission-id is verplicht.
+    missingTaskId: Görev Kimliği gerekli.
+    missingSubmissionId: Gönderim kimliği gerekli.
   task:
-    submitted: Taak succesvol ingediend.
+    submitted: İş başarıyla gönderildi.
   review:
-    judged: Inzending succesvol beoordeeld.
-    alreadyJudged: Inzending is al beoordeeld.
+    judged: Gönderim başarılı olarak değerlendirildi.
+    alreadyJudged: Gönderim zaten değerlendirildi.
 courier_rush:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Courier Rush-games.
+  gameTypeRequired: Bu uç nokta yalnızca Courier Rush oyunlarında kullanılabilir.
   validation:
-    missingPickupId: Pickup-id is verplicht.
-    missingDropoffId: Dropoff-id is verplicht.
+    missingPickupId: Teslim alma kimliği gerekli.
+    missingDropoffId: Bırakma kimliği gerekli.
   pickup:
-    confirmed: Pickup succesvol bevestigd.
-    alreadyConfirmed: Pickup is al bevestigd.
+    confirmed: Teslim alma başarıyla onaylandı.
+    alreadyConfirmed: Teslim alma zaten onaylandı.
   dropoff:
-    confirmed: Dropoff succesvol bevestigd.
+    confirmed: Bırakma başarıyla onaylandı.
 echo_hunt:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Echo Hunt-games.
+  gameTypeRequired: Bu uç nokta yalnızca Echo Hunt oyunlarında kullanılabilir.
   validation:
-    missingBeaconId: Beacon-id is verplicht.
+    missingBeaconId: İşaret kimliği gerekli.
   beacon:
-    claimed: Beacon succesvol geclaimd.
-    alreadyClaimed: Beacon is al geclaimd door je team.
+    claimed: Beacon başarıyla alındı.
+    alreadyClaimed: Beacon zaten ekibiniz tarafından sahiplenildi.
 checkpoint_heist:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Checkpoint Heist-games.
+  gameTypeRequired: Bu uç nokta yalnızca Checkpoint Heist oyunlarında kullanılabilir.
   validation:
-    missingCheckpointId: Checkpoint-id is verplicht.
+    missingCheckpointId: Denetim noktası kimliği gerekli.
   capture:
-    recorded: Checkpoint succesvol veroverd.
-    alreadyCaptured: Checkpoint is al veroverd door je team.
+    recorded: Kontrol noktası başarıyla ele geçirildi.
+    alreadyCaptured: Kontrol noktası zaten ekibiniz tarafından ele geçirildi.
 pandemic_response:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Pandemic Response-games.
+  gameTypeRequired: Bu uç nokta yalnızca Pandemi Müdahale oyunları için geçerlidir.
   validation:
-    missingPickupId: Pickup-id is verplicht.
-    missingHotspotId: Hotspot-id is verplicht.
+    missingPickupId: Teslim alma kimliği gerekli.
+    missingHotspotId: Erişim noktası kimliği gerekli.
   pickup:
-    collected: Pickup succesvol verzameld.
-    alreadyCollected: Pickup is al verzameld door je team.
+    collected: Teslim alma başarıyla toplandı.
+    alreadyCollected: Teslim alma ekibiniz tarafından zaten toplandı.
   hotspot:
-    resolved: Hotspot succesvol opgelost.
-    alreadyResolved: Hotspot is al opgelost door je team.
+    resolved: Hotspot başarıyla çözüldü.
+    alreadyResolved: Hotspot sorunu ekibiniz tarafından zaten çözüldü.
 birds_of_prey:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Birds of Prey-games.
+  gameTypeRequired: Bu uç nokta yalnızca Birds of Prey oyunları için geçerlidir.
   config:
-    updateFailed: Birds of Prey-instellingen opslaan mislukt.
+    updateFailed: Birds of Prey ayarları kaydedilemedi.
   location:
-    required: Locatie is verplicht voordat je deze actie kunt uitvoeren.
-    invalid: Locatiecoördinaten zijn ongeldig.
-    updated: Locatie bijgewerkt.
+    required: Bu işlemi gerçekleştirebilmeniz için konum gereklidir.
+    invalid: Konum koordinatları geçersiz.
+    updated: Konum güncellendi.
   validation:
-    missingEggId: Egg-id is verplicht.
+    missingEggId: Yumurta kimliği gereklidir.
   egg:
-    dropped: Egg succesvol geplaatst.
-    dropFailed: Egg kon niet worden opgeslagen.
-    alreadyDropped: Egg is al geplaatst.
-    persistFailed: Egg-drop is geaccepteerd, maar kon niet uit persistente game-state
-      worden geladen.
-    destroyed: Egg succesvol vernietigd.
-    alreadyDestroyed: Egg is al vernietigd.
-    notFound: Egg is niet gevonden.
-    cannotDestroyOwn: Je kunt je eigen egg niet vernietigen.
-    notVisible: Egg is niet zichtbaar binnen je bereik.
-    protected: Egg is beschermd omdat de eigenaar in de buurt is.
+    dropped: Yumurta başarıyla yerleştirildi.
+    dropFailed: Yumurta kurtarılamadı.
+    alreadyDropped: Yumurta zaten yerleştirildi.
+    persistFailed: Yumurta bırakma işlemi kabul edildi ancak kalıcı oyun durumundan
+      yüklenemedi.
+    destroyed: Yumurta başarıyla yok edildi.
+    alreadyDestroyed: Yumurta zaten yok edildi.
+    notFound: Yumurta bulunamadı.
+    cannotDestroyOwn: Kendi yumurtanı yok edemezsin.
+    notVisible: Yumurta elinizin altında görünmüyor.
+    protected: Sahibi yakında olduğu için yumurta korunuyor.
 code_conspiracy:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Code Conspiracy-games.
+  gameTypeRequired: Bu uç nokta yalnızca Kod Komplosu oyunları için geçerlidir.
   validation:
-    missingTargetTeamId: Doelteam-id is verplicht.
-    missingCode: Code is verplicht.
+    missingTargetTeamId: Hedef ekip kimliği gerekli.
+    missingCode: Kod gerekli.
   code:
-    submitted: Code-inzending ontvangen.
+    submitted: Kod gönderimi alındı.
 auth:
   locale:
-    unsupported: Niet-ondersteunde taal. Toegestane waarden zijn en en nl.
+    unsupported: Desteklenmeyen dil. İzin verilen değerler en ve nl'dir.
   ws:
-    superAdminKeyRequired: WS super admin-sleutel is verplicht.
-    superAdminKeyInvalid: WS-superbeheerderssleutel is ongeldig.
-    superAdminKeyNotConfigured: WS super admin-sleutel is niet geconfigureerd op de
-      backend.
+    superAdminKeyRequired: WS süper yönetici anahtarı gereklidir.
+    superAdminKeyInvalid: WS süper yönetici anahtarı geçersiz.
+    superAdminKeyNotConfigured: WS süper yönetici anahtarı arka uçta yapılandırılmamış.
   user:
-    invalidEmailOrPassword: Ongeldig e-mailadres of wachtwoord.
-    disallowedRole: Dit account heeft geen toegang tot deze backend.
-    superAdminRequired: Super admin-toegang is vereist voor deze actie.
+    invalidEmailOrPassword: Geçersiz e-posta adresi veya şifre.
+    disallowedRole: Bu hesabın bu arka uca erişimi yok.
+    superAdminRequired: Bu işlem için süper yönetici erişimi gereklidir.
+    notFound: Kullanıcı bulunamadı.
+    updateFailed: Profil güncellemesi başarısız oldu.
+    userRequired: Bu promosyon için kullanıcı hesabı gereklidir.
   team:
-    invalidCodes: Ongeldige gamecode of teamcode.
+    invalidCodes: Geçersiz oyun kodu veya takım kodu.
   token:
-    missingBearerToken: Bearer-token is verplicht.
-    invalidBearerHeaderFormat: Bearer-token header-formaat is ongeldig.
-    invalidOrExpired: Token is ongeldig of verlopen.
-    gameAccessRequired: Token heeft geen toegang tot de gevraagde game.
+    missingBearerToken: Taşıyıcı jetonu gerekli.
+    invalidBearerHeaderFormat: Taşıyıcı belirteci başlık biçimi geçersiz.
+    invalidOrExpired: Jeton geçersiz veya süresi dolmuş.
+    gameAccessRequired: Token istenen oyuna erişemiyor.
   register:
-    emailAlreadyUsed: Er bestaat al een account met dit e-mailadres.
-    usernameAlreadyUsed: Deze gebruikersnaam is al in gebruik.
-    verifyEmailSent: Account aangemaakt. Controleer je e-mail om je adres te bevestigen.
-    emailSendFailed: Verificatie-e-mail kon niet worden verzonden.
-    mailerNotConfigured: E-mailservice is niet geconfigureerd.
-    mailerUnsupportedScheme: Het DSN-schema van de e-mailservice wordt niet ondersteund.
-    mailerFromMissing: Afzenderadres voor e-mail is niet geconfigureerd.
+    emailAlreadyUsed: Bu e-posta adresine sahip bir hesap zaten mevcut.
+    usernameAlreadyUsed: Bu kullanıcı adı zaten kullanılıyor.
+    verifyEmailSent: Hesap oluşturuldu. Adresinizi onaylamak için e-postanızı kontrol
+      edin.
+    emailSendFailed: Doğrulama e-postası gönderilemedi.
+    mailerNotConfigured: E-posta hizmeti yapılandırılmamış.
+    mailerUnsupportedScheme: E-posta hizmeti DSN şeması desteklenmiyor.
+    mailerFromMissing: E-posta gönderen adresi yapılandırılmamış.
   verify:
-    invalidToken: Deze verificatietoken is ongeldig of verlopen.
-    success: E-mailadres is succesvol bevestigd.
-    pendingEmailConflict: Dit wachtende e-mailadres kan niet meer worden toegepast
-      omdat het al in gebruik is.
-    tokenColumnMissing: Opslag voor verificatietokens is niet correct geconfigureerd.
+    invalidToken: Bu kimlik doğrulama jetonu geçersiz veya süresi dolmuş.
+    success: E-posta adresi başarıyla doğrulandı.
+    pendingEmailConflict: Bu beklemedeki e-posta adresi zaten kullanımda olduğundan
+      artık uygulanamıyor.
+    tokenColumnMissing: Kimlik doğrulama belirteci depolama alanı doğru şekilde yapılandırılmamış.
   reset:
-    requestAccepted: Als een account bestaat en bevestigd is, is een reset-e-mail
-      verzonden.
-    tokenColumnsMissing: Opslag voor wachtwoord-resettokens is niet correct geconfigureerd.
-    emailSendFailed: Wachtwoord reset-e-mail kon niet worden verzonden.
+    requestAccepted: Bir hesap mevcutsa ve onaylanmışsa bir sıfırlama e-postası gönderilmiştir.
+    tokenColumnsMissing: Parola sıfırlama belirteci depolama alanı doğru şekilde yapılandırılmamış.
+    emailSendFailed: Şifre sıfırlama e-postası gönderilemedi.
+  password:
+    currentIncorrect: Mevcut şifre yanlış.
+    changeFailed: Şifre değiştirme başarısız oldu.
+    changed: Şifre başarıyla değiştirildi.
 mailer:
   verify:
-    subject: Bevestig je e-mailadres
-    title: Bevestig je e-mailadres
-    greeting: Hoi %usernaam%,
-    intro: Bevestig je e-mailadres door op de knop hieronder te klikken.
-    cta: E-mailadres bevestigen
-    outro: Als je geen account hebt aangemaakt, kun je deze e-mail negeren.
+    subject: E-posta adresinizi onaylayın
+    title: E-posta adresinizi onaylayın
+    greeting: Merhaba %username%,
+    intro: Aşağıdaki butona tıklayarak e-posta adresinizi onaylayın.
+    cta: E
+    outro: Hesap oluşturmadıysanız bu e-postayı yok sayabilirsiniz.
   reset:
-    subject: Wachtwoord resetten
-    title: Wachtwoord resetten
-    greeting: Hoi %usernaam%,
-    intro: Er is een wachtwoordreset aangevraagd voor je account. Gebruik de knop
-      hieronder om een nieuw wachtwoord te kiezen.
-    cta: Wachtwoord resetten
-    outro: Als je dit niet hebt aangevraagd, kun je deze e-mail negeren.
+    subject: Şifreyi sıfırla
+    title: Şifreyi sıfırla
+    greeting: Merhaba %username%,
+    intro: Hesabınız için şifre sıfırlama istendi. Yeni bir şifre seçmek için aşağıdaki
+      düğmeyi kullanın.
+    cta: Şifreyi sıfırla
+    outro: Eğer bunu siz talep etmediyseniz bu e-postayı yok sayabilirsiniz.

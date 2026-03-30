@@ -1,344 +1,350 @@
 validation:
-  invalidRequest: De aanvraaginhoud is ongeldig.
+  invalidRequest: A kérés tartalma érvénytelen.
 game:
   auth:
-    userRequired: Een gebruiker-principal is vereist voor gamebeheer-eindpunten.
-    viewAccessRequired: Je hebt geen leestoegang tot deze game.
-    manageAccessRequired: Je hebt geen schrijftoegang tot deze game.
+    userRequired: A játékkezelési végpontokhoz egyszerű felhasználói fiók szükséges.
+    viewAccessRequired: Nincs olvasási hozzáférése ehhez a játékhoz.
+    manageAccessRequired: Nincs írási jogosultsága ehhez a játékhoz.
   teamMessage:
-    sent: Bericht succesvol naar team verstuurd.
-    sendFailed: Bericht kon niet naar team worden verstuurd.
+    sent: Az üzenet sikeresen elküldve a csapatnak.
+    sendFailed: Az üzenetet nem sikerült elküldeni a csapatnak.
   chat:
-    emptyMessage: Chatbericht mag niet leeg zijn.
-    sendFailed: Chatbericht kon niet worden verstuurd.
-  notFound: Game is niet gevonden.
+    emptyMessage: A csevegőüzenet nem lehet üres.
+    sendFailed: A csevegőüzenetet nem sikerült elküldeni.
+  notFound: A játék nem található.
   member:
-    userNotFound: Gebruiker is niet gevonden.
-    emailNotFound: Er is geen gebruiker gevonden met dat e-mailadres.
+    userNotFound: Felhasználó nem található.
+    emailNotFound: Nem található felhasználó ezzel az e-mail címmel.
   schema:
-    columnMissing: Het schema van de gametabel mist een verplichte kolom.
+    columnMissing: A játékasztal sémájából hiányzik egy kötelező oszlop.
   types:
-    columnMissing: Het schema van game type availability mist een verplichte kolom.
+    columnMissing: A játéktípus elérhetőségi ütemtervéből hiányzik egy kötelező oszlop.
   validation:
-    requiredFieldsMissing: Verplichte gamevelden ontbreken.
-    startBeforeEndRequired: De starttijd van een game moet vóór de eindtijd liggen.
-    unknownSetting: Eén of meer game-instellingen-sleutels zijn onbekend.
+    requiredFieldsMissing: A kötelező játékmezők hiányoznak.
+    startBeforeEndRequired: A játék kezdési időpontjának a befejezési időpont előtt
+      kell lennie.
+    unknownSetting: Egy vagy több játékbeállítási kulcs ismeretlen.
   create:
-    failed: Game kon niet worden aangemaakt.
+    failed: A játékot nem sikerült létrehozni.
   update:
-    failed: Game kon niet worden bijgewerkt.
+    failed: A játékot nem sikerült frissíteni.
   delete:
-    failed: Game kon niet worden verwijderd.
-    success: Game succesvol verwijderd.
+    failed: A játékot nem lehetett törölni.
+    success: A játék sikeresen törölve.
   reset:
-    failed: Game kon niet worden gereset.
-    success: Game succesvol gereset.
+    failed: A játékot nem sikerült visszaállítani.
+    success: A játék sikeresen visszaállt.
   admin:
     add:
-      failed: Game admin kon niet worden toegevoegd.
-      success: Game admin succesvol toegevoegd.
+      failed: A játék adminisztrátorát nem sikerült hozzáadni.
+      success: A játék adminisztrátora sikeresen hozzáadva.
     remove:
-      failed: Game admin kon niet worden verwijderd.
-      success: Game admin succesvol verwijderd.
-      ownerForbidden: De game-eigenaar kan niet als admin worden verwijderd.
-      selfForbidden: Je kunt jezelf niet uit game admins verwijderen.
+      failed: A játék adminisztrátorát nem sikerült eltávolítani.
+      success: A játék adminisztrátora sikeresen eltávolítva.
+      ownerForbidden: A játék tulajdonosa nem távolítható el adminisztrátorként.
+      selfForbidden: Nem távolíthatod el magad a játékadminisztrátorok közül.
   gameMaster:
     add:
-      failed: Game master kon niet worden toegevoegd.
-      success: Game master succesvol toegevoegd.
+      failed: A játékmestert nem sikerült hozzáadni.
+      success: A játékmester sikeresen hozzáadva.
     remove:
-      failed: Game master kon niet worden verwijderd.
-      success: Game master succesvol verwijderd.
+      failed: A játékmestert nem sikerült eltávolítani.
+      success: A játékmester sikeresen eltávolítva.
 team:
-  notFound: Team is niet gevonden in deze game.
+  notFound: A csapat nem található ebben a játékban.
   auth:
-    selfRequired: Teamtokens hebben alleen toegang tot hun eigen team.
+    selfRequired: A csapatjelzők csak a saját csapatukhoz férhetnek hozzá.
   validation:
-    codeAlreadyUsed: Teamcode is al in gebruik voor deze game.
+    codeAlreadyUsed: A csapatkód már használatban van ehhez a játékhoz.
   create:
-    failed: Team kon niet worden aangemaakt.
-    codeGenerationFailed: Er kon geen unieke teamcode worden gegenereerd.
+    failed: Csapat létrehozása nem sikerült.
+    codeGenerationFailed: Nem sikerült egyedi csapatkódot létrehozni.
   update:
-    failed: Team kon niet worden bijgewerkt.
+    failed: A csapatot nem sikerült frissíteni.
   delete:
-    failed: Team kon niet worden verwijderd.
-    success: Team succesvol verwijderd.
+    failed: A csapatot nem sikerült törölni.
+    success: A csapat sikeresen eltávolítva.
 explodingKittens:
-  gameTypeRequired: Dit eindpunt is alleen beschikbaar voor Exploding Kittens-games.
+  gameTypeRequired: Ez a végpont csak az Exploding Kittens játékokhoz érhető el.
   lives:
-    invalidDelta: Leven-delta moet ongelijk aan nul zijn.
-    updated: Teamlevens succesvol bijgewerkt.
-    updateFailed: Teamlevens konden niet worden bijgewerkt.
+    invalidDelta: A Leven-delta nem lehet nulla.
+    updated: A csapat élete sikeresen frissítve.
+    updateFailed: A csapatéletet nem sikerült frissíteni.
   play:
-    failed: Kaart kon niet worden gespeeld.
-    cardNotInHand: Kaart zit niet in de hand van dit team.
-    cardNotPlayable: Deze kaart kan niet direct gespeeld worden.
-    needsTarget: Voor deze kaart is een doelteam vereist.
-    targetSelf: Een team kan zichzelf niet targeten.
-    targetInvalid: Doelteam is ongeldig voor deze game.
-    attackAlreadyPending: Er staat al een aanval in de wachtrij voor dit team.
-    peekAlreadyPending: See the future staat al in de wachtrij voor dit team.
-    skipAlreadyPending: Skip staat al in de wachtrij voor dit team.
-    attackReady: Attack-kaart succesvol gespeeld.
-    favorTargeted: Favor-kaart gespeeld en doelactie aangemaakt.
-    peekReady: See the future-kaart succesvol gespeeld.
-    shuffleDone: Shuffle-kaart succesvol gespeeld.
-    skipReady: Skip-kaart succesvol gespeeld.
+    failed: A kártyát nem lehetett kijátszani.
+    cardNotInHand: A kártya nincs ennek a csapatnak a kezében.
+    cardNotPlayable: Ez a kártya közvetlenül nem játszható ki.
+    needsTarget: Ehhez a kártyához célcsapat szükséges.
+    targetSelf: Egy csapat nem tudja megcélozni magát.
+    targetInvalid: A célcsapat érvénytelen ehhez a játékhoz.
+    attackAlreadyPending: Már van egy támadás a csapat számára.
+    peekAlreadyPending: Lásd a jövőt, ez már a sorban áll ennél a csapatnál.
+    skipAlreadyPending: Skip már a sorban áll ehhez a csapathoz.
+    attackReady: Sikeresen kijátszott támadáskártya.
+    favorTargeted: Kijátszott szívességkártya és célakció létrejött.
+    peekReady: Tekintse meg a sikeresen kijátszott jövőbeli kártyát.
+    shuffleDone: Sikeresen kijátszották a keverőkártyát.
+    skipReady: Sikeresen lejátszott kártya kihagyása.
   hand:
-    addFailed: Willekeurige handkaart kon niet worden toegevoegd.
-    removeFailed: Willekeurige handkaart kon niet worden verwijderd.
+    addFailed: Véletlen kézi kártya nem adható hozzá.
+    removeFailed: Véletlen kézi kártya nem távolítható el.
   cards:
-    invalidType: Kaarttype is ongeldig voor Exploding Kittens.
-    notFound: Kaart is niet gevonden.
-    addFailed: Kaarten konden niet worden toegevoegd.
-    addSuccess: Kaarten succesvol toegevoegd.
-    createFailed: Kaart kon niet worden aangemaakt.
-    updateFailed: Kaart kon niet worden bijgewerkt.
-    deleteFailed: Kaart kon niet worden verwijderd.
-    deleteSuccess: Kaart succesvol verwijderd.
-    removeBlocked: Kaart kan niet worden verwijderd zolang deze in een hand zit of
-      vergrendeld is.
-    pdfDependenciesMissing: QR-PDF exportafhankelijkheden zijn niet beschikbaar op
-      de server.
-    pdfLogoInvalid: Middenlogo moet een afbeeldingsbestand zijn.
-    pdfLogoTooLarge: Middenlogo is te groot. Maximale grootte is 2 MB.
+    invalidType: A kártyatípus érvénytelen a Robbanó cicák esetében.
+    notFound: A térkép nem található.
+    addFailed: Nem sikerült kártyákat hozzáadni.
+    addSuccess: A kártyák sikeresen hozzáadva.
+    createFailed: A térképet nem sikerült létrehozni.
+    updateFailed: A térképet nem sikerült frissíteni.
+    deleteFailed: A kártyát nem lehetett eltávolítani.
+    deleteSuccess: A kártya sikeresen eltávolítva.
+    removeBlocked: A kártya nem távolítható el, ha kézben van vagy zárva van.
+    pdfDependenciesMissing: A QR-PDF exportálási függőségek nem érhetők el a szerveren.
+    pdfLogoInvalid: A középső logónak képfájlnak kell lennie.
+    pdfLogoTooLarge: A középső logó túl nagy. A maximális méret 2 MB.
   scan:
-    failed: Kaart scannen is mislukt.
-    cardNotFound: Kaart is niet gevonden voor deze game.
-    cardInHand: Kaart zit al in een teamhand.
-    cardLocked: Kaart is momenteel vergrendeld.
-    cardAdded: Kaart aan hand toegevoegd.
-    cardNoEffect: Kaart heeft geen effect.
-    felixGain: Felix-kaart gaf één leven erbij.
-    felixAlreadyUsed: Felix-kaart is al gebruikt door dit team.
-    explodingDefused: Exploding kitten is onschadelijk gemaakt.
-    explodingHit: Exploding kitten heeft het team geraakt.
-    attackTargeted: Aanval is gericht en wacht op afhandeling.
+    failed: A kártya beolvasása nem sikerült.
+    cardNotFound: Ehhez a játékhoz nem található térkép.
+    cardInHand: A kártya már a csapat kezében van.
+    cardLocked: A térkép jelenleg zárolva van.
+    cardAdded: Kártya hozzáadva a kézhez.
+    cardNoEffect: A kártyának nincs hatása.
+    felixGain: Felix kártya egy további életet adott.
+    felixAlreadyUsed: A Félix kártyát már használta ez a csapat.
+    explodingDefused: A felrobbanó cicát hatástalanították.
+    explodingHit: Felrobbanó cica érte a csapatot.
+    attackTargeted: A támadás célzott, és arra vár, hogy kezeljék.
   state:
-    fetched: Teamstatus opgehaald.
-    resolveFailed: Status kon niet worden afgehandeld.
-    none: Geen wachtende status om af te handelen.
-    skipPending: Skip staat in wachtrij voor dit team.
-    skipResolved: Skip-status afgehandeld.
-    peekPending: See the future staat in wachtrij voor dit team.
-    peekNeedsConfirm: See the future vereist bevestiging om af te handelen.
-    peekResolved: See the future-status afgehandeld.
-    attackNeedsTarget: Attack vereist een doelteam en gescande kaart.
-    attackInvalidTarget: Doelteam voor attack is ongeldig.
+    fetched: A csapat állapota lekérve.
+    resolveFailed: Az állapot nem kezelhető.
+    none: Nincs kezelendő függő állapot.
+    skipPending: A Skip sorban áll ehhez a csapathoz.
+    skipResolved: Átugrás állapota kezelve.
+    peekPending: Nézze meg, a jövő sorban áll ennek a csapatnak.
+    peekNeedsConfirm: A jövő megtekintéséhez megerősítés szükséges a befejezéshez.
+    peekResolved: Tekintse meg a befejezett jövőbeli állapotot.
+    attackNeedsTarget: A támadáshoz célcsoportra és szkennelt térképre van szükség.
+    attackInvalidTarget: A támadás célcsoportja érvénytelen.
   action:
-    invalid: Actie is ongeldig.
-    notAllowed: Actie kan niet door dit team worden afgehandeld.
-    nopeMissing: Nope-kaart is vereist om deze actie te annuleren.
-    nopeUsed: Actie geannuleerd met Nope.
-    favorNoCards: Doelteam heeft geen kaarten voor Favor.
-    favorTaken: Favor afgehandeld en een kaart is genomen.
-    resolveFailed: Actie kon niet worden afgehandeld.
+    invalid: A művelet érvénytelen.
+    notAllowed: Az akciót ez a csapat nem tudja végrehajtani.
+    nopeMissing: A promóció lemondásához nincs szükség kártyára.
+    nopeUsed: Promóció törölve a Nem.
+    favorNoCards: A célcsapatnak nincs kártyája a Favor-hoz.
+    favorTaken: A szívesség megtörtént, és egy kártya került.
+    resolveFailed: A művelet nem hajtható végre.
   combo:
-    failed: Combo kon niet worden gebruikt.
-    invalid: Ongeldige combo-selectie.
-    cardNotInHand: Een of meer geselecteerde kaarten zitten niet in de hand.
-    needsTarget: Combo vereist een doelteam.
-    targetSelf: Team kan zichzelf niet als doel kiezen voor deze combo.
-    targetInvalid: Doelteam voor combo is ongeldig.
-    twoReady: 2-van-gelijke combo in wachtrij gezet.
-    twoNoCards: Doelteam heeft geen kaarten voor 2-van-gelijke combo.
-    twoTaken: 2-van-gelijke combo afgehandeld en een kaart is genomen.
-    threeNeedsType: 3-van-gelijke combo vereist gewenst kaarttype.
-    threeInvalidType: Gewenst kaarttype is ongeldig voor 3-van-gelijke combo.
-    threeReady: 3-van-gelijke combo in wachtrij gezet.
-    threeTaken: 3-van-gelijke combo afgehandeld en gewenste kaart is genomen.
-    threeNoMatch: Gewenst kaarttype niet gevonden in hand van doelteam.
-    fiveNeedsType: 5-verschillende combo vereist gewenst kaarttype.
-    fiveTaken: 5-verschillende combo afgehandeld en kaart uit deck genomen.
-    fiveNone: 5-verschillende combo afgehandeld maar gewenst kaarttype niet beschikbaar
-      in deck.
+    failed: A Combo nem használható.
+    invalid: Érvénytelen kombinációs kijelölés.
+    cardNotInHand: Egy vagy több kiválasztott kártya nincs a kezében.
+    needsTarget: A kombináláshoz célcsapat szükséges.
+    targetSelf: A csapat nem célozhatja meg magát erre a kombinációra.
+    targetInvalid: A kombó célcsoportja érvénytelen.
+    twoReady: 2-az-egyfajta kombó sorban áll.
+    twoNoCards: A célcsapatnak nincs kártyája a 2-az-egy-fajta kombinációhoz.
+    twoTaken: 2-az-egy-fajta kombó megoldva, és egy kártya került.
+    threeNeedsType: A 3-as kombóhoz a kívánt kártyatípus szükséges.
+    threeInvalidType: A kívánt kártyatípus érvénytelen a 3-az-egy-fajta kombinációhoz.
+    threeReady: 3-az-egyfajta kombó sorban áll.
+    threeTaken: 3-az-egy-fajta kombó megoldva, és a kívánt kártya megtörtént.
+    threeNoMatch: A kívánt kártyatípus nem található a célcsapat kezében.
+    fiveNeedsType: Az 5 különböző kombinációhoz a kívánt kártyatípus szükséges.
+    fiveTaken: 5 különböző kombó megoldva, és a kártya kivett a pakliból.
+    fiveNone: 5 különböző kombó megoldott, de a kívánt kártyatípus nem elérhető a
+      pakliban.
 geohunter:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Geohunter-games.
+  gameTypeRequired: Ez a végpont csak a Geohunter játékokhoz érhető el.
   validation:
-    missingPoiId: Point of interest-id is verplicht.
+    missingPoiId: Az érdekes hely azonosítója kötelező.
   answer:
-    recorded: Antwoord succesvol ingediend.
-    alreadySubmitted: Dit punt is al beantwoord door je team.
+    recorded: A válasz sikeresen elküldve.
+    alreadySubmitted: Erre a pontra már válaszolt a csapata.
 blindhike:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Blindhike-games.
+  gameTypeRequired: Ez a végpont csak a Blindhike játékokhoz érhető el.
   validation:
-    missingMarkerId: Marker-id is verplicht.
+    missingMarkerId: Marker ID kötelező.
   marker:
-    added: Marker succesvol toegevoegd.
-    alreadyAdded: Marker is al toegevoegd door je team.
-    finished: Je team is al gefinisht en kan geen extra markers plaatsen.
+    added: A jelölő sikeresen hozzáadva.
+    alreadyAdded: A jelölőt már hozzáadta a csapatod.
+    finished: A csapatod már végzett, és nem tud további jelzőket elhelyezni.
 resource_run:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Resource Run-games.
+  gameTypeRequired: Ez a végpont csak a Resource Run játékokhoz érhető el.
   validation:
-    missingNodeId: Resource node-id is verplicht.
+    missingNodeId: Az erőforrás-csomópont azonosítója kötelező.
   claim:
-    recorded: Resource succesvol geclaimd.
-    alreadyCollected: Resource is al verzameld door je team.
+    recorded: Erőforrás sikeresen igényelve.
+    alreadyCollected: A csapata már összegyűjtötte az erőforrást.
 territory_control:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Territory Control-games.
+  gameTypeRequired: Ez a végpont csak a Territory Control játékokhoz érhető el.
   validation:
-    missingZoneId: Zone-id is verplicht.
+    missingZoneId: Zónaazonosító szükséges.
   claim:
-    recorded: Zone succesvol geclaimd.
-    alreadyOwned: Zone is al geclaimd door je team.
+    recorded: A zóna sikeresen igényelhető.
+    alreadyOwned: A zónát a csapatod már lefoglalta.
 market_crash:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Market Crash-games.
+  gameTypeRequired: Ez a végpont csak a Market Crash játékokhoz érhető el.
   validation:
-    missingTradeId: Trade-id is verplicht.
+    missingTradeId: Kereskedelmi azonosító szükséges.
   resource:
-    invalidName: Resourcenaam is ongeldig.
-    exists: Resource bestaat al.
-    createFailed: Resource aanmaken mislukt.
-    notFound: Resource is niet gevonden.
-    updateFailed: Resource bijwerken mislukt.
-    deleteFailed: Resource verwijderen mislukt.
+    invalidName: Az erőforrás neve érvénytelen.
+    exists: Az erőforrás már létezik.
+    createFailed: Az erőforrás létrehozása nem sikerült.
+    notFound: Az erőforrás nem található.
+    updateFailed: Az erőforrás frissítése nem sikerült.
+    deleteFailed: Az erőforrás törlése nem sikerült.
   point:
-    createFailed: Punt aanmaken mislukt.
-    notFound: Punt is niet gevonden.
-    updateFailed: Punt bijwerken mislukt.
-    deleteFailed: Punt verwijderen mislukt.
-    invalidTitle: Punttitel is ongeldig.
-    invalidColor: De kleur van de puntmarkering is ongeldig.
-    invalidResource: Punt bevat een ongeldige resourceverwijzing.
-    resourcesRequired: Minimaal één resource-instelling is verplicht voor een punt.
-    invalid: Puntcoördinaten zijn ongeldig.
+    createFailed: A pont létrehozása nem sikerült.
+    notFound: Pont nem található.
+    updateFailed: A pont frissítése nem sikerült.
+    deleteFailed: A pont törlése nem sikerült.
+    invalidTitle: A pont címe érvénytelen.
+    invalidColor: A pontjelölő színe érvénytelen.
+    invalidResource: A pont érvénytelen erőforrás-hivatkozást tartalmaz.
+    resourcesRequired: Egy ponthoz legalább egy erőforrás-beállítás szükséges.
+    invalid: A pont koordinátái érvénytelenek.
   location:
-    required: Locatie is verplicht voordat je kunt handelen.
-    invalid: Locatiecoördinaten zijn ongeldig.
-    updated: Locatie bijgewerkt.
+    required: A kereskedéshez hely szükséges.
+    invalid: A hely koordinátái érvénytelenek.
+    updated: Hely frissítve.
   trade:
-    executed: Trade succesvol uitgevoerd.
-    invalidSide: Trade-richting is ongeldig.
-    invalidResource: Resource is niet verhandelbaar op dit punt.
-    outOfRange: Je bent buiten bereik van dit handelspunt.
-    invalidPrice: Trade-prijs is ongeldig.
-    insufficientCash: Onvoldoende cash voor deze trade.
-    insufficientInventory: Onvoldoende voorraad voor deze trade.
+    executed: Az üzlet sikeresen lezajlott.
+    invalidSide: A kereskedési irány érvénytelen.
+    invalidResource: Az erőforrás jelenleg nem értékesíthető.
+    outOfRange: Ön kívül esik ezen a kereskedési ponton.
+    invalidPrice: A kereskedési ár érvénytelen.
+    insufficientCash: Nincs elegendő készpénz ehhez a kereskedéshez.
+    insufficientInventory: Nincs elegendő készlet ehhez a kereskedéshez.
 crazy88:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Crazy 88-games.
+  gameTypeRequired: Ez a végpont csak a Crazy 88 játékokhoz érhető el.
   validation:
-    missingTaskId: Task-id is verplicht.
-    missingSubmissionId: Submission-id is verplicht.
+    missingTaskId: Feladatazonosító szükséges.
+    missingSubmissionId: A benyújtás azonosítója kötelező.
   task:
-    submitted: Taak succesvol ingediend.
+    submitted: Az állás sikeresen elküldve.
   review:
-    judged: Inzending succesvol beoordeeld.
-    alreadyJudged: Inzending is al beoordeeld.
+    judged: A benyújtást sikeresnek ítélték.
+    alreadyJudged: A beadványt már elbírálták.
 courier_rush:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Courier Rush-games.
+  gameTypeRequired: Ez a végpont csak a Courier Rush játékokhoz érhető el.
   validation:
-    missingPickupId: Pickup-id is verplicht.
-    missingDropoffId: Dropoff-id is verplicht.
+    missingPickupId: Átvételi azonosító szükséges.
+    missingDropoffId: Leadási azonosító szükséges.
   pickup:
-    confirmed: Pickup succesvol bevestigd.
-    alreadyConfirmed: Pickup is al bevestigd.
+    confirmed: Az átvétel sikeresen megerősítve.
+    alreadyConfirmed: Az átvétel már megerősítve.
   dropoff:
-    confirmed: Dropoff succesvol bevestigd.
+    confirmed: A leadás sikeresen megerősítve.
 echo_hunt:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Echo Hunt-games.
+  gameTypeRequired: Ez a végpont csak az Echo Hunt játékokhoz érhető el.
   validation:
-    missingBeaconId: Beacon-id is verplicht.
+    missingBeaconId: Beacon ID szükséges.
   beacon:
-    claimed: Beacon succesvol geclaimd.
-    alreadyClaimed: Beacon is al geclaimd door je team.
+    claimed: Beacon sikeresen igényelte.
+    alreadyClaimed: A csapatod már igényelte a jelzőfényt.
 checkpoint_heist:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Checkpoint Heist-games.
+  gameTypeRequired: Ez a végpont csak a Checkpoint Heist játékokhoz érhető el.
   validation:
-    missingCheckpointId: Checkpoint-id is verplicht.
+    missingCheckpointId: Az ellenőrzőpont azonosítója kötelező.
   capture:
-    recorded: Checkpoint succesvol veroverd.
-    alreadyCaptured: Checkpoint is al veroverd door je team.
+    recorded: Az ellenőrzőpont sikeresen rögzítve.
+    alreadyCaptured: A csapatod már elfoglalta az ellenőrző pontot.
 pandemic_response:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Pandemic Response-games.
+  gameTypeRequired: Ez a végpont csak a Pandemic Response játékokhoz érhető el.
   validation:
-    missingPickupId: Pickup-id is verplicht.
-    missingHotspotId: Hotspot-id is verplicht.
+    missingPickupId: Átvételi azonosító szükséges.
+    missingHotspotId: Hotspot-azonosító szükséges.
   pickup:
-    collected: Pickup succesvol verzameld.
-    alreadyCollected: Pickup is al verzameld door je team.
+    collected: Az átvétel sikeresen összegyűjtve.
+    alreadyCollected: Az Ön csapata már begyűjtötte az átvételt.
   hotspot:
-    resolved: Hotspot succesvol opgelost.
-    alreadyResolved: Hotspot is al opgelost door je team.
+    resolved: A hotspot sikeresen megoldva.
+    alreadyResolved: A hotspotot már megoldotta a csapata.
 birds_of_prey:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Birds of Prey-games.
+  gameTypeRequired: Ez a végpont csak a Birds of Prey játékokhoz érhető el.
   config:
-    updateFailed: Birds of Prey-instellingen opslaan mislukt.
+    updateFailed: A Bird of Prey beállításainak mentése nem sikerült.
   location:
-    required: Locatie is verplicht voordat je deze actie kunt uitvoeren.
-    invalid: Locatiecoördinaten zijn ongeldig.
-    updated: Locatie bijgewerkt.
+    required: A művelet végrehajtásához a hely megadása szükséges.
+    invalid: A hely koordinátái érvénytelenek.
+    updated: Hely frissítve.
   validation:
-    missingEggId: Egg-id is verplicht.
+    missingEggId: Tojásazonosító szükséges.
   egg:
-    dropped: Egg succesvol geplaatst.
-    dropFailed: Egg kon niet worden opgeslagen.
-    alreadyDropped: Egg is al geplaatst.
-    persistFailed: Egg-drop is geaccepteerd, maar kon niet uit persistente game-state
-      worden geladen.
-    destroyed: Egg succesvol vernietigd.
-    alreadyDestroyed: Egg is al vernietigd.
-    notFound: Egg is niet gevonden.
-    cannotDestroyOwn: Je kunt je eigen egg niet vernietigen.
-    notVisible: Egg is niet zichtbaar binnen je bereik.
-    protected: Egg is beschermd omdat de eigenaar in de buurt is.
+    dropped: A tojás sikeresen elhelyezve.
+    dropFailed: A tojást nem lehetett megmenteni.
+    alreadyDropped: A tojást már elhelyezték.
+    persistFailed: Az Egg drop elfogadva, de nem lehetett betölteni a folyamatos játékállapotból.
+    destroyed: A tojás sikeresen megsemmisült.
+    alreadyDestroyed: A tojást már megsemmisítették.
+    notFound: A tojás nem található.
+    cannotDestroyOwn: A saját tojásodat nem tudod elpusztítani.
+    notVisible: A tojás nem látható a hatótávolságon belül.
+    protected: A tojás védett, mert a gazdi a közelben van.
 code_conspiracy:
-  gameTypeRequired: Dit endpoint is alleen beschikbaar voor Code Conspiracy-games.
+  gameTypeRequired: Ez a végpont csak Code Conspiracy játékokhoz érhető el.
   validation:
-    missingTargetTeamId: Doelteam-id is verplicht.
-    missingCode: Code is verplicht.
+    missingTargetTeamId: A célcsoport azonosítója kötelező.
+    missingCode: A kód megadása kötelező.
   code:
-    submitted: Code-inzending ontvangen.
+    submitted: Megérkezett a kódküldés.
 auth:
   locale:
-    unsupported: Niet-ondersteunde taal. Toegestane waarden zijn en en nl.
+    unsupported: Nem támogatott nyelv. A megengedett értékek en és nl.
   ws:
-    superAdminKeyRequired: WS super admin-sleutel is verplicht.
-    superAdminKeyInvalid: WS-superbeheerderssleutel is ongeldig.
-    superAdminKeyNotConfigured: WS super admin-sleutel is niet geconfigureerd op de
-      backend.
+    superAdminKeyRequired: WS szuper rendszergazdai kulcs szükséges.
+    superAdminKeyInvalid: A WS kiemelt rendszergazdai kulcsa érvénytelen.
+    superAdminKeyNotConfigured: A WS szuper adminisztrátori kulcsa nincs konfigurálva
+      a háttérben.
   user:
-    invalidEmailOrPassword: Ongeldig e-mailadres of wachtwoord.
-    disallowedRole: Dit account heeft geen toegang tot deze backend.
-    superAdminRequired: Super admin-toegang is vereist voor deze actie.
+    invalidEmailOrPassword: Érvénytelen e-mail cím vagy jelszó.
+    disallowedRole: Ennek a fióknak nincs hozzáférése ehhez a háttérrendszerhez.
+    superAdminRequired: Ehhez a művelethez kiemelt rendszergazdai hozzáférés szükséges.
+    notFound: Felhasználó nem található.
+    updateFailed: A profil frissítése nem sikerült.
+    userRequired: A promócióhoz felhasználói fiók szükséges.
   team:
-    invalidCodes: Ongeldige gamecode of teamcode.
+    invalidCodes: Érvénytelen játékkód vagy csapatkód.
   token:
-    missingBearerToken: Bearer-token is verplicht.
-    invalidBearerHeaderFormat: Bearer-token header-formaat is ongeldig.
-    invalidOrExpired: Token is ongeldig of verlopen.
-    gameAccessRequired: Token heeft geen toegang tot de gevraagde game.
+    missingBearerToken: Bemutató token szükséges.
+    invalidBearerHeaderFormat: A hordozótoken fejlécformátuma érvénytelen.
+    invalidOrExpired: A token érvénytelen vagy lejárt.
+    gameAccessRequired: Token nem fér hozzá a kért játékhoz.
   register:
-    emailAlreadyUsed: Er bestaat al een account met dit e-mailadres.
-    usernameAlreadyUsed: Deze gebruikersnaam is al in gebruik.
-    verifyEmailSent: Account aangemaakt. Controleer je e-mail om je adres te bevestigen.
-    emailSendFailed: Verificatie-e-mail kon niet worden verzonden.
-    mailerNotConfigured: E-mailservice is niet geconfigureerd.
-    mailerUnsupportedScheme: Het DSN-schema van de e-mailservice wordt niet ondersteund.
-    mailerFromMissing: Afzenderadres voor e-mail is niet geconfigureerd.
+    emailAlreadyUsed: Már létezik fiók ezzel az e-mail címmel.
+    usernameAlreadyUsed: Ez a felhasználónév már használatban van.
+    verifyEmailSent: Fiók létrehozva. Nézze meg e-mailjeit a cím megerősítéséhez.
+    emailSendFailed: Az ellenőrző e-mailt nem sikerült elküldeni.
+    mailerNotConfigured: Az e-mail szolgáltatás nincs konfigurálva.
+    mailerUnsupportedScheme: Az e-mail szolgáltatás DSN-sémája nem támogatott.
+    mailerFromMissing: Az e-mail küldő címe nincs konfigurálva.
   verify:
-    invalidToken: Deze verificatietoken is ongeldig of verlopen.
-    success: E-mailadres is succesvol bevestigd.
-    pendingEmailConflict: Dit wachtende e-mailadres kan niet meer worden toegepast
-      omdat het al in gebruik is.
-    tokenColumnMissing: Opslag voor verificatietokens is niet correct geconfigureerd.
+    invalidToken: Ez a hitelesítési token érvénytelen vagy lejárt.
+    success: Az e-mail cím sikeresen megerősítve.
+    pendingEmailConflict: Ez a függőben lévő e-mail cím már nem alkalmazható, mert
+      már használatban van.
+    tokenColumnMissing: A hitelesítési token tárolása nincs megfelelően konfigurálva.
   reset:
-    requestAccepted: Als een account bestaat en bevestigd is, is een reset-e-mail
-      verzonden.
-    tokenColumnsMissing: Opslag voor wachtwoord-resettokens is niet correct geconfigureerd.
-    emailSendFailed: Wachtwoord reset-e-mail kon niet worden verzonden.
+    requestAccepted: Ha létezik fiók, és azt megerősítették, a rendszer visszaállított
+      e-mailt küld.
+    tokenColumnsMissing: A jelszó-visszaállítási token tárolása nincs megfelelően
+      konfigurálva.
+    emailSendFailed: A jelszó-visszaállítási e-mailt nem sikerült elküldeni.
+  password:
+    currentIncorrect: A jelenlegi jelszó helytelen.
+    changeFailed: A jelszó módosítása nem sikerült.
+    changed: A jelszó sikeresen megváltozott.
 mailer:
   verify:
-    subject: Bevestig je e-mailadres
-    title: Bevestig je e-mailadres
-    greeting: Hoi %usernaam%,
-    intro: Bevestig je e-mailadres door op de knop hieronder te klikken.
-    cta: E-mailadres bevestigen
-    outro: Als je geen account hebt aangemaakt, kun je deze e-mail negeren.
+    subject: Erősítse meg e-mail címét
+    title: Erősítse meg e-mail címét
+    greeting: Szia %uszernév%,
+    intro: Erősítse meg e-mail címét az alábbi gombra kattintva.
+    cta: Erősítse meg az e-mail címet
+    outro: Ha még nem hozott létre fiókot, figyelmen kívül hagyhatja ezt az e-mailt.
   reset:
-    subject: Wachtwoord resetten
-    title: Wachtwoord resetten
-    greeting: Hoi %usernaam%,
-    intro: Er is een wachtwoordreset aangevraagd voor je account. Gebruik de knop
-      hieronder om een nieuw wachtwoord te kiezen.
-    cta: Wachtwoord resetten
-    outro: Als je dit niet hebt aangevraagd, kun je deze e-mail negeren.
+    subject: Jelszó visszaállítása
+    title: Jelszó visszaállítása
+    greeting: Szia %uszernév%,
+    intro: Jelszó-visszaállítást kértek a fiókjához. Az alábbi gombbal válasszon új
+      jelszót.
+    cta: Jelszó visszaállítása
+    outro: Ha nem kérte ezt, figyelmen kívül hagyhatja ezt az e-mailt.
