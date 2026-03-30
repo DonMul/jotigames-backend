@@ -33,9 +33,15 @@ class GameLogicStateRepository:
     @staticmethod
     def _pick_column(table: Table, candidates: list[str]) -> Optional[str]:
         """Resolve the first existing column name from candidate aliases."""
+        column_names = list(table.c.keys())
         for name in candidates:
             if name in table.c:
                 return name
+        lowered_map = {column_name.lower(): column_name for column_name in column_names}
+        for name in candidates:
+            resolved = lowered_map.get(name.lower())
+            if resolved is not None:
+                return resolved
         return None
 
     def get_team_table(self, db: DbSession) -> Table:
@@ -45,9 +51,14 @@ class GameLogicStateRepository:
     def _get_game_id_column(self, table: Table) -> str:
         """Resolve game table primary key column name with legacy compatibility."""
         name = self._pick_column(table, self._GAME_ID_COLUMN_CANDIDATES)
-        if not name:
-            raise KeyError("game id column not found")
-        return name
+        if name:
+            return name
+
+        primary_key_columns = [column.name for column in table.primary_key.columns]
+        if primary_key_columns:
+            return primary_key_columns[0]
+
+        raise KeyError(f"game id column not found (available: {list(table.c.keys())})")
 
     def _get_team_id_column(self, table: Table) -> str:
         """Resolve team table primary key column name with legacy compatibility."""

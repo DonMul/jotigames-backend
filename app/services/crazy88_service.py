@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Any, Dict
 
 from app.dependencies import DbSession
@@ -17,6 +18,28 @@ class Crazy88Service(GameLogicService):
         base = super().get_team_bootstrap(db, game_id, team_id)
         tasks = self._repository.fetch_tasks_by_game_id(db, game_id)
         teams = self._repository.fetch_teams_by_game_id(db, game_id)
+        submission_rows = self._repository.fetch_submission_threads_by_game_id_and_team_id(db, game_id, team_id)
+        submissions_by_task_id: dict[str, list[dict[str, Any]]] = {}
+        for row in submission_rows:
+            task_key = str(row.get("task_id") or "")
+            if not task_key:
+                continue
+            history = submissions_by_task_id.setdefault(task_key, [])
+            history.append(
+                {
+                    "id": str(row.get("id") or ""),
+                    "status": str(row.get("status") or "pending"),
+                    "submitted_at": self._to_iso(row.get("submitted_at")),
+                    "reviewed_at": self._to_iso(row.get("reviewed_at")),
+                    "team_message": row.get("team_message"),
+                    "judge_message": row.get("judge_message"),
+                    "proof_path": row.get("proof_path"),
+                    "proof_original_name": row.get("proof_original_name"),
+                    "proof_mime_type": row.get("proof_mime_type"),
+                    "proof_size": None if row.get("proof_size") is None else int(row.get("proof_size") or 0),
+                    "proof_text": row.get("proof_text"),
+                }
+            )
         config = self._repository.get_configuration(db, game_id)
         show_highscore = bool(config.get("show_highscore", True))
         base["tasks"] = [
@@ -27,6 +50,20 @@ class Crazy88Service(GameLogicService):
                 "points": int(task.get("points") or 0),
                 "category": str(task.get("category") or ""),
                 "is_active": False if task.get("is_active") is False else True,
+                "latitude": None if task.get("latitude") is None else float(task.get("latitude")),
+                "longitude": None if task.get("longitude") is None else float(task.get("longitude")),
+                "radius_meters": int(task.get("radius_meters") or 25),
+                "sort_order": int(task.get("sort_order") or 0),
+                "submissions": submissions_by_task_id.get(str(task.get("id") or ""), []),
+                "latest_status": (
+                    submissions_by_task_id.get(str(task.get("id") or ""), [])[-1].get("status")
+                    if submissions_by_task_id.get(str(task.get("id") or ""), [])
+                    else None
+                ),
+                "can_submit": (
+                    not submissions_by_task_id.get(str(task.get("id") or ""), [])
+                    or str(submissions_by_task_id.get(str(task.get("id") or ""), [])[-1].get("status") or "").lower() == "rejected"
+                ),
             }
             for task in tasks
         ]
@@ -41,6 +78,16 @@ class Crazy88Service(GameLogicService):
         ] if show_highscore else []
         base["show_highscore"] = show_highscore
         return base
+
+    @staticmethod
+    def _to_iso(value: Any) -> str | None:
+        """Convert a timestamp-like value to ISO text."""
+        if value is None:
+            return None
+        if isinstance(value, datetime):
+            return value.isoformat()
+        text = str(value).strip()
+        return text or None
 
     def submit_task(self, db: DbSession, *, game_id: str, team_id: str, task_id: str) -> GameActionResult:
         """Record a task submission action for review by admins."""

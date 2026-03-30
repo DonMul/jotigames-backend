@@ -1,5 +1,6 @@
 import os
 import re
+import shutil
 import tempfile
 import zipfile
 from datetime import UTC, datetime
@@ -7,7 +8,7 @@ from pathlib import Path
 from typing import Any, Dict, Optional
 from uuid import uuid4
 
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, File, Form, HTTPException, UploadFile, status
 from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field
 from starlette.background import BackgroundTask
@@ -38,6 +39,9 @@ class SubmitTaskRequest(BaseModel):
     task_id: str = Field(min_length=1, max_length=64)
     team_message: Optional[str] = Field(default=None, max_length=5000)
     proof_text: Optional[str] = Field(default=None, max_length=5000)
+
+
+MAX_CRAZY88_PROOF_FILE_SIZE_BYTES = 25 * 1024 * 1024
 
 
 class JudgeSubmissionRequest(BaseModel):
@@ -155,7 +159,8 @@ class Crazy88Module(ApiModule, SharedModuleBase):
             self._require_team_self_or_manage_access(db, game_id, team_id, principal)
             state = self._service.get_team_bootstrap(db, game_id, team_id)
             state["config"] = self._repository.get_configuration(db, game_id)
-            state["tasks"] = [self._serialize_task(task) for task in self._repository.fetch_tasks_by_game_id(db, game_id)]
+            if not isinstance(state.get("tasks"), list):
+                state["tasks"] = [self._serialize_task(task) for task in self._repository.fetch_tasks_by_game_id(db, game_id)]
             return TeamBootstrapResponse(state=state)
 
         @router.get("/{game_id}/overview", response_model=AdminOverviewResponse, summary=f"{ACCESS_ADMIN_LABEL} Admin overview")
@@ -475,11 +480,21 @@ class Crazy88Module(ApiModule, SharedModuleBase):
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="crazy88.task.deleteFailed") from error
 
         @router.post("/{game_id}/teams/{team_id}/task/submit", response_model=ActionResponse, summary=f"{ACCESS_BOTH_LABEL} Submit task")
-        def submit_task(game_id: str, team_id: str, body: SubmitTaskRequest, principal: CurrentPrincipal, db: DbSession, locale: CurrentLocale) -> ActionResponse:
+        def submit_task(
+            game_id: str,
+            team_id: str,
+            principal: CurrentPrincipal,
+            db: DbSession,
+            locale: CurrentLocale,
+            task_id: str = Form(min_length=1, max_length=64),
+            team_message: str | None = Form(default=None, max_length=5000),
+            proof_text: str | None = Form(default=None, max_length=5000),
+            proof_file: UploadFile | None = File(default=None),
+        ) -> ActionResponse:
             """Submit a team task proof entry for admin review."""
             self._require_game(db, game_id)
             self._require_team_self_or_manage_access(db, game_id, team_id, principal)
-            task_id = body.task_id.strip()
+            task_id = str(task_id or "").strip()
             if not task_id:
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="crazy88.validation.missingTaskId")
 
@@ -509,6 +524,10 @@ class Crazy88Module(ApiModule, SharedModuleBase):
             submitted_column = self._repository._pick_column(submission_table, ["submitted_at", "submittedAt"])
             team_message_column = self._repository._pick_column(submission_table, ["team_message", "teamMessage"])
             proof_text_column = self._repository._pick_column(submission_table, ["proof_text", "proofText"])
+            proof_path_column = self._repository._pick_column(submission_table, ["proof_path", "proofPath"])
+            proof_original_name_column = self._repository._pick_column(submission_table, ["proof_original_name", "proofOriginalName"])
+            proof_mime_type_column = self._repository._pick_column(submission_table, ["proof_mime_type", "proofMimeType"])
+            proof_size_column = self._repository._pick_column(submission_table, ["proof_size", "proofSize"])
 
             if task_column is None or team_column is None:
                 raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="crazy88.submission.schemaMissing")
@@ -518,9 +537,25 @@ class Crazy88Module(ApiModule, SharedModuleBase):
             if submitted_column:
                 values[submitted_column] = datetime.now(UTC).replace(tzinfo=None)
             if team_message_column:
-                values[team_message_column] = str(body.team_message or "").strip() or None
-            if proof_text_column:
-                values[proof_text_column] = str(body.proof_text or "").strip() or None
+                values[team_message_column] = str(team_message or "").strip() or None
+            if proof_text_column and str(proof_text or "").strip():
+                values[proof_text_column] = str(proof_text or "").strip() or None
+
+            proof_meta = self._store_submission_proof_file(
+                game_id=game_id,
+                team_id=team_id,
+                task_id=task_id,
+                submission_id=submission_id,
+                proof_file=proof_file,
+            )
+            if proof_path_column:
+                values[proof_path_column] = proof_meta.get("proof_path")
+            if proof_original_name_column:
+                values[proof_original_name_column] = proof_meta.get("proof_original_name")
+            if proof_mime_type_column:
+                values[proof_mime_type_column] = proof_meta.get("proof_mime_type")
+            if proof_size_column:
+                values[proof_size_column] = proof_meta.get("proof_size")
 
             try:
                 created_id = self._repository.create_submission_without_commit(db, values)
@@ -564,6 +599,7 @@ class Crazy88Module(ApiModule, SharedModuleBase):
 
             status_value = "accepted" if body.accepted else "rejected"
             points_awarded = int(submission.get("task_points") or 0) if body.accepted else 0
+            resolved_team_id = str(submission.get("team_id") or "")
             values: Dict[str, Any] = {}
 
             submission_table = self._repository.get_submission_table(db)
@@ -586,11 +622,27 @@ class Crazy88Module(ApiModule, SharedModuleBase):
             try:
                 self._repository.update_submission_without_commit(db, submission_id, values)
                 if points_awarded > 0:
-                    self._repository.increment_team_geo_score_without_commit(db, str(submission.get("team_id") or ""), points_awarded)
+                    self._repository.increment_team_geo_score_without_commit(db, resolved_team_id, points_awarded)
                 self._repository.commit_changes(db)
             except Exception as error:
                 self._repository.rollback_on_error(db, error)
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="crazy88.review.updateFailed") from error
+
+            team_row = self._state_repository.get_team_by_game_and_id(db, game_id, resolved_team_id) if resolved_team_id else None
+            live_score = int((team_row or {}).get("geo_score") or 0)
+            self._ws_publisher.publish(
+                event="team.crazy_88.review.judged",
+                payload={
+                    "game_id": game_id,
+                    "team_id": resolved_team_id,
+                    "submission_id": submission_id,
+                    "task_id": str(submission.get("task_id") or ""),
+                    "status": status_value,
+                    "points_awarded": points_awarded,
+                    "score": live_score,
+                },
+                channels=[f"channel:{game_id}:{resolved_team_id}"] if resolved_team_id else [f"channel:{game_id}"],
+            )
 
             return ActionResponse(
                 success=True,
@@ -700,16 +752,98 @@ class Crazy88Module(ApiModule, SharedModuleBase):
         if not relative:
             return None
 
-        roots = [
-            cls._workspace_root(),
-            cls._workspace_root() / "backend",
-            cls._workspace_root() / "jotigames-old",
+        candidates = [
+            cls._workspace_root() / "public" / relative,
+            cls._workspace_root() / "backend" / "public" / relative,
+            cls._workspace_root() / "jotigames-old" / "public" / relative,
+            cls._workspace_root() / "frontend" / "public" / relative,
+            cls._workspace_root() / "frontend" / "dist" / relative,
         ]
-        for root in roots:
-            candidate = root / "public" / relative
+        for candidate in candidates:
             if candidate.is_file():
                 return candidate
         return None
+
+    @classmethod
+    def _store_submission_proof_file(
+        cls,
+        *,
+        game_id: str,
+        team_id: str,
+        task_id: str,
+        submission_id: str,
+        proof_file: UploadFile | None,
+    ) -> Dict[str, Any]:
+        """Persist uploaded submission proof file and return metadata payload."""
+        if proof_file is None:
+            return {
+                "proof_path": None,
+                "proof_original_name": None,
+                "proof_mime_type": None,
+                "proof_size": None,
+            }
+
+        original_name = str(proof_file.filename or "").strip() or "proof.bin"
+        safe_original_name = cls._sanitize_zip_filename(Path(original_name).name)
+        extension = Path(safe_original_name).suffix.lower()
+        stored_name = f"{submission_id}_{datetime.now(UTC).strftime('%Y%m%d_%H%M%S')}{extension}"
+
+        relative_dir = Path("uploads") / "crazy88" / str(game_id) / str(team_id) / str(task_id)
+        relative_path = relative_dir / stored_name
+        primary_root = cls._workspace_root() / "frontend" / "public"
+        destination_path = primary_root / relative_path
+        destination_path.parent.mkdir(parents=True, exist_ok=True)
+
+        total_bytes = 0
+        try:
+            with destination_path.open("wb") as output_file:
+                while True:
+                    chunk = proof_file.file.read(1024 * 1024)
+                    if not chunk:
+                        break
+                    total_bytes += len(chunk)
+                    if total_bytes > MAX_CRAZY88_PROOF_FILE_SIZE_BYTES:
+                        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="crazy88.task.proofTooLarge")
+                    output_file.write(chunk)
+        except HTTPException:
+            cls._remove_file_safely(str(destination_path))
+            raise
+        except OSError as error:
+            cls._remove_file_safely(str(destination_path))
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="crazy88.task.submitFailed") from error
+        finally:
+            try:
+                proof_file.file.close()
+            except OSError:
+                pass
+
+        if total_bytes <= 0:
+            cls._remove_file_safely(str(destination_path))
+            return {
+                "proof_path": None,
+                "proof_original_name": None,
+                "proof_mime_type": None,
+                "proof_size": None,
+            }
+
+        mirror_roots = [
+            cls._workspace_root() / "frontend" / "dist",
+            cls._workspace_root() / "backend" / "public",
+        ]
+        for mirror_root in mirror_roots:
+            try:
+                mirror_path = mirror_root / relative_path
+                mirror_path.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copy2(destination_path, mirror_path)
+            except OSError:
+                continue
+
+        return {
+            "proof_path": f"/{relative_path.as_posix()}",
+            "proof_original_name": safe_original_name,
+            "proof_mime_type": str(proof_file.content_type or "").strip() or None,
+            "proof_size": total_bytes,
+        }
 
     @staticmethod
     def _remove_file_safely(path: str) -> None:

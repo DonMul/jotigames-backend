@@ -213,3 +213,44 @@ def test_crazy88_module_build_router_registers_routes():
     router = module.build_router()
     assert router is not None
     assert len(router.routes) > 0
+
+
+def test_crazy88_repository_get_configuration_falls_back_to_settings_when_columns_missing():
+    repo = Crazy88Repository()
+    repo.get_game_by_id = lambda *_args, **_kwargs: {"id": "game-1"}
+    repo.get_game_settings = lambda *_args, **_kwargs: {
+        "crazy88_visibility_mode": "geo_locked",
+        "crazy88_show_highscore": False,
+    }
+
+    config = repo.get_configuration(_FakeDb(), "game-1")
+
+    assert config["visibility_mode"] == "geo_locked"
+    assert config["show_highscore"] is False
+
+
+def test_crazy88_repository_update_configuration_falls_back_to_settings_when_columns_missing():
+    repo = Crazy88Repository()
+    table = _make_table()
+    captured: dict[str, Any] = {}
+
+    repo.get_game_table = lambda *_args, **_kwargs: table
+    repo.get_game_settings = lambda *_args, **_kwargs: {"existing": "value"}
+
+    def _capture(_db, _game_id, settings):
+        captured.update(settings)
+
+    repo.update_game_settings_without_commit = _capture
+
+    repo.update_configuration_without_commit(
+        _FakeDb(),
+        "game-1",
+        {
+            "visibility_mode": "geo_locked",
+            "show_highscore": False,
+        },
+    )
+
+    assert captured["existing"] == "value"
+    assert captured["crazy88_visibility_mode"] == "geo_locked"
+    assert captured["crazy88_show_highscore"] is False

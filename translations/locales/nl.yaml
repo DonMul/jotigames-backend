@@ -238,6 +238,7 @@ crazy88:
     missingSubmissionId: Submission-id is verplicht.
   task:
     submitted: Taak succesvol ingediend.
+    proofTooLarge: Bewijsbestand is te groot (maximaal 25 MB).
   review:
     judged: Inzending succesvol beoordeeld.
     alreadyJudged: Inzending is al beoordeeld.

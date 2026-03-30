@@ -235,6 +235,7 @@ crazy88:
     missingSubmissionId: Submission ID is required.
   task:
     submitted: Job submitted successfully.
+    proofTooLarge: Proof file is too large (maximum 25 MB).
   review:
     judged: Submission judged successful.
     alreadyJudged: Submission has already been assessed.

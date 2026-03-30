@@ -2,6 +2,8 @@ import importlib
 import inspect
 from pathlib import Path
 
+from sqlalchemy import Column, MetaData, String, Table
+
 from app.repositories.game_logic_state_repository import GameLogicStateRepository
 
 
@@ -57,3 +59,15 @@ def test_game_logic_state_repository_json_deserialization_contract():
     assert repo._deserialize_json_value("{'x': 1}") == {'x': 1}
     assert repo._deserialize_json_value('') == {}
     assert repo._deserialize_json_value(None) == {}
+
+
+def test_game_logic_state_repository_game_id_column_primary_key_fallback():
+    repo = GameLogicStateRepository()
+    table = Table(
+        'legacy_game',
+        MetaData(),
+        Column('GAME_UUID', String(36), primary_key=True),
+        Column('name', String(255), nullable=False),
+    )
+
+    assert repo._get_game_id_column(table) == 'GAME_UUID'

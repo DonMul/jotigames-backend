@@ -17,6 +17,20 @@ class Crazy88Repository(GameLogicStateRepository):
                 return row.get(key)
         return default
 
+    @staticmethod
+    def _normalize_show_highscore(value: Any) -> bool:
+        """Normalize persisted show_highscore values across bool/int/string representations."""
+        if isinstance(value, bool):
+            return value
+        if isinstance(value, (int, float)):
+            return bool(value)
+        normalized = str(value or "").strip().lower()
+        if normalized in {"0", "false", "no", "off"}:
+            return False
+        if normalized in {"1", "true", "yes", "on"}:
+            return True
+        return True
+
     def get_task_table(self, db: DbSession) -> Table:
         """Return reflected table for Crazy88 tasks."""
         return self._get_table(db, "crazy88_task")
@@ -35,13 +49,24 @@ class Crazy88Repository(GameLogicStateRepository):
 
     def get_configuration(self, db: DbSession, game_id: str) -> Dict[str, Any]:
         """Load Crazy88 gameplay configuration values for one game."""
-        game = self.get_game_by_id(db, game_id)
-        if game is None:
-            return {}
+        game = self.get_game_by_id(db, game_id) or {}
+        settings = self.get_game_settings(db, game_id)
+
+        visibility_mode = self._first_present(game, ["crazy88_visibility_mode", "crazy88VisibilityMode"], None)
+        if visibility_mode is None:
+            visibility_mode = settings.get("crazy88_visibility_mode")
+
+        show_highscore = self._first_present(game, ["crazy88_show_highscore", "crazy88ShowHighscore"], None)
+        if show_highscore is None:
+            show_highscore = settings.get("crazy88_show_highscore")
+
+        normalized_visibility_mode = str(visibility_mode or "all_visible").strip().lower()
+        if normalized_visibility_mode not in {"all_visible", "geo_locked"}:
+            normalized_visibility_mode = "all_visible"
 
         return {
-            "visibility_mode": str(self._first_present(game, ["crazy88_visibility_mode", "crazy88VisibilityMode"], "all_visible") or "all_visible"),
-            "show_highscore": bool(self._first_present(game, ["crazy88_show_highscore", "crazy88ShowHighscore"], True)),
+            "visibility_mode": normalized_visibility_mode,
+            "show_highscore": self._normalize_show_highscore(show_highscore),
         }
 
     def update_configuration_without_commit(self, db: DbSession, game_id: str, values: Dict[str, Any]) -> None:
@@ -68,6 +93,15 @@ class Crazy88Repository(GameLogicStateRepository):
                 .where(table.c["id"] == game_id)
                 .values(**updates)
             )
+            return
+
+        settings = self.get_game_settings(db, game_id)
+        if "visibility_mode" in values:
+            visibility_mode = str(values.get("visibility_mode") or "all_visible").strip().lower()
+            settings["crazy88_visibility_mode"] = visibility_mode if visibility_mode in {"all_visible", "geo_locked"} else "all_visible"
+        if "show_highscore" in values:
+            settings["crazy88_show_highscore"] = self._normalize_show_highscore(values.get("show_highscore"))
+        self.update_game_settings_without_commit(db, game_id, settings)
 
     def fetch_tasks_by_game_id(self, db: DbSession, game_id: str) -> list[Dict[str, Any]]:
         """Fetch all task records configured for a game."""
@@ -218,6 +252,22 @@ class Crazy88Repository(GameLogicStateRepository):
             context["query"].order_by(
                 context["query"].selected_columns.task_title,
                 context["query"].selected_columns.team_name,
+                order_column,
+            )
+        ).mappings().all()
+        return [dict(row) for row in rows]
+
+    def fetch_submission_threads_by_game_id_and_team_id(self, db: DbSession, game_id: str, team_id: str) -> list[Dict[str, Any]]:
+        """Fetch submission rows joined with task/team context for one team."""
+        context = self._submission_context_select(db, game_id)
+        submission_table = context["submission_table"]
+        submitted_at_column = context["submitted_at_column"]
+        order_column = submission_table.c[submitted_at_column] if submitted_at_column else submission_table.c["id"]
+        rows = db.execute(
+            context["query"]
+            .where(submission_table.c[context["submission_team_id"]] == team_id)
+            .order_by(
+                context["query"].selected_columns.task_title,
                 order_column,
             )
         ).mappings().all()

@@ -299,6 +299,12 @@ class GameRepository:
             if "game_id" in table.c:
                 predicates.append(table.c["game_id"] == game_id)
 
+            for fk in table.foreign_key_constraints:
+                for element in fk.elements:
+                    referred_table = element.column.table.name if element.column is not None else None
+                    if referred_table == "game":
+                        predicates.append(element.parent == game_id)
+
             if team_ids:
                 for fk in table.foreign_key_constraints:
                     for element in fk.elements:
