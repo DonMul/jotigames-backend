@@ -19,3 +19,5 @@ htmlcov/
 *.sqlite3
 
 .DS_Store
+
+public/uploads/*
