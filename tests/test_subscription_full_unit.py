@@ -14,6 +14,7 @@ from uuid import uuid4
 
 import pytest
 import stripe
+from fastapi import HTTPException
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import Session, sessionmaker
 
@@ -28,6 +29,7 @@ from app.models import (
     UserSubscription,
 )
 from app.repositories.subscription_repository import SubscriptionRepository
+from app.security import AuthenticatedPrincipal
 from app.services.subscription_service import (
     SubscriptionService,
     _next_period_end,
@@ -207,6 +209,51 @@ class TestSubscriptionRepositoryTopups:
         assert len(all_pkgs) == 2
         assert len(active_pkgs) == 1
 
+    def test_update_topup_package_fields(self, db, repo):
+        pkg = repo.create_topup_package(
+            db,
+            name="500 min",
+            minutes=500,
+            price_cents=499,
+            currency="eur",
+            is_active=True,
+            sort_order=1,
+        )
+        db.commit()
+
+        repo.update_topup_package(db, pkg, minutes=750, price_cents=799, is_active=False)
+        db.commit()
+        db.refresh(pkg)
+
+        assert pkg.minutes == 750
+        assert pkg.price_cents == 799
+        assert pkg.is_active is False
+
+    def test_list_topup_packages_respects_sort_order(self, db, repo):
+        first = repo.create_topup_package(
+            db,
+            name="First",
+            minutes=100,
+            price_cents=100,
+            currency="eur",
+            is_active=True,
+            sort_order=5,
+        )
+        second = repo.create_topup_package(
+            db,
+            name="Second",
+            minutes=200,
+            price_cents=200,
+            currency="eur",
+            is_active=True,
+            sort_order=1,
+        )
+        db.commit()
+
+        packages = repo.list_topup_packages(db, active_only=False)
+        assert packages[0].id == second.id
+        assert packages[1].id == first.id
+
     def test_create_topup_purchase(self, db, repo):
         purchase = repo.create_topup_purchase(
             db, user_id="user-1", package_id=None,
@@ -240,6 +287,34 @@ class TestSubscriptionRepositoryTopups:
         active = repo.get_active_topups(db, "user-1")
         assert len(active) == 1
         assert active[0].minutes_remaining == 300
+
+    def test_expire_topups_sets_remaining_to_zero(self, db, repo):
+        expired = repo.create_topup_purchase(
+            db,
+            user_id="user-1",
+            package_id=None,
+            minutes_total=500,
+            minutes_remaining=250,
+            expires_at=datetime.now(UTC).replace(tzinfo=None) - timedelta(days=1),
+        )
+        active = repo.create_topup_purchase(
+            db,
+            user_id="user-1",
+            package_id=None,
+            minutes_total=500,
+            minutes_remaining=300,
+            expires_at=datetime.now(UTC).replace(tzinfo=None) + timedelta(days=30),
+        )
+        db.commit()
+
+        count = repo.expire_topups(db, datetime.now(UTC).replace(tzinfo=None))
+        db.commit()
+        db.refresh(expired)
+        db.refresh(active)
+
+        assert count == 1
+        assert expired.minutes_remaining == 0
+        assert active.minutes_remaining == 300
 
 
 # ── Repository: Payments ─────────────────────────────────────────────────────
@@ -478,6 +553,107 @@ class TestSubscriptionServiceTopup:
     def test_purchase_topup_nonexistent_package(self, db, service):
         with pytest.raises(ValueError, match="notFound"):
             service.purchase_topup(db, "user-1", "fake-id", email="test@example.com")
+
+    @patch("app.services.subscription_service.stripe.checkout.Session.create")
+    def test_purchase_topup_paid_with_stripe_price_returns_checkout_url(
+        self,
+        mock_checkout_create,
+        db,
+        service,
+        repo,
+        free_plan,
+    ):
+        pkg = repo.create_topup_package(
+            db,
+            name="500 min",
+            minutes=500,
+            price_cents=499,
+            currency="eur",
+            stripe_price_id="price_topup_500",
+            is_active=True,
+            sort_order=0,
+        )
+        db.commit()
+
+        service.subscribe(db, "user-1", "free", email="test@example.com")
+        mock_checkout_create.return_value = {"url": "https://checkout.stripe.test/cs_topup_1"}
+
+        with patch.object(service, "_get_or_create_stripe_customer", return_value="cus_123"):
+            result = service.purchase_topup(db, "user-1", pkg.id, email="test@example.com")
+
+        assert result["payment_url"] == "https://checkout.stripe.test/cs_topup_1"
+        topups = repo.get_active_topups(db, "user-1")
+        assert len(topups) == 0
+
+        payments = repo.list_payments(db, user_id="user-1")
+        assert len(payments) == 1
+        assert payments[0].status == "pending"
+        assert payments[0].type == "topup"
+
+        _, kwargs = mock_checkout_create.call_args
+        assert kwargs["mode"] == "payment"
+        assert kwargs["line_items"][0]["price"] == "price_topup_500"
+        assert kwargs["payment_method_types"] == service._subscription_payment_method_types()
+
+    @patch("app.services.subscription_service.stripe.checkout.Session.create")
+    def test_purchase_topup_paid_without_package_methods_uses_defaults(
+        self,
+        mock_checkout_create,
+        db,
+        service,
+        repo,
+        free_plan,
+    ):
+        pkg = repo.create_topup_package(
+            db,
+            name="100 min",
+            minutes=100,
+            price_cents=199,
+            currency="eur",
+            stripe_price_id="price_topup_100",
+            is_active=True,
+            sort_order=0,
+        )
+        db.commit()
+
+        service.subscribe(db, "user-1", "free", email="test@example.com")
+        mock_checkout_create.return_value = {"url": "https://checkout.stripe.test/cs_topup_default"}
+
+        with patch.object(service, "_get_or_create_stripe_customer", return_value="cus_123"):
+            service.purchase_topup(db, "user-1", pkg.id, email="test@example.com")
+
+        _, kwargs = mock_checkout_create.call_args
+        assert "card" in kwargs["payment_method_types"]
+
+    @patch("app.services.subscription_service.stripe.checkout.Session.create")
+    def test_purchase_topup_checkout_success_url_contains_session_placeholder(
+        self,
+        mock_checkout_create,
+        db,
+        service,
+        repo,
+        free_plan,
+    ):
+        pkg = repo.create_topup_package(
+            db,
+            name="100 min",
+            minutes=100,
+            price_cents=199,
+            currency="eur",
+            stripe_price_id="price_topup_100",
+            is_active=True,
+            sort_order=0,
+        )
+        db.commit()
+
+        service.subscribe(db, "user-1", "free", email="test@example.com")
+        mock_checkout_create.return_value = {"url": "https://checkout.stripe.test/cs_topup_success_url"}
+
+        with patch.object(service, "_get_or_create_stripe_customer", return_value="cus_123"):
+            service.purchase_topup(db, "user-1", pkg.id, email="test@example.com")
+
+        _, kwargs = mock_checkout_create.call_args
+        assert "session_id={CHECKOUT_SESSION_ID}" in kwargs["success_url"]
 
 
 # ── Repository: subscription lookups ─────────────────────────────────────────
@@ -1562,6 +1738,160 @@ class TestSubscriptionServiceWebhooks:
         db.refresh(payment)
         assert payment.status == "succeeded"
 
+    def test_handle_checkout_completed_topup_updates_pending_payment_with_pi(self, db, service, repo):
+        pkg = repo.create_topup_package(
+            db,
+            name="500 min",
+            minutes=500,
+            price_cents=499,
+            currency="eur",
+            stripe_price_id="price_topup_500",
+            is_active=True,
+            sort_order=0,
+        )
+        payment = repo.create_payment(
+            db,
+            user_id="user-1",
+            type="topup",
+            amount_cents=499,
+            currency="EUR",
+            status="pending",
+            description="Top-up pending",
+        )
+        db.commit()
+
+        event = {
+            "type": "checkout.session.completed",
+            "data": {
+                "object": {
+                    "mode": "payment",
+                    "payment_status": "unpaid",
+                    "payment_intent": "pi_checkout_topup_1",
+                    "amount_total": 499,
+                    "currency": "eur",
+                    "metadata": {
+                        "jotigames_user_id": "user-1",
+                        "topup_package_id": pkg.id,
+                        "payment_record_id": payment.id,
+                    },
+                }
+            },
+        }
+
+        service.handle_stripe_event(db, event)
+        db.refresh(payment)
+        assert payment.stripe_payment_intent_id == "pi_checkout_topup_1"
+        assert payment.status == "pending"
+
+    def test_handle_payment_intent_succeeded_creates_topup_purchase(self, db, service, repo):
+        pkg = repo.create_topup_package(
+            db,
+            name="500 min",
+            minutes=500,
+            price_cents=499,
+            currency="eur",
+            stripe_price_id="price_topup_500",
+            is_active=True,
+            sort_order=0,
+        )
+        payment = repo.create_payment(
+            db,
+            user_id="user-1",
+            type="topup",
+            amount_cents=499,
+            currency="EUR",
+            status="pending",
+            description="Top-up pending",
+        )
+        db.commit()
+
+        event = {
+            "type": "payment_intent.succeeded",
+            "data": {
+                "object": {
+                    "id": "pi_topup_checkout_2",
+                    "amount_received": 499,
+                    "currency": "eur",
+                    "metadata": {
+                        "jotigames_user_id": "user-1",
+                        "topup_package_id": pkg.id,
+                        "payment_record_id": payment.id,
+                    },
+                }
+            },
+        }
+
+        service.handle_stripe_event(db, event)
+        db.refresh(payment)
+        assert payment.status == "succeeded"
+        assert payment.topup_purchase_id is not None
+        purchases = repo.get_active_topups(db, "user-1")
+        assert len(purchases) == 1
+        assert purchases[0].minutes_remaining == 500
+
+    @patch("app.services.subscription_service.stripe.checkout.Session.retrieve")
+    def test_confirm_topup_checkout_session_finalizes_minutes(self, mock_session_retrieve, db, service, repo):
+        pkg = repo.create_topup_package(
+            db,
+            name="500 min",
+            minutes=500,
+            price_cents=499,
+            currency="eur",
+            stripe_price_id="price_topup_500",
+            is_active=True,
+            sort_order=0,
+        )
+        payment = repo.create_payment(
+            db,
+            user_id="user-1",
+            type="topup",
+            amount_cents=499,
+            currency="EUR",
+            status="pending",
+            description="Top-up pending",
+        )
+        db.commit()
+
+        mock_session_retrieve.return_value = {
+            "id": "cs_topup_123",
+            "mode": "payment",
+            "payment_status": "paid",
+            "payment_intent": "pi_topup_confirm_1",
+            "amount_total": 499,
+            "currency": "eur",
+            "metadata": {
+                "jotigames_user_id": "user-1",
+                "topup_package_id": pkg.id,
+                "payment_record_id": payment.id,
+            },
+        }
+
+        result = service.confirm_topup_checkout_session(db, "user-1", "cs_topup_123")
+        assert result["payment_status"] == "paid"
+
+        db.refresh(payment)
+        assert payment.status == "succeeded"
+        assert payment.topup_purchase_id is not None
+        active_topups = repo.get_active_topups(db, "user-1")
+        assert len(active_topups) == 1
+        assert active_topups[0].minutes_remaining == 500
+
+    @patch("app.services.subscription_service.stripe.checkout.Session.retrieve")
+    def test_confirm_topup_checkout_session_rejects_wrong_user(self, mock_session_retrieve, db, service):
+        mock_session_retrieve.return_value = {
+            "id": "cs_topup_wrong_user",
+            "mode": "payment",
+            "payment_status": "paid",
+            "metadata": {
+                "jotigames_user_id": "other-user",
+                "topup_package_id": "pkg-1",
+                "payment_record_id": "pay-1",
+            },
+        }
+
+        with pytest.raises(ValueError, match="forbidden"):
+            service.confirm_topup_checkout_session(db, "user-1", "cs_topup_wrong_user")
+
     def test_handle_payment_intent_failed_updates_pending_topup(self, db, service, repo):
         payment = repo.create_payment(
             db,
@@ -1857,7 +2187,7 @@ class TestSuperAdminSerializationHelpers:
     def test_topup_pkg_to_dict(self, db, repo):
         pkg = repo.create_topup_package(
             db, name="100 min", minutes=100, price_cents=199,
-            currency="eur", is_active=True, sort_order=2,
+            currency="eur", stripe_price_id="price_topup_100", is_active=True, sort_order=2,
         )
         db.commit()
 
@@ -1867,6 +2197,7 @@ class TestSuperAdminSerializationHelpers:
         assert result["minutes"] == 100
         assert result["price_cents"] == 199
         assert result["currency"] == "eur"
+        assert result["stripe_price_id"] == "price_topup_100"
         assert result["is_active"] is True
         assert result["sort_order"] == 2
         assert result["created_at"] is not None
@@ -2126,6 +2457,94 @@ class TestSuperAdminDefaultPlanDict:
         assert d["is_default"] is True
 
 
+class TestSuperAdminCreatePersistence:
+    @staticmethod
+    def _route_endpoint(router, path, method):
+        method_normalized = method.upper()
+        for route in router.routes:
+            if getattr(route, "path", None) == path and method_normalized in getattr(route, "methods", set()):
+                return route.endpoint
+        raise AssertionError(f"Route not found: {method} {path}")
+
+    @staticmethod
+    def _principal():
+        return AuthenticatedPrincipal(
+            principal_type="user",
+            principal_id="super-admin-1",
+            username="super-admin",
+            roles=["ROLE_SUPER_ADMIN"],
+        )
+
+    def test_create_plan_endpoint_persists_record(self, db, repo):
+        from app.modules.super_admin import SuperAdminModule, SubscriptionPlanCreateRequest
+
+        endpoint = self._route_endpoint(
+            SuperAdminModule().build_router(),
+            "/super-admin/subscription/plans",
+            "POST",
+        )
+        body = SubscriptionPlanCreateRequest(
+            slug="starter",
+            name="Starter",
+            monthly_minutes=1200,
+            price_cents=999,
+            currency="eur",
+            is_active=True,
+            sort_order=5,
+        )
+
+        response = endpoint(body=body, principal=self._principal(), db=db)
+        assert response.plan["slug"] == "starter"
+
+        persisted = repo.get_plan_by_slug(db, "starter")
+        assert persisted is not None
+        assert persisted.name == "Starter"
+
+    def test_create_plan_endpoint_rejects_duplicate_slug(self, db, repo, free_plan):
+        from app.modules.super_admin import SuperAdminModule, SubscriptionPlanCreateRequest
+
+        endpoint = self._route_endpoint(
+            SuperAdminModule().build_router(),
+            "/super-admin/subscription/plans",
+            "POST",
+        )
+        body = SubscriptionPlanCreateRequest(
+            slug=free_plan.slug,
+            name="Duplicate",
+            monthly_minutes=500,
+            price_cents=0,
+            currency="eur",
+            is_active=True,
+            sort_order=10,
+        )
+
+        with pytest.raises(HTTPException) as exc:
+            endpoint(body=body, principal=self._principal(), db=db)
+        assert exc.value.status_code == 409
+
+    def test_create_topup_endpoint_persists_record(self, db, repo):
+        from app.modules.super_admin import SuperAdminModule, TopupPackageCreateRequest
+
+        endpoint = self._route_endpoint(
+            SuperAdminModule().build_router(),
+            "/super-admin/subscription/topup-packages",
+            "POST",
+        )
+        body = TopupPackageCreateRequest(
+            name="500 Minutes",
+            minutes=500,
+            price_cents=499,
+            currency="eur",
+            is_active=True,
+        )
+
+        response = endpoint(body=body, principal=self._principal(), db=db)
+        assert response.package["name"] == "500 Minutes"
+
+        persisted = repo.list_topup_packages(db, active_only=False)
+        assert any(pkg.name == "500 Minutes" for pkg in persisted)
+
+
 # ── Plan Update and Reorder Tests ────────────────────────────────────────────
 
 class TestPlanUpdateAndReorder:
@@ -2219,6 +2638,12 @@ class TestPlanUpdateAndReorder:
         from app.modules.super_admin import ReorderPlansRequest
         req = ReorderPlansRequest(plan_ids=["id1", "id2"])
         assert req.plan_ids == ["id1", "id2"]
+
+    def test_topup_reorder_request_validation(self):
+        """ReorderTopupPackagesRequest accepts ordered package IDs."""
+        from app.modules.super_admin import ReorderTopupPackagesRequest
+        req = ReorderTopupPackagesRequest(package_ids=["pkg1", "pkg2"])
+        assert req.package_ids == ["pkg1", "pkg2"]
 
 
 # ── API Module: Smoke tests ──────────────────────────────────────────────────

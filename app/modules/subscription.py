@@ -35,6 +35,10 @@ class PurchaseTopupRequest(BaseModel):
     stripe_payment_method_id: Optional[str] = None
 
 
+class ConfirmTopupCheckoutRequest(BaseModel):
+    session_id: str = Field(min_length=1, max_length=255)
+
+
 class SubscriptionSummaryResponse(BaseModel):
     monetisation_enabled: bool
     subscription: Optional[Dict[str, Any]] = None
@@ -118,6 +122,7 @@ class SubscriptionModule(ApiModule):
                         "minutes": p.minutes,
                         "price_cents": p.price_cents,
                         "currency": p.currency,
+                        "stripe_price_id": p.stripe_price_id,
                     }
                     for p in packages
                 ]
@@ -209,6 +214,22 @@ class SubscriptionModule(ApiModule):
                     body.package_id,
                     email=principal.username,
                     stripe_payment_method_id=body.stripe_payment_method_id,
+                )
+                return SubscriptionActionResponse(result=result)
+            except ValueError as exc:
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)) from exc
+
+        @router.post("/topup/confirm", response_model=SubscriptionActionResponse, summary="Confirm top-up checkout session")
+        def confirm_topup_checkout(body: ConfirmTopupCheckoutRequest, principal: CurrentPrincipal, db: DbSession) -> SubscriptionActionResponse:
+            self._require_user(principal)
+            settings = get_settings(refresh=True)
+            if not settings.enable_monetisation:
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="subscription.disabled")
+            try:
+                result = self._service.confirm_topup_checkout_session(
+                    db,
+                    principal.principal_id,
+                    body.session_id,
                 )
                 return SubscriptionActionResponse(result=result)
             except ValueError as exc:

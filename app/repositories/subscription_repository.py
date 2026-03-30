@@ -313,6 +313,20 @@ class SubscriptionRepository:
             .values(minutes_remaining=MinuteTopupPurchase.minutes_remaining - minutes)
         )
 
+    @staticmethod
+    def expire_topups(db: Session, now: datetime) -> int:
+        result = db.execute(
+            update(MinuteTopupPurchase)
+            .where(
+                and_(
+                    MinuteTopupPurchase.expires_at <= now,
+                    MinuteTopupPurchase.minutes_remaining > 0,
+                )
+            )
+            .values(minutes_remaining=0)
+        )
+        return int(result.rowcount or 0)
+
     # ── Payment records ──────────────────────────────────────────────────
 
     @staticmethod
@@ -329,6 +343,14 @@ class SubscriptionRepository:
     def update_payment(db: Session, payment: PaymentRecord, **kwargs: Any) -> None:
         for key, value in kwargs.items():
             setattr(payment, key, value)
+
+    @staticmethod
+    def get_payment_by_id(db: Session, payment_id: str) -> Optional[PaymentRecord]:
+        return db.execute(
+            select(PaymentRecord)
+            .where(PaymentRecord.id == payment_id)
+            .limit(1)
+        ).scalar_one_or_none()
 
     @staticmethod
     def get_payment_by_stripe_invoice_id(db: Session, stripe_invoice_id: str) -> Optional[PaymentRecord]:

@@ -6,6 +6,7 @@ from uuid import uuid4
 from argon2 import PasswordHasher
 from fastapi import APIRouter, HTTPException, status
 from pydantic import BaseModel, EmailStr, Field
+from sqlalchemy.exc import IntegrityError
 
 from app.config import get_settings
 from app.dependencies import CurrentPrincipal, DbSession
@@ -148,6 +149,7 @@ class TopupPackageCreateRequest(BaseModel):
     minutes: int = Field(ge=1)
     price_cents: int = Field(ge=0)
     currency: str = Field(default="eur", min_length=3, max_length=3)
+    stripe_price_id: Optional[str] = Field(default=None, max_length=255)
     is_active: bool = True
 
 
@@ -156,7 +158,13 @@ class TopupPackageUpdateRequest(BaseModel):
     minutes: Optional[int] = Field(default=None, ge=1)
     price_cents: Optional[int] = Field(default=None, ge=0)
     currency: Optional[str] = Field(default=None, min_length=3, max_length=3)
+    stripe_price_id: Optional[str] = Field(default=None, max_length=255)
     is_active: Optional[bool] = None
+    sort_order: Optional[int] = None
+
+
+class ReorderTopupPackagesRequest(BaseModel):
+    package_ids: List[str] = Field(min_length=1, description="Ordered list of top-up package IDs")
 
 
 class TopupPackagesListResponse(BaseModel):
@@ -190,6 +198,11 @@ class AdminUserSubscriptionResponse(BaseModel):
     subscription: Optional[Dict[str, Any]]
     balance: Dict[str, Any]
     topup_minutes: int
+    payment_url: Optional[str] = None
+
+
+class AdminSetUserSubscriptionRequest(BaseModel):
+    plan_id: str = Field(min_length=1, description="Target subscription plan ID for the user")
 
 
 class SuperAdminModule(ApiModule):
@@ -639,6 +652,9 @@ class SuperAdminModule(ApiModule):
         @router.post("/subscription/plans", response_model=SubscriptionPlanResponse, status_code=status.HTTP_201_CREATED, summary="Create subscription plan")
         def admin_create_plan(body: SubscriptionPlanCreateRequest, principal: CurrentPrincipal, db: DbSession) -> SubscriptionPlanResponse:
             self._ensure_super_admin(principal)
+            existing = self._sub_repo.get_plan_by_slug(db, body.slug)
+            if existing is not None:
+                raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="subscription.slugConflict")
             plan = self._sub_repo.create_plan(
                 db,
                 slug=body.slug,
@@ -650,6 +666,15 @@ class SuperAdminModule(ApiModule):
                 is_active=body.is_active,
                 sort_order=body.sort_order,
             )
+            try:
+                db.commit()
+            except IntegrityError as error:
+                db.rollback()
+                raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="subscription.slugConflict") from error
+            except Exception as error:
+                db.rollback()
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="subscription.planCreateFailed") from error
+            db.refresh(plan)
             return SubscriptionPlanResponse(plan=self._serialize_row(self._plan_to_dict(plan)))
 
         @router.put("/subscription/plans/reorder", response_model=SubscriptionPlansListResponse, summary="Reorder subscription plans")
@@ -732,9 +757,30 @@ class SuperAdminModule(ApiModule):
                 minutes=body.minutes,
                 price_cents=body.price_cents,
                 currency=body.currency,
+                stripe_price_id=body.stripe_price_id,
                 is_active=body.is_active,
             )
+            try:
+                db.commit()
+            except Exception as error:
+                db.rollback()
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="subscription.topupPackageCreateFailed") from error
+            db.refresh(pkg)
             return TopupPackageResponse(package=self._serialize_row(self._topup_pkg_to_dict(pkg)))
+
+        @router.put("/subscription/topup-packages/reorder", response_model=TopupPackagesListResponse, summary="Reorder top-up packages")
+        def admin_reorder_topup_packages(body: ReorderTopupPackagesRequest, principal: CurrentPrincipal, db: DbSession) -> TopupPackagesListResponse:
+            self._ensure_super_admin(principal)
+            for idx, package_id in enumerate(body.package_ids):
+                pkg = self._sub_repo.get_topup_package_by_id(db, package_id)
+                if pkg is None:
+                    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="subscription.topupPackageNotFound")
+                self._sub_repo.update_topup_package(db, pkg, sort_order=idx)
+            db.commit()
+            packages = self._sub_repo.list_topup_packages(db, active_only=False)
+            return TopupPackagesListResponse(
+                packages=[self._serialize_row(self._topup_pkg_to_dict(p)) for p in packages]
+            )
 
         @router.put("/subscription/topup-packages/{package_id}", response_model=TopupPackageResponse, summary="Update top-up package")
         def admin_update_topup_package(package_id: str, body: TopupPackageUpdateRequest, principal: CurrentPrincipal, db: DbSession) -> TopupPackageResponse:
@@ -742,7 +788,8 @@ class SuperAdminModule(ApiModule):
             pkg = self._sub_repo.get_topup_package_by_id(db, package_id)
             if pkg is None:
                 raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="subscription.topupPackageNotFound")
-            self._sub_repo.update_topup_package(db, pkg, **{k: v for k, v in body.model_dump().items() if v is not None})
+            updates = body.model_dump(exclude_unset=True)
+            self._sub_repo.update_topup_package(db, pkg, **updates)
             db.commit()
             db.refresh(pkg)
             return TopupPackageResponse(package=self._serialize_row(self._topup_pkg_to_dict(pkg)))
@@ -765,6 +812,52 @@ class SuperAdminModule(ApiModule):
                 subscription=summary.get("subscription"),
                 balance=summary["balance"],
                 topup_minutes=summary.get("topup_minutes_remaining", 0),
+            )
+
+        @router.put("/subscription/users/{user_id}", response_model=AdminUserSubscriptionResponse, summary="Set user subscription plan")
+        def admin_set_user_subscription(
+            user_id: str,
+            body: AdminSetUserSubscriptionRequest,
+            principal: CurrentPrincipal,
+            db: DbSession,
+        ) -> AdminUserSubscriptionResponse:
+            self._ensure_super_admin(principal)
+            settings = get_settings()
+
+            user_row = self._repository.get_user_by_id(
+                db,
+                table_name=settings.auth_users_table,
+                id_column=settings.auth_user_id_column,
+                user_id=user_id,
+            )
+            if user_row is None:
+                raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="auth.user.notFound")
+
+            plan = self._sub_repo.get_plan_by_id(db, body.plan_id)
+            if plan is None or not plan.is_active:
+                raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="subscription.planNotFound")
+
+            email_value = str(user_row.get(settings.auth_username_column) or user_row.get("email") or "").strip()
+
+            payment_url: Optional[str] = None
+            try:
+                result = self._sub_service.change_plan(db, user_id, plan.slug, email=email_value)
+                payment_url = result.get("payment_url")
+            except ValueError as error:
+                detail = str(error)
+                if detail == "subscription.samePlan":
+                    payment_url = None
+                elif detail == "subscription.plan.notFound":
+                    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="subscription.planNotFound") from error
+                else:
+                    raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=detail) from error
+
+            summary = self._sub_service.get_user_subscription_summary(db, user_id)
+            return AdminUserSubscriptionResponse(
+                subscription=summary.get("subscription"),
+                balance=summary["balance"],
+                topup_minutes=summary.get("topup_minutes_remaining", 0),
+                payment_url=payment_url,
             )
 
         # ── Revenue statistics ────────────────────────────────────────────
@@ -831,6 +924,7 @@ class SuperAdminModule(ApiModule):
             "minutes": pkg.minutes,
             "price_cents": pkg.price_cents,
             "currency": pkg.currency,
+            "stripe_price_id": pkg.stripe_price_id,
             "is_active": pkg.is_active,
             "sort_order": pkg.sort_order,
             "created_at": pkg.created_at,

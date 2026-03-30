@@ -129,6 +129,55 @@ class SubscriptionService:
         )
         return str(self._stripe_value(session, "url", ""))
 
+    def _create_topup_checkout_url(
+        self,
+        *,
+        customer_id: str,
+        user_id: str,
+        package: Any,
+        payment_record_id: str,
+    ) -> str:
+        settings = get_settings(refresh=True)
+        base_url = settings.app_public_base_url.rstrip("/")
+
+        metadata: Dict[str, str] = {
+            "jotigames_user_id": user_id,
+            "topup_package_id": str(package.id),
+            "payment_record_id": payment_record_id,
+        }
+
+        session = stripe.checkout.Session.create(
+            customer=customer_id,
+            mode="payment",
+            line_items=[{"price": str(package.stripe_price_id), "quantity": 1}],
+            payment_method_types=self._subscription_payment_method_types(),
+            success_url=f"{base_url}/account/subscription?topup=success&session_id={{CHECKOUT_SESSION_ID}}",
+            cancel_url=f"{base_url}/account/subscription?topup=cancelled",
+            metadata=metadata,
+            payment_intent_data={"metadata": metadata},
+        )
+        return str(self._stripe_value(session, "url", ""))
+
+    def confirm_topup_checkout_session(self, db: Session, user_id: str, session_id: str) -> Dict[str, Any]:
+        self._configure_stripe()
+        checkout_session = stripe.checkout.Session.retrieve(session_id)
+        metadata = self._stripe_value(checkout_session, "metadata", {}) or {}
+        session_user_id = str(metadata.get("jotigames_user_id") or "")
+        session_mode = str(self._stripe_value(checkout_session, "mode", "") or "").lower()
+
+        if session_mode != "payment":
+            raise ValueError("topup.checkout.invalidMode")
+        if session_user_id != str(user_id):
+            raise ValueError("topup.checkout.forbidden")
+
+        self._handle_topup_checkout_completed(db, checkout_session)
+
+        payment_status = str(self._stripe_value(checkout_session, "payment_status", "") or "")
+        return {
+            "session_id": str(self._stripe_value(checkout_session, "id", session_id)),
+            "payment_status": payment_status,
+        }
+
     @staticmethod
     def _find_existing_stripe_subscription_id(customer_id: str) -> Optional[str]:
         subscriptions = stripe.Subscription.list(customer=customer_id, status="all", limit=20)
@@ -750,24 +799,38 @@ class SubscriptionService:
         expires = now + timedelta(days=365)
 
         stripe_pi_id: Optional[str] = None
+        payment_url: Optional[str] = None
         if pkg.price_cents > 0 and pkg.stripe_price_id:
             self._configure_stripe()
             sub = self._repo.get_active_subscription(db, user_id)
             customer_id = sub.stripe_customer_id if sub and sub.stripe_customer_id else self._get_or_create_stripe_customer(db, user_id, email)
 
-            if stripe_payment_method_id:
-                stripe.PaymentMethod.attach(stripe_payment_method_id, customer=customer_id)
-
-            intent = stripe.PaymentIntent.create(
-                amount=pkg.price_cents,
-                currency=pkg.currency.lower(),
-                customer=customer_id,
-                payment_method=stripe_payment_method_id,
-                confirm=True if stripe_payment_method_id else False,
-                metadata={"jotigames_user_id": user_id, "topup_package_id": pkg.id},
-                automatic_payment_methods={"enabled": True, "allow_redirects": "never"} if stripe_payment_method_id else None,
+            payment = self._repo.create_payment(
+                db,
+                user_id=user_id,
+                type="topup",
+                amount_cents=pkg.price_cents,
+                currency=pkg.currency,
+                status="pending",
+                description=f"Top-up: {pkg.name} ({pkg.minutes} minutes)",
             )
-            stripe_pi_id = intent.id
+
+            payment_url = self._create_topup_checkout_url(
+                customer_id=customer_id,
+                user_id=user_id,
+                package=pkg,
+                payment_record_id=payment.id,
+            )
+
+            if sub and not sub.stripe_customer_id:
+                self._repo.update_subscription(db, sub, stripe_customer_id=customer_id)
+
+            db.commit()
+            return {
+                "minutes": pkg.minutes,
+                "expires_at": expires.isoformat(),
+                "payment_url": payment_url,
+            }
 
         purchase = self._repo.create_topup_purchase(
             db,
@@ -786,14 +849,25 @@ class SubscriptionService:
                 type="topup",
                 amount_cents=pkg.price_cents,
                 currency=pkg.currency,
-                status="pending" if stripe_pi_id else "succeeded",
+                status="succeeded",
                 stripe_payment_intent_id=stripe_pi_id,
                 topup_purchase_id=purchase.id,
                 description=f"Top-up: {pkg.name} ({pkg.minutes} minutes)",
             )
 
         db.commit()
-        return {"purchase_id": purchase.id, "minutes": pkg.minutes, "expires_at": expires.isoformat()}
+        return {
+            "purchase_id": purchase.id,
+            "minutes": pkg.minutes,
+            "expires_at": expires.isoformat(),
+            "payment_url": payment_url,
+        }
+
+    def expire_elapsed_topups(self, db: Session) -> int:
+        now = datetime.now(UTC).replace(tzinfo=None)
+        expired = self._repo.expire_topups(db, now)
+        db.commit()
+        return expired
 
     # ── Minute consumption ───────────────────────────────────────────────
 
@@ -947,9 +1021,15 @@ class SubscriptionService:
 
     def _handle_checkout_completed(self, db: Session, checkout_session: dict) -> None:
         """Link Stripe subscription to local record after Checkout Session completes."""
+        mode = str(checkout_session.get("mode") or "").strip().lower()
+        metadata = checkout_session.get("metadata") or {}
+
+        if mode == "payment" and metadata.get("topup_package_id") and metadata.get("jotigames_user_id"):
+            self._handle_topup_checkout_completed(db, checkout_session)
+            return
+
         stripe_sub_id = checkout_session.get("subscription")
         customer_id = checkout_session.get("customer")
-        metadata = checkout_session.get("metadata") or {}
         user_id = metadata.get("jotigames_user_id")
         replace_sub_id = metadata.get("replace_stripe_subscription_id")
 
@@ -1005,6 +1085,96 @@ class SubscriptionService:
             )
 
         db.commit()
+
+    def _handle_topup_checkout_completed(self, db: Session, checkout_session: dict) -> None:
+        metadata = checkout_session.get("metadata") or {}
+        payment_record_id = metadata.get("payment_record_id")
+        payment_intent_id = checkout_session.get("payment_intent")
+        amount_total = int(checkout_session.get("amount_total") or 0)
+        currency = str(checkout_session.get("currency") or "eur").upper()
+
+        if not payment_record_id:
+            return
+
+        payment = self._repo.get_payment_by_id(db, payment_record_id)
+        if not payment:
+            return
+
+        self._repo.update_payment(
+            db,
+            payment,
+            stripe_payment_intent_id=payment_intent_id,
+            amount_cents=amount_total or payment.amount_cents,
+            currency=currency or payment.currency,
+        )
+
+        if str(checkout_session.get("payment_status") or "").lower() == "paid":
+            self._finalize_topup_success(
+                db,
+                payment=payment,
+                user_id=str(metadata.get("jotigames_user_id") or ""),
+                package_id=str(metadata.get("topup_package_id") or ""),
+                stripe_payment_intent_id=payment_intent_id,
+                amount_cents=amount_total,
+                currency=currency,
+            )
+        db.commit()
+
+    def _finalize_topup_success(
+        self,
+        db: Session,
+        *,
+        payment: Any,
+        user_id: str,
+        package_id: str,
+        stripe_payment_intent_id: Optional[str],
+        amount_cents: int,
+        currency: str,
+    ) -> None:
+        if payment.topup_purchase_id:
+            self._repo.update_payment(
+                db,
+                payment,
+                status="succeeded",
+                stripe_payment_intent_id=stripe_payment_intent_id,
+                amount_cents=amount_cents or payment.amount_cents,
+                currency=currency or payment.currency,
+            )
+            return
+
+        pkg = self._repo.get_topup_package_by_id(db, package_id)
+        if not pkg:
+            self._repo.update_payment(
+                db,
+                payment,
+                status="failed",
+                stripe_payment_intent_id=stripe_payment_intent_id,
+                amount_cents=amount_cents or payment.amount_cents,
+                currency=currency or payment.currency,
+                description=(payment.description or "Top-up") + " [package missing]",
+            )
+            return
+
+        expires = datetime.now(UTC).replace(tzinfo=None) + timedelta(days=365)
+        purchase = self._repo.create_topup_purchase(
+            db,
+            user_id=user_id,
+            package_id=pkg.id,
+            minutes_total=pkg.minutes,
+            minutes_remaining=pkg.minutes,
+            stripe_payment_intent_id=stripe_payment_intent_id,
+            expires_at=expires,
+        )
+
+        self._repo.update_payment(
+            db,
+            payment,
+            status="succeeded",
+            stripe_payment_intent_id=stripe_payment_intent_id,
+            topup_purchase_id=purchase.id,
+            amount_cents=amount_cents or payment.amount_cents,
+            currency=currency or payment.currency,
+        )
 
     def _handle_invoice_paid(self, db: Session, invoice: dict) -> None:
         stripe_sub_id = invoice.get("subscription")
@@ -1152,24 +1322,39 @@ class SubscriptionService:
             return
 
         payment = self._repo.get_payment_by_stripe_payment_intent_id(db, payment_intent_id)
+        metadata = payment_intent.get("metadata") or {}
+        if not payment and metadata.get("payment_record_id"):
+            payment = self._repo.get_payment_by_id(db, str(metadata.get("payment_record_id")))
         amount = payment_intent.get("amount_received", payment_intent.get("amount", 0))
         currency = str(payment_intent.get("currency", "eur")).upper()
         if payment:
-            self._repo.update_payment(
-                db,
-                payment,
-                status="succeeded",
-                amount_cents=amount,
-                currency=currency,
-            )
+            package_id = str(metadata.get("topup_package_id") or "")
+            user_id = str(metadata.get("jotigames_user_id") or payment.user_id)
+            if payment.type == "topup" and package_id:
+                self._finalize_topup_success(
+                    db,
+                    payment=payment,
+                    user_id=user_id,
+                    package_id=package_id,
+                    stripe_payment_intent_id=payment_intent_id,
+                    amount_cents=int(amount or 0),
+                    currency=currency,
+                )
+            else:
+                self._repo.update_payment(
+                    db,
+                    payment,
+                    status="succeeded",
+                    amount_cents=amount,
+                    currency=currency,
+                )
             db.commit()
             return
 
-        metadata = payment_intent.get("metadata") or {}
         user_id = metadata.get("jotigames_user_id")
         if not user_id:
             return
-        self._repo.create_payment(
+        payment = self._repo.create_payment(
             db,
             user_id=user_id,
             type="topup",
@@ -1179,6 +1364,17 @@ class SubscriptionService:
             stripe_payment_intent_id=payment_intent_id,
             description="Stripe payment intent succeeded",
         )
+        package_id = str(metadata.get("topup_package_id") or "")
+        if package_id:
+            self._finalize_topup_success(
+                db,
+                payment=payment,
+                user_id=str(user_id),
+                package_id=package_id,
+                stripe_payment_intent_id=payment_intent_id,
+                amount_cents=int(amount or 0),
+                currency=currency,
+            )
         db.commit()
 
     def _handle_payment_intent_failed(self, db: Session, payment_intent: dict) -> None:
@@ -1187,6 +1383,9 @@ class SubscriptionService:
             return
 
         payment = self._repo.get_payment_by_stripe_payment_intent_id(db, payment_intent_id)
+        metadata = payment_intent.get("metadata") or {}
+        if not payment and metadata.get("payment_record_id"):
+            payment = self._repo.get_payment_by_id(db, str(metadata.get("payment_record_id")))
         amount = payment_intent.get("amount", 0)
         currency = str(payment_intent.get("currency", "eur")).upper()
         if payment:
@@ -1194,13 +1393,13 @@ class SubscriptionService:
                 db,
                 payment,
                 status="failed",
+                stripe_payment_intent_id=payment_intent_id,
                 amount_cents=amount,
                 currency=currency,
             )
             db.commit()
             return
 
-        metadata = payment_intent.get("metadata") or {}
         user_id = metadata.get("jotigames_user_id")
         if not user_id:
             return
