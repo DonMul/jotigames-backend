@@ -151,11 +151,28 @@ explodingKittens:
     fiveNone: 5-different combo resolved but desired card type not available in deck.
 geohunter:
   gameTypeRequired: This endpoint is only available for Geohunter games.
+  location:
+    updated: Location updated.
+    invalid: Location coordinates are invalid.
+  poi:
+    createFailed: POI creation failed.
+    updateFailed: POI update failed.
+    deleteFailed: POI deletion failed.
+    notFound: POI not found.
+    invalidType: Invalid POI type.
+    invalidCoordinates: Invalid POI coordinates.
+    expectedAnswersRequired: At least one expected answer is required.
+    choicesRequired: At least one choice is required.
+    correctChoiceRequired: At least one choice must be marked as correct.
   validation:
     missingPoiId: Point of interest ID is required.
   answer:
     recorded: Answer submitted successfully.
     alreadySubmitted: This point has already been answered by your team.
+    correct: Correct answer!
+    incorrect: Answer is incorrect.
+    outOfRange: You must be within this POI's radius to answer the question.
+    retryTimeoutActive: This question can be answered again in {seconds} seconds.
 blindhike:
   gameTypeRequired: This endpoint is only available for Blindhike games.
   validation:

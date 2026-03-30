@@ -154,11 +154,28 @@ explodingKittens:
       in deck.
 geohunter:
   gameTypeRequired: Dit endpoint is alleen beschikbaar voor Geohunter-games.
+  location:
+    updated: Locatie bijgewerkt.
+    invalid: Ongeldige locatiecoördinaten.
+  poi:
+    createFailed: POI aanmaken mislukt.
+    updateFailed: POI bijwerken mislukt.
+    deleteFailed: POI verwijderen mislukt.
+    notFound: POI niet gevonden.
+    invalidType: Ongeldig POI-type.
+    invalidCoordinates: Ongeldige POI-coördinaten.
+    expectedAnswersRequired: Minimaal één verwacht antwoord is verplicht.
+    choicesRequired: Minimaal één keuze is verplicht.
+    correctChoiceRequired: Minimaal één keuze moet als correct gemarkeerd zijn.
   validation:
     missingPoiId: Point of interest-id is verplicht.
   answer:
     recorded: Antwoord succesvol ingediend.
     alreadySubmitted: Dit punt is al beantwoord door je team.
+    correct: Correct antwoord!
+    incorrect: Antwoord is onjuist.
+    outOfRange: Je moet binnen de radius van deze POI zijn om de vraag te beantwoorden.
+    retryTimeoutActive: Deze vraag kan opnieuw beantwoord worden over {seconds} seconden.
 blindhike:
   gameTypeRequired: Dit endpoint is alleen beschikbaar voor Blindhike-games.
   validation:

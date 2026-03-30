@@ -1,3 +1,4 @@
+import json
 from typing import Any, Dict, Optional
 from uuid import uuid4
 
@@ -31,6 +32,10 @@ class ActionResponse(BaseModel):
     action_id: Optional[str] = None
     points_awarded: int
     state_version: int
+    correct: Optional[bool] = None
+    score: Optional[int] = None
+    retry_available_in_seconds: int = 0
+    lock_active: bool = False
 
 
 class TeamLocationUpdateRequest(BaseModel):
@@ -44,6 +49,8 @@ class TeamLocationUpdateResponse(BaseModel):
     location: Dict[str, Any]
     nearby_pois: list[Dict[str, Any]]
     nearby_poi_ids: list[str]
+    retry_locked_poi_seconds: Dict[str, int] = Field(default_factory=dict)
+    nearby_poi_lockouts_seconds: Dict[str, int] = Field(default_factory=dict)
 
 
 class GeoChoiceInput(BaseModel):
@@ -54,6 +61,7 @@ class GeoChoiceInput(BaseModel):
 class GeoHunterPoiCreateRequest(BaseModel):
     title: str = Field(min_length=1, max_length=120)
     type: str = Field(min_length=1, max_length=24)
+    points: int = Field(default=1, ge=0, le=10000)
     latitude: float
     longitude: float
     radius_meters: int = Field(default=20, ge=1, le=10000)
@@ -66,6 +74,7 @@ class GeoHunterPoiCreateRequest(BaseModel):
 class GeoHunterPoiUpdateRequest(BaseModel):
     title: Optional[str] = Field(default=None, min_length=1, max_length=120)
     type: Optional[str] = Field(default=None, min_length=1, max_length=24)
+    points: Optional[int] = Field(default=None, ge=0, le=10000)
     latitude: Optional[float] = None
     longitude: Optional[float] = None
     radius_meters: Optional[int] = Field(default=None, ge=1, le=10000)
@@ -78,6 +87,7 @@ class GeoHunterPoiUpdateRequest(BaseModel):
 class GeoHunterRetrySettingsRequest(BaseModel):
     retry_enabled: bool = False
     retry_timeout_seconds: int = Field(default=0, ge=0, le=86400)
+    visibility_mode: str = Field(default="all_visible", pattern="^(all_visible|in_range_only)$")
 
 
 class GeoHunterPoiRecordResponse(BaseModel):
@@ -87,6 +97,7 @@ class GeoHunterPoiRecordResponse(BaseModel):
 class GeoHunterPoiListResponse(BaseModel):
     retry_enabled: bool
     retry_timeout_seconds: int
+    visibility_mode: str = "all_visible"
     pois: list[Dict[str, Any]]
 
 
@@ -155,18 +166,34 @@ class GeoHunterModule(ApiModule, SharedModuleBase):
     def _serialize_poi(self, poi: Dict[str, Any], choices: list[Dict[str, Any]]) -> Dict[str, Any]:
         """Serialize POI and its choices to stable API response shape."""
         poi_type = str(poi.get("type") or "text")
+        raw_expected = poi.get("expected_answers")
+        expected_answers: list[str] = []
+        if isinstance(raw_expected, list):
+            expected_answers = [str(item).strip() for item in raw_expected if str(item or "").strip()]
+        elif isinstance(raw_expected, str) and raw_expected.strip():
+            try:
+                parsed = json.loads(raw_expected)
+                if isinstance(parsed, list):
+                    expected_answers = [str(item).strip() for item in parsed if str(item or "").strip()]
+            except Exception:
+                expected_answers = [
+                    item.strip()
+                    for item in raw_expected.split("\n")
+                    if str(item or "").strip()
+                ]
         return {
             "id": str(poi.get("id") or ""),
             "game_id": str(poi.get("game_id") or ""),
             "title": str(poi.get("title") or ""),
             "type": poi_type,
             "type_label_key": self._type_label_key(poi_type),
+            "points": int(poi.get("points") or 0),
             "latitude": float(poi.get("latitude") or 0),
             "longitude": float(poi.get("longitude") or 0),
             "radius_meters": int(poi.get("radius_meters") or 20),
             "content": poi.get("content"),
             "question": poi.get("question"),
-            "expected_answers": list(poi.get("expected_answers") or []),
+            "expected_answers": expected_answers,
             "choices": [
                 {
                     "id": str(choice.get("id") or ""),
@@ -258,6 +285,16 @@ class GeoHunterModule(ApiModule, SharedModuleBase):
 
             nearby_pois = self._service.get_nearby_pois_for_team(db, game_id, team_id)
             nearby_poi_ids = [str(poi.get("id") or "") for poi in nearby_pois]
+            game = self._repository.get_game_by_id(db, game_id) or {}
+            retry_enabled, retry_timeout_seconds = self._extract_retry_settings(game)
+            retry_locked_poi_seconds = self._service.get_retry_locked_poi_seconds_for_team(
+                db,
+                game_id=game_id,
+                team_id=team_id,
+                poi_ids=nearby_poi_ids,
+                retry_enabled=retry_enabled,
+                retry_timeout_seconds=retry_timeout_seconds,
+            )
             should_publish = self._service.should_publish_location_event(db, game_id=game_id, team_id=team_id, min_interval_seconds=10)
 
             if should_publish:
@@ -279,6 +316,7 @@ class GeoHunterModule(ApiModule, SharedModuleBase):
                         "team_id": team_id,
                         "nearby_poi_ids": nearby_poi_ids,
                         "nearby_pois": nearby_pois,
+                        "nearby_poi_lockouts_seconds": retry_locked_poi_seconds,
                     },
                     channels=[f"channel:{game_id}:{team_id}"],
                 )
@@ -289,6 +327,8 @@ class GeoHunterModule(ApiModule, SharedModuleBase):
                 location=location,
                 nearby_pois=nearby_pois,
                 nearby_poi_ids=nearby_poi_ids,
+                retry_locked_poi_seconds=retry_locked_poi_seconds,
+                nearby_poi_lockouts_seconds=retry_locked_poi_seconds,
             )
 
         @router.get(
@@ -304,10 +344,12 @@ class GeoHunterModule(ApiModule, SharedModuleBase):
             pois = self._repository.fetch_pois_by_game_id(db, game_id)
             choices_by_point = self._repository.fetch_choices_by_poi_ids(db, [str(poi.get("id")) for poi in pois])
             retry_enabled, retry_timeout_seconds = self._extract_retry_settings(game)
+            visibility_mode = self._repository.get_visibility_mode(db, game_id)
 
             return GeoHunterPoiListResponse(
                 retry_enabled=retry_enabled,
                 retry_timeout_seconds=retry_timeout_seconds,
+                visibility_mode=visibility_mode,
                 pois=[
                     self._serialize_poi(poi, choices_by_point.get(str(poi.get("id") or ""), []))
                     for poi in pois
@@ -365,6 +407,7 @@ class GeoHunterModule(ApiModule, SharedModuleBase):
                 "game_id": game_id,
                 "title": body.title.strip(),
                 "type": body.type,
+                "points": int(body.points),
                 "latitude": body.latitude,
                 "longitude": body.longitude,
                 "radius_meters": int(body.radius_meters),
@@ -378,6 +421,8 @@ class GeoHunterModule(ApiModule, SharedModuleBase):
                 values["expected_answers"] = None
             elif body.type == "multiple_choice":
                 values["expected_answers"] = None
+            else:
+                values["expected_answers"] = json.dumps(normalized_expected or [])
 
             try:
                 self._repository.create_poi_without_commit(db, values)
@@ -461,6 +506,8 @@ class GeoHunterModule(ApiModule, SharedModuleBase):
                 values["title"] = body.title.strip()
             if body.type is not None:
                 values["type"] = body.type
+            if body.points is not None:
+                values["points"] = int(body.points)
             if body.latitude is not None:
                 values["latitude"] = body.latitude
             if body.longitude is not None:
@@ -472,13 +519,15 @@ class GeoHunterModule(ApiModule, SharedModuleBase):
             if body.question is not None:
                 values["question"] = body.question.strip() or None
             if body.expected_answers is not None:
-                values["expected_answers"] = self._normalize_expected_answers(body.expected_answers)
+                values["expected_answers"] = json.dumps(self._normalize_expected_answers(body.expected_answers) or [])
 
             if effective_type == "text":
                 values["question"] = None
                 values["expected_answers"] = None
             elif effective_type == "multiple_choice":
                 values["expected_answers"] = None
+            elif "expected_answers" in values and values["expected_answers"] is not None:
+                values["expected_answers"] = json.dumps(self._normalize_expected_answers(body.expected_answers or []) or [])
 
             try:
                 self._repository.update_poi_without_commit(db, game_id, poi_id, values)
@@ -560,6 +609,11 @@ class GeoHunterModule(ApiModule, SharedModuleBase):
                     retry_enabled=body.retry_enabled,
                     retry_timeout_seconds=timeout_seconds,
                 )
+                self._repository.update_visibility_mode_without_commit(
+                    db,
+                    game_id,
+                    visibility_mode=body.visibility_mode,
+                )
                 self._repository.commit_changes(db)
             except Exception as error:
                 self._repository.rollback_on_error(db, error)
@@ -569,10 +623,12 @@ class GeoHunterModule(ApiModule, SharedModuleBase):
             pois = self._repository.fetch_pois_by_game_id(db, game_id)
             choices_by_point = self._repository.fetch_choices_by_poi_ids(db, [str(poi.get("id")) for poi in pois])
             retry_enabled, retry_timeout_seconds = self._extract_retry_settings(game)
+            visibility_mode = self._repository.get_visibility_mode(db, game_id)
 
             return GeoHunterPoiListResponse(
                 retry_enabled=retry_enabled,
                 retry_timeout_seconds=retry_timeout_seconds,
+                visibility_mode=visibility_mode,
                 pois=[
                     self._serialize_poi(poi, choices_by_point.get(str(poi.get("id") or ""), []))
                     for poi in pois
@@ -605,13 +661,21 @@ class GeoHunterModule(ApiModule, SharedModuleBase):
                 poi_id=body.poi_id.strip(),
                 answer=body.answer,
             )
+
+            localized_message = self._localize_message_key(result.message_key, locale)
+            if result.retry_available_in_seconds > 0:
+                localized_message = localized_message.replace("{seconds}", str(result.retry_available_in_seconds))
             
             return ActionResponse(
                 success=result.success,
-                message_key=self._localize_message_key(result.message_key, locale),
+                message_key=localized_message,
                 action_id=result.action_id or None,
                 points_awarded=result.points_awarded,
                 state_version=result.state_version,
+                correct=result.correct,
+                score=result.score,
+                retry_available_in_seconds=result.retry_available_in_seconds,
+                lock_active=result.lock_active,
             )
 
         return router

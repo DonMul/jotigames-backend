@@ -277,6 +277,20 @@ class GameRepository:
             ).all()
             team_ids = [str(row[0]) for row in rows]
 
+        geo_point_table = metadata.tables.get("geo_point")
+        geo_submission_table = metadata.tables.get("geo_submission")
+        if geo_point_table is not None and geo_submission_table is not None:
+            geo_point_id_column = "id" if "id" in geo_point_table.c else None
+            geo_point_game_id_column = "game_id" if "game_id" in geo_point_table.c else ("gameId" if "gameId" in geo_point_table.c else None)
+            geo_submission_point_column = "point_id" if "point_id" in geo_submission_table.c else ("pointId" if "pointId" in geo_submission_table.c else None)
+
+            if geo_point_id_column and geo_point_game_id_column and geo_submission_point_column:
+                point_ids_query = select(geo_point_table.c[geo_point_id_column]).where(geo_point_table.c[geo_point_game_id_column] == game_id)
+                db.execute(
+                    delete(geo_submission_table)
+                    .where(geo_submission_table.c[geo_submission_point_column].in_(point_ids_query))
+                )
+
         for table in reversed(metadata.sorted_tables):
             if table.name == "game":
                 continue
