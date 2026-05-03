@@ -412,6 +412,17 @@ class SubscriptionService:
         # Add top-up remaining
         topups = self._repo.get_active_topups(db, user_id)
         topup_minutes_remaining = sum(t.minutes_remaining for t in topups)
+        expiry_buckets: Dict[str, int] = {}
+        for topup in topups:
+            expires_at = getattr(topup, "expires_at", None)
+            if not expires_at:
+                continue
+            expires_on = expires_at.date().isoformat()
+            expiry_buckets[expires_on] = expiry_buckets.get(expires_on, 0) + int(topup.minutes_remaining or 0)
+        topup_expiry_breakdown = [
+            {"expires_on": expires_on, "minutes_remaining": minutes_remaining}
+            for expires_on, minutes_remaining in sorted(expiry_buckets.items())
+        ]
 
         return {
             "monetisation_enabled": True,
@@ -419,6 +430,7 @@ class SubscriptionService:
             "plan": _serialize_plan(plan) if plan else None,
             "balance": balance_dict,
             "topup_minutes_remaining": topup_minutes_remaining,
+            "topup_expiry_breakdown": topup_expiry_breakdown,
         }
 
     def subscribe(

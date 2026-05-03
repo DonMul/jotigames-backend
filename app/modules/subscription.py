@@ -39,12 +39,18 @@ class ConfirmTopupCheckoutRequest(BaseModel):
     session_id: str = Field(min_length=1, max_length=255)
 
 
+class TopupExpiryBreakdownItem(BaseModel):
+    expires_on: str
+    minutes_remaining: int
+
+
 class SubscriptionSummaryResponse(BaseModel):
     monetisation_enabled: bool
     subscription: Optional[Dict[str, Any]] = None
     plan: Optional[Dict[str, Any]] = None
     balance: Dict[str, Any]
     topup_minutes_remaining: int = 0
+    topup_expiry_breakdown: list[TopupExpiryBreakdownItem] = Field(default_factory=list)
 
 
 class PlansListResponse(BaseModel):

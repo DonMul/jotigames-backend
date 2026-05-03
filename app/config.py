@@ -73,7 +73,7 @@ class Settings(BaseSettings):
     ssl_keyfile_password: Optional[str] = Field(default=None, alias="SSL_KEYFILE_PASSWORD")
 
     app_public_base_url: str = Field(default="http://localhost:8000", alias="APP_PUBLIC_BASE_URL")
-    auth_verify_path: str = Field(default="/api/auth/verify", alias="AUTH_VERIFY_PATH")
+    auth_verify_path: str = Field(default="/activate-account", alias="AUTH_VERIFY_PATH")
     auth_password_reset_path: str = Field(default="/reset-password", alias="AUTH_PASSWORD_RESET_PATH")
 
     mailer_dsn: Optional[str] = Field(default=None, alias="MAILER_DSN")

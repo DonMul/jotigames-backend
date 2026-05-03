@@ -263,7 +263,7 @@ PYTHONPATH=. python scripts/auto_resolve_pending_actions.py
 
 - `MAILER_DSN` configures SMTP transport (`smtp://` or `smtps://`).
 - `MAILER_FROM` configures sender address.
-- `APP_PUBLIC_BASE_URL` + `AUTH_VERIFY_PATH` are used to build the verification link in email.
+- `APP_PUBLIC_BASE_URL` + `AUTH_VERIFY_PATH` are used to build the verification link in email (typically a frontend route such as `/activate-account`).
 
 ### Email templates
 

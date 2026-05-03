@@ -413,6 +413,52 @@ class TestSubscriptionServiceSummary:
         summary = service.get_user_subscription_summary(db, "user-1")
         assert summary["subscription"] is None
 
+    @patch("app.services.subscription_service.get_settings")
+    def test_summary_includes_topup_expiry_breakdown(self, mock_settings, db, service, free_plan):
+        mock_settings.return_value = MagicMock(enable_monetisation=True)
+        service.subscribe(db, "user-1", "free", email="test@example.com")
+
+        now = datetime.now(UTC).replace(tzinfo=None)
+        repo = SubscriptionRepository()
+        repo.create_topup_purchase(
+            db,
+            user_id="user-1",
+            package_id=None,
+            minutes_total=200,
+            minutes_remaining=120,
+            expires_at=now + timedelta(days=10),
+        )
+        repo.create_topup_purchase(
+            db,
+            user_id="user-1",
+            package_id=None,
+            minutes_total=300,
+            minutes_remaining=80,
+            expires_at=now + timedelta(days=10),
+        )
+        repo.create_topup_purchase(
+            db,
+            user_id="user-1",
+            package_id=None,
+            minutes_total=500,
+            minutes_remaining=500,
+            expires_at=now + timedelta(days=20),
+        )
+        db.commit()
+
+        summary = service.get_user_subscription_summary(db, "user-1")
+        assert summary["topup_minutes_remaining"] == 700
+        assert summary["topup_expiry_breakdown"] == [
+            {
+                "expires_on": (now + timedelta(days=10)).date().isoformat(),
+                "minutes_remaining": 200,
+            },
+            {
+                "expires_on": (now + timedelta(days=20)).date().isoformat(),
+                "minutes_remaining": 500,
+            },
+        ]
+
 
 # ── Service: Consume Minutes ─────────────────────────────────────────────────
 
